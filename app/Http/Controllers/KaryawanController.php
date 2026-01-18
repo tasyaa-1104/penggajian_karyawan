@@ -13,6 +13,8 @@ class KaryawanController extends Controller
     public function index()
     {
         //
+        $karyawans = Karyawan::all();
+        return view('admin.karyawan', compact('karyawans'));
     }
 
     /**
@@ -21,6 +23,7 @@ class KaryawanController extends Controller
     public function create()
     {
         //
+        return view('admin.karyawan-create');
     }
 
     /**
@@ -29,6 +32,16 @@ class KaryawanController extends Controller
     public function store(Request $request)
     {
         //
+        request()->validate([
+            'nik' => 'required|unique:karyawan,nik',
+            'nama_karyawan' => 'required',
+            'id_divisi' => 'required|exists:divisi,id_divisi',
+            'id_jabatan' => 'required|exists:jabatan,id_jabatan',
+            'id_user' => 'required|exists:users,id',
+            'status_karyawan' => 'required|in:aktif,non-aktif'
+        ]);
+        Karyawan::create($request->all());
+        return redirect()->route('karyawan')->with('success', 'Karyawan created successfully.');
     }
 
     /**
@@ -45,6 +58,8 @@ class KaryawanController extends Controller
     public function edit(Karyawan $karyawan)
     {
         //
+        $karyawan = Karyawan::findOrFail($karyawan->id_karyawan);
+        return view('admin.karyawan-edit', compact('karyawan'));
     }
 
     /**
@@ -53,6 +68,16 @@ class KaryawanController extends Controller
     public function update(Request $request, Karyawan $karyawan)
     {
         //
+        request()->validate([
+            'nik' => 'required|unique:karyawan,nik,' . $karyawan->id_karyawan . ',id_karyawan',
+            'nama_karyawan' => 'required',
+            'id_divisi' => 'required|exists:divisi,id_divisi',
+            'id_jabatan' => 'required|exists:jabatan,id_jabatan',
+            'id_user' => 'required|exists:users,id',
+            'status_karyawan' => 'required|in:aktif,non-aktif'
+        ]);
+        $karyawan->update($request->all());
+        return redirect()->route('karyawan')->with('success', 'Karyawan updated successfully.');
     }
 
     /**
@@ -61,5 +86,7 @@ class KaryawanController extends Controller
     public function destroy(Karyawan $karyawan)
     {
         //
+        $karyawan->delete();
+        return redirect()->route('karyawan')->with('success', 'Karyawan deleted successfully.');
     }
 }

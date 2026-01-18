@@ -6,5 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Potongan extends Model
 {
-    //
+    protected $table = 'potongan';
+    protected $primaryKey = 'id_potongan';
+
+    protected $fillable = [
+        'nama_potongan',
+        'nominal'
+    ];
 }
