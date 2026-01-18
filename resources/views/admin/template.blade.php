@@ -173,18 +173,6 @@
                 </a>
             </li> --}}
             <li>
-                <a href="#"
-                   class="nav-link">
-                    <i class="fa-solid fa-images"></i> Gallery
-                </a>
-            </li>
-            <li>
-                <a href="#"
-                   class="nav-link">
-                    <i class="fa-solid fa-phone"></i> Kontak
-                </a>
-            </li>
-            <li>
                 <a href="#" class="nav-link">
                     <i class="fa-solid fa-right-from-bracket"></i> Logout
                 </a>

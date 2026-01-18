@@ -12,8 +12,18 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('rekap_absensi', function (Blueprint $table) {
-            $table->id();
+            $table->id('id_rekap');
+            $table->unsignedBigInteger('id_karyawan');
+            $table->string('bulan');
+            $table->integer('jumlah_hadir')->default(0);
+            $table->integer('jumlah_izin')->default(0);
+            $table->integer('jumlah_alpha')->default(0);
             $table->timestamps();
+
+            $table->foreign('id_karyawan')
+                ->references('id_karyawan')
+                ->on('karyawan')
+                ->onDelete('cascade');
         });
     }
 

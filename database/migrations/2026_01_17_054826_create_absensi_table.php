@@ -12,8 +12,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('absensi', function (Blueprint $table) {
-            $table->id();
+            $table->id('id_absensi');
+            $table->unsignedBigInteger('id_karyawan');
+            $table->date('tanggal');
+            $table->enum('status_kehadiran', ['Hadir', 'Izin', 'Alpha']);
+            $table->string('keterangan')->nullable();
             $table->timestamps();
+
+            $table->foreign('id_karyawan')
+                ->references('id_karyawan')
+                ->on('karyawan')
+                ->onDelete('cascade');
         });
     }
 

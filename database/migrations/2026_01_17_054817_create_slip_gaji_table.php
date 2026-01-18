@@ -11,9 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('slip_gaji', function (Blueprint $table) {
-            $table->id();
+       Schema::create('slip_gaji', function (Blueprint $table) {
+            $table->id('id_slip');
+            $table->unsignedBigInteger('id_gaji');
+            $table->date('tanggal_cetak');
+            $table->string('file_slip')->nullable();
             $table->timestamps();
+
+            $table->foreign('id_gaji')
+                ->references('id_gaji')
+                ->on('gaji')
+                ->onDelete('cascade');
         });
     }
 

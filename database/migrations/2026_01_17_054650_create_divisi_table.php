@@ -12,9 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('divisi', function (Blueprint $table) {
-            $table->id();
+            $table->id('id_divisi');
+            $table->string('nama_divisi');
             $table->timestamps();
         });
+
     }
 
     /**

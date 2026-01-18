@@ -12,8 +12,18 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('gaji', function (Blueprint $table) {
-            $table->id();
+            $table->id('id_gaji');
+            $table->unsignedBigInteger('id_karyawan');
+            $table->string('bulan'); // contoh: 2026-01
+            $table->decimal('total_tunjangan', 15, 2)->default(0);
+            $table->decimal('total_potongan', 15, 2)->default(0);
+            $table->decimal('gaji_bersih', 15, 2);
             $table->timestamps();
+
+            $table->foreign('id_karyawan')
+                ->references('id_karyawan')
+                ->on('karyawan')
+                ->onDelete('cascade');
         });
     }
 
