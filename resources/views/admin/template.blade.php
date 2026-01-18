@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tasty Food</title>
+    <title>Penggajian</title>
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -126,7 +126,7 @@
     {{-- SIDEBAR --}}
     <nav class="sidebar" id="sidebar">
         <h4 class="text-white text-center mb-4">
-            <i class="fa-solid fa-store me-2"></i> Tasty Food
+            <i class="fa-solid fa-store me-2"></i> Penggajian
         </h4>
 
         <ul class="nav flex-column">
@@ -139,25 +139,31 @@
             <li>
                 <a href="#"
                    class="nav-link">
-                    <i class="fas fa-users"></i> User
+                    <i class="fas fa-users"></i> Karyawwan
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('absensi') }}" class="nav-link">
+                    <i class="fas fa-newspaper"></i> Absensi
+                </a>
+
+            </li>
+             <li>
+                <a href="#"
+                   class="nav-link">
+                    <i class="fa-solid fa-images"></i> rekap absensi
                 </a>
             </li>
             <li>
                 <a href="#"
                    class="nav-link">
-                    <i class="fas fa-newspaper"></i> Berita
+                    <i class="fa-solid fa-circle-info"></i> Jabatan
                 </a>
             </li>
             <li>
                 <a href="#"
                    class="nav-link">
-                    <i class="fa-solid fa-circle-info"></i> Tentang Kami
-                </a>
-            </li>
-            <li>
-                <a href="#"
-                   class="nav-link">
-                    <i class="fa-solid fa-image"></i> Gambar Tentang
+                    <i class="fa-solid fa-image"></i> Divisi
                 </a>
             </li>
             {{-- <li>
