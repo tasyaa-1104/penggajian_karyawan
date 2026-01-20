@@ -1,6 +1,6 @@
 @extends('admin.template')
 
-@section('konten')
+@section('content')
 <div class="container">
     <h3 class="mb-3">Rekap Absensi Karyawan</h3>
 
