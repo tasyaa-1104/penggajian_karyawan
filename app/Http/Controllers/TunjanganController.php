@@ -7,59 +7,38 @@ use Illuminate\Http\Request;
 
 class TunjanganController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $tunjangan = Tunjangan::all();
+        return view('admin.tunjangan', compact('tunjangan'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return view('admin.tunjangan-create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        Tunjangan::create($request->all());
+        return redirect()->route('tunjangan.index');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Tunjangan $tunjangan)
+    public function edit($id)
     {
-        //
+        $tunjangan = Tunjangan::findOrFail($id);
+        return view('admin.tunjangan-edit', compact('tunjangan'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Tunjangan $tunjangan)
+    public function update(Request $request, $id)
     {
-        //
+        Tunjangan::findOrFail($id)->update($request->all());
+        return redirect()->route('admin.tunjangan');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Tunjangan $tunjangan)
+    public function destroy($id)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Tunjangan $tunjangan)
-    {
-        //
+        Tunjangan::destroy($id);
+        return redirect()->route('tunjangan.index');
     }
 }

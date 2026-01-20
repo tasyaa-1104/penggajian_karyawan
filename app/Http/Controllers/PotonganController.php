@@ -7,59 +7,38 @@ use Illuminate\Http\Request;
 
 class PotonganController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $potongan = Potongan::all();
+        return view('admin.potongan', compact('potongan'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return view('admin.potongan-create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        Potongan::create($request->all());
+        return redirect()->route('potongan.index');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Potongan $potongan)
+    public function edit($id)
     {
-        //
+        $potongan = Potongan::findOrFail($id);
+        return view('admin.potongan-edit', compact('potongan'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Potongan $potongan)
+    public function update(Request $request, $id)
     {
-        //
+        Potongan::findOrFail($id)->update($request->all());
+        return redirect()->route('potongan.index');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Potongan $potongan)
+    public function destroy($id)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Potongan $potongan)
-    {
-        //
+        Potongan::destroy($id);
+        return redirect()->route('potongan.index');
     }
 }

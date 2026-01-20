@@ -3,63 +3,53 @@
 namespace App\Http\Controllers;
 
 use App\Models\Gaji;
+use App\Models\Karyawan;
 use Illuminate\Http\Request;
 
 class GajiController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $gaji = Gaji::with('karyawan')->get();
+        return view('admin.gaji', compact('gaji'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        $karyawan = Karyawan::all();
+        return view('admin.gaji-create', compact('karyawan'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        Gaji::create([
+            'id_karyawan' => $request->id_karyawan,
+            'bulan' => $request->bulan,
+            'total_tunjangan' => $request->total_tunjangan,
+            'total_potongan' => $request->total_potongan,
+            'gaji_bersih' => $request->gaji_bersih,
+        ]);
+
+        return redirect()->route('gaji.index')
+            ->with('success','Data gaji berhasil disimpan');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Gaji $gaji)
+    public function edit($id)
     {
-        //
+        $gaji = Gaji::findOrFail($id);
+        $karyawan = Karyawan::all();
+        return view('admin.gaji-edit', compact('gaji','karyawan'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Gaji $gaji)
+    public function update(Request $request, $id)
     {
-        //
+        Gaji::findOrFail($id)->update($request->all());
+        return redirect()->route('gaji.index');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Gaji $gaji)
+    public function destroy($id)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Gaji $gaji)
-    {
-        //
+        Gaji::destroy($id);
+        return redirect()->route('gaji.index');
     }
 }

@@ -3,63 +3,61 @@
 namespace App\Http\Controllers;
 
 use App\Models\slip_gaji;
+use App\Models\gaji;
 use Illuminate\Http\Request;
 
-class slip_gajiController extends Controller
+class slip_gajicontroller extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $slip_gaji = slip_gaji::with('gaji.karyawan')->get();
+        return view('admin.slip-gaji', compact('slip_gaji'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        $gaji = gaji::with('karyawan')->get();
+        return view('admin.slip-gaji-create', compact('gaji'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'id_gaji' => 'required',
+            'tanggal_cetak' => 'required|date',
+        ]);
+
+        slip_gaji::create([
+            'id_gaji' => $request->id_gaji,
+            'tanggal_cetak' => $request->tanggal_cetak,
+            'file_slip' => $request->file_slip
+        ]);
+
+        return redirect()->route('slip-gaji.index')
+            ->with('success', 'slip gaji berhasil dibuat');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(slip_gaji $slip_gaji)
+    public function edit($id)
     {
-        //
+        $slip_gaji = slip_gaji::findOrFail($id);
+        $gaji = gaji::with('karyawan')->get();
+
+        return view('admin.slip-gaji-edit', compact('slip_gaji', 'gaji'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(slip_gaji $slip_gaji)
+    public function update(Request $request, $id)
     {
-        //
+        slip_gaji::findOrFail($id)->update($request->all());
+
+        return redirect()->route('slip-gaji.index')
+            ->with('success', 'slip gaji berhasil diupdate');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, slip_gaji $slip_gaji)
+    public function destroy($id)
     {
-        //
-    }
+        slip_gaji::destroy($id);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(slip_gaji $slip_gaji)
-    {
-        //
+        return redirect()->route('slip-gaji.index')
+            ->with('success', 'slip gaji berhasil dihapus');
     }
 }

@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class SlipGaji extends Model
+class slip_gaji extends Model
 {
     protected $table = 'slip_gaji';
     protected $primaryKey = 'id_slip';
