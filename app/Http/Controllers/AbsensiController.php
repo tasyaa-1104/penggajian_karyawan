@@ -11,11 +11,17 @@ class AbsensiController extends Controller
     // TAMPILKAN DATA
     public function index()
     {
-        return view('admin.absensi.index', [
+        return view('admin.absensi', [
             'karyawan' => Karyawan::all(),
             'absensi'  => Absensi::with('karyawan')
                             ->orderBy('tanggal', 'desc')
                             ->get()
+        ]);
+    }
+     public function create()
+    {
+        return view('admin.absensi-create', [
+            'karyawan' => Karyawan::all()
         ]);
     }
 

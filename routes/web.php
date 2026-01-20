@@ -16,6 +16,19 @@ Route::get('/dashboard', function () {
 });
 
 Route::get('/absensi', [AbsensiController::class, 'index'])->name('absensi');
+// FORM TAMBAH ABSENSI
+Route::get('/absensi/create', [AbsensiController::class, 'create'])->name('absensi.create');
+
+// simpan absensi
+Route::post('/absensi/store', [AbsensiController::class, 'store'])->name('absensi.store');
+// form edit
+Route::get('/absensi/edit/{id}', [AbsensiController::class, 'edit'])->name('absensi.edit');
+
+// update (POST)
+Route::post('/absensi/update/{id}', [AbsensiController::class, 'update'])->name('absensi.update');
+
+// hapus (POST)
+Route::post('/absensi/delete/{id}', [AbsensiController::class, 'destroy'])->name('absensi.delete');
 
 /* READ */
 Route::get('/karyawan', [KaryawanController::class, 'index'])->name('karyawan');
