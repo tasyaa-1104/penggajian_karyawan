@@ -6,41 +6,43 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('karyawan', function (Blueprint $table) {
             $table->id('id_karyawan');
             $table->string('nik')->unique();
             $table->string('nama_karyawan');
+
             $table->unsignedBigInteger('id_divisi');
             $table->unsignedBigInteger('id_jabatan');
+
+            // TETAP pakai id_user (tidak dikurangi)
             $table->unsignedBigInteger('id_user')->nullable();
+
             $table->enum('status_karyawan', ['aktif', 'nonaktif']);
             $table->timestamps();
 
+            // FK ke divisi
             $table->foreign('id_divisi')
                 ->references('id_divisi')
                 ->on('divisi')
                 ->onDelete('cascade');
 
+            // FK ke jabatan
             $table->foreign('id_jabatan')
                 ->references('id_jabatan')
                 ->on('jabatan')
                 ->onDelete('cascade');
 
+            // 🔥 PERBAIKAN DI SINI
+            // users TIDAK punya id_user → pakai id
             $table->foreign('id_user')
-                ->references('id_user')
+                ->references('id')
                 ->on('users')
                 ->onDelete('set null');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('karyawan');
