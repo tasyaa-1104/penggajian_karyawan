@@ -182,7 +182,7 @@
 
         {{-- Slip Gaji --}}
         <li>
-            <a href="#" class="nav-link">
+            <a href="{{route('slipgaji.index')}}" class="nav-link">
                 <i class="fa-solid fa-file-invoice-dollar"></i>
                 Slip Gaji
             </a>
@@ -190,7 +190,7 @@
 
         {{-- Potongan Gaji --}}
         <li>
-            <a href="#" class="nav-link">
+            <a href="{{route('potongan.index')}}" class="nav-link">
                 <i class="fa-solid fa-minus-circle"></i>
                 Potongan Gaji
             </a>
@@ -198,7 +198,7 @@
 
         {{-- Gaji --}}
         <li>
-            <a href="#" class="nav-link">
+            <a href="{{route('gaji.index')}}" class="nav-link">
                 <i class="fa-solid fa-wallet"></i>
                 Gaji
             </a>
@@ -206,7 +206,7 @@
 
         {{-- Tunjangan --}}
         <li>
-            <a href="#" class="nav-link">
+            <a href="{{route('tunjangan.index')}}" class="nav-link">
                 <i class="fa-solid fa-hand-holding-dollar"></i>
                 Tunjangan
             </a>
@@ -227,7 +227,7 @@
     {{-- MAIN --}}
     <div class="main-wrapper">
         <div class="content">
-            @yield('konten')
+            @yield('content')
         </div>
     </div>
 

@@ -99,3 +99,25 @@ Route::put('/slip-gaji/update/{id}', [slip_gajiController::class, 'update'])->na
 
 Route::delete('/slip-gaji/delete/{id}', [slip_gajiController::class, 'destroy'])->name('slipgaji.destroy');
 
+use App\Http\Controllers\GajiController;
+
+// ================== GAJI ==================
+
+// READ
+Route::get('/gaji', [GajiController::class, 'index'])->name('gaji.index');
+
+// CREATE
+Route::get('/gaji/create', [GajiController::class, 'create'])->name('gaji.create');
+
+Route::post('/gaji/store', [GajiController::class, 'store'])->name('gaji.store');
+
+// UPDATE
+Route::get('/gaji/edit/{id}', [GajiController::class, 'edit'])->name('gaji.edit');
+
+Route::put('/gaji/update/{id}', [GajiController::class, 'update'])->name('gaji.update');
+
+// DELETE
+Route::delete('/gaji/delete/{id}', [GajiController::class, 'destroy'])->name('gaji.destroy');
+
+Route::get('/', function () {return view('landing');});
+
