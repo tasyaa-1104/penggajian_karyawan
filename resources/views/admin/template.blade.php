@@ -133,12 +133,20 @@
 
         {{-- Dashboard --}}
         <li>
-            <a href="#"
-               class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-                <i class="fa-solid fa-chart-line"></i>
-                Dashboard
-            </a>
-        </li>
+    <li>
+    <a href="{{ route('admin.dashboard') }}"
+       class="nav-link"
+       style="
+            {{ request()->routeIs('admin.dashboard')
+                ? 'background:#3f5aa6;color:#fff;'
+                : '' }}
+       ">
+        <i class="fa-solid fa-chart-line"></i>
+        Dashboard
+    </a>
+    </li>
+
+
 
         {{-- Karyawan --}}
         <li>

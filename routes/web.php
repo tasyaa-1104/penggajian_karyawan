@@ -12,9 +12,8 @@ Route::get('/', function () {
     return view('admin.template');
 });
 
-Route::get('/dashboard', function () {
-    return view('admin.dashboard');
-});
+Route::get('/admin/dashboard', function () {return view('admin.dashboard');})->name('admin.dashboard');
+
 
 Route::get('/absensi', [AbsensiController::class, 'index'])->name('absensi');
 // FORM TAMBAH ABSENSI
