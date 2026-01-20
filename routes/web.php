@@ -5,6 +5,7 @@ use App\Http\Controllers\AbsensiController;
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\PotonganController;
 use App\Http\Controllers\slip_gajiController;
+use App\Http\Controllers\rekap_absensiController;
 use App\Http\Controllers\TunjanganController;
 use App\Http\Controllers\DivisiController;
 use App\Http\Controllers\JabatanController;
@@ -13,9 +14,8 @@ Route::get('/', function () {
     return view('admin.template');
 });
 
-Route::get('/dashboard', function () {
-    return view('admin.dashboard');
-});
+Route::get('/admin/dashboard', function () {return view('admin.dashboard');})->name('admin.dashboard');
+
 
 Route::get('/absensi', [AbsensiController::class, 'index'])->name('absensi');
 // FORM TAMBAH ABSENSI
@@ -31,7 +31,25 @@ Route::post('/absensi/update/{id}', [AbsensiController::class, 'update'])->name(
 
 // hapus (POST)
 Route::post('/absensi/delete/{id}', [AbsensiController::class, 'destroy'])->name('absensi.delete');
+// tampil rekap
+Route::get('/rekap-absensi', [rekap_absensiController::class, 'index'])
+    ->name('rekap-absensi.index');
 
+// form generate
+Route::get('/rekap-absensi/create', [rekap_absensiController::class, 'create'])
+    ->name('rekap-absensi.create');
+
+// simpan / generate
+Route::post('/rekap-absensi/store', [rekap_absensiController::class, 'store'])->name('rekap-absensi.store');
+
+// form edit
+Route::get('/rekap-absensi/edit/{rekap_absensi}', [rekap_absensiController::class, 'edit'])->name('rekap-absensi.edit');
+
+// update
+Route::post('/rekap-absensi/update/{rekap_absensi}', [rekap_absensiController::class, 'update'])->name('rekap-absensi.update');
+
+// hapus
+Route::post('/rekap-absensi/delete/{rekap_absensi}', [rekap_absensiController::class, 'destroy'])->name('rekap-absensi.delete');
 /* READ */
 Route::get('/karyawan', [KaryawanController::class, 'index'])->name('karyawan');
 
@@ -87,6 +105,7 @@ Route::delete('/slip-gaji/delete/{id}', [slip_gajiController::class, 'destroy'])
 
 
 
+
 Route::prefix('admin')->group(function () {
     Route::get('/divisi', [DivisiController::class, 'index'])->name('divisi.index');
     Route::get('/divisi/create', [DivisiController::class, 'create'])->name('divisi.create');
@@ -109,3 +128,27 @@ Route::prefix('admin')->group(function () {
     Route::put('/jabatan/{id}', [JabatanController::class, 'update'])->name('jabatan.update');
     Route::delete('/jabatan/{id}', [JabatanController::class, 'destroy'])->name('jabatan.destroy');
 });
+
+use App\Http\Controllers\GajiController;
+
+// ================== GAJI ==================
+
+// READ
+Route::get('/gaji', [GajiController::class, 'index'])->name('gaji.index');
+
+// CREATE
+Route::get('/gaji/create', [GajiController::class, 'create'])->name('gaji.create');
+
+Route::post('/gaji/store', [GajiController::class, 'store'])->name('gaji.store');
+
+// UPDATE
+Route::get('/gaji/edit/{id}', [GajiController::class, 'edit'])->name('gaji.edit');
+
+Route::put('/gaji/update/{id}', [GajiController::class, 'update'])->name('gaji.update');
+
+// DELETE
+Route::delete('/gaji/delete/{id}', [GajiController::class, 'destroy'])->name('gaji.destroy');
+
+Route::get('/', function () {return view('landing');});
+
+

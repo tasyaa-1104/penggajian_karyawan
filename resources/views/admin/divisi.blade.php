@@ -1,6 +1,6 @@
 @extends('admin.template')
 
-@section('konten')
+@section('content')
 <h3>Data Divisi</h3>
 
 <a href="{{ route('divisi.create') }}" class="btn btn-primary mb-3">

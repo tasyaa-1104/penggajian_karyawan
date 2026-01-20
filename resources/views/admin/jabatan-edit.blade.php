@@ -1,6 +1,6 @@
 @extends('admin.template')
 
-@section('konten')
+@section('content')
 <div class="container mt-4">
     <div class="card">
         <div class="card-header bg-warning text-white">

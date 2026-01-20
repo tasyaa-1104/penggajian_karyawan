@@ -10,7 +10,7 @@ class rekap_absensi extends Model
     //
         use HasFactory;
 
-    protected $table = 'rekap_absen';
+     protected $table = 'rekap_absensi'; 
     protected $primaryKey = 'id_rekap';
 
     protected $fillable = [
@@ -24,7 +24,7 @@ class rekap_absensi extends Model
 
     public function karyawan()
     {
-        return $this->belongsTo(Karyawan::class, 'id_karyawan');
+         return $this->belongsTo(Karyawan::class, 'id_karyawan', 'id_karyawan');
     }
 
 }

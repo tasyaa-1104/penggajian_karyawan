@@ -1,6 +1,6 @@
 @extends('admin.template')
 
-@section('konten')
+@section('content')
 <h3>Data Jabatan</h3>
 
 <a href="{{ route('jabatan.create') }}" class="btn btn-primary mb-3">

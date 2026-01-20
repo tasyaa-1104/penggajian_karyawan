@@ -11,11 +11,11 @@ use Carbon\Carbon;
 class rekap_absensiController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * TAMPIL DATA REKAP ABSENSI
      */
     public function index()
     {
-        return view('admin.rekap_absen.index', [
+        return view('admin.rekap-absensi', [
             'rekap' => rekap_absensi::with('karyawan')
                         ->orderBy('bulan', 'desc')
                         ->get(),
@@ -24,17 +24,15 @@ class rekap_absensiController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     * (dipakai generate)
+     * FORM GENERATE REKAP
      */
     public function create()
     {
-        return view('admin.rekap_absen.create');
+        return view('admin.rekap-absensi-create');
     }
 
     /**
-     * Store a newly created resource in storage.
-     * GENERATE REKAP
+     * PROSES GENERATE REKAP ABSENSI
      */
     public function store(Request $request)
     {
@@ -59,39 +57,28 @@ class rekap_absensiController extends Controller
                 [
                     'jumlah_hadir' => $absensi->where('status_kehadiran', 'hadir')->count(),
                     'jumlah_izin'  => $absensi->where('status_kehadiran', 'izin')->count(),
-                    'jumlah_sakit' => $absensi->where('status_kehadiran', 'sakit')->count(),
-                    'jumlah_alpa'  => $absensi->where('status_kehadiran', 'alpa')->count(),
+                    'jumlah_alpha' => $absensi->where('status_kehadiran', 'alpa')->count(),
                 ]
             );
         }
 
         return redirect()->route('rekap-absensi.index')
-                         ->with('success', 'Rekap absensi berhasil digenerate');
+            ->with('success', 'Rekap absensi berhasil digenerate');
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(rekap_absensi $rekap_absensi)
-    {
-        return view('admin.rekap_absen.show', [
-            'rekap' => $rekap_absensi->load('karyawan')
-        ]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
+     * FORM EDIT REKAP
      */
     public function edit(rekap_absensi $rekap_absensi)
     {
-        return view('admin.rekap_absen.edit', [
+        return view('admin.rekap-absen.edit', [
             'rekap' => $rekap_absensi,
             'karyawan' => Karyawan::all()
         ]);
     }
 
     /**
-     * Update the specified resource in storage.
+     * UPDATE DATA REKAP
      */
     public function update(Request $request, rekap_absensi $rekap_absensi)
     {
@@ -100,24 +87,29 @@ class rekap_absensiController extends Controller
             'bulan'        => 'required',
             'jumlah_hadir' => 'required|integer',
             'jumlah_izin'  => 'required|integer',
-            'jumlah_sakit' => 'required|integer',
-            'jumlah_alpa'  => 'required|integer',
+            'jumlah_alpha' => 'required|integer',
         ]);
 
-        $rekap_absensi->update($request->all());
+        $rekap_absensi->update([
+            'id_karyawan'  => $request->id_karyawan,
+            'bulan'        => $request->bulan,
+            'jumlah_hadir' => $request->jumlah_hadir,
+            'jumlah_izin'  => $request->jumlah_izin,
+            'jumlah_alpha' => $request->jumlah_alpha,
+        ]);
 
         return redirect()->route('rekap-absensi.index')
-                         ->with('success', 'Rekap absensi berhasil diupdate');
+            ->with('success', 'Rekap absensi berhasil diupdate');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * HAPUS DATA REKAP
      */
     public function destroy(rekap_absensi $rekap_absensi)
     {
         $rekap_absensi->delete();
 
         return redirect()->route('rekap-absensi.index')
-                         ->with('success', 'Rekap absensi berhasil dihapus');
+            ->with('success', 'Rekap absensi berhasil dihapus');
     }
 }
