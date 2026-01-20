@@ -5,6 +5,7 @@ use App\Http\Controllers\AbsensiController;
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\PotonganController;
 use App\Http\Controllers\slip_gajiController;
+use App\Http\Controllers\rekap_absensiController;
 use App\Http\Controllers\TunjanganController;
 
 Route::get('/', function () {
@@ -29,7 +30,25 @@ Route::post('/absensi/update/{id}', [AbsensiController::class, 'update'])->name(
 
 // hapus (POST)
 Route::post('/absensi/delete/{id}', [AbsensiController::class, 'destroy'])->name('absensi.delete');
+// tampil rekap
+Route::get('/rekap-absensi', [rekap_absensiController::class, 'index'])
+    ->name('rekap-absensi.index');
 
+// form generate
+Route::get('/rekap-absensi/create', [rekap_absensiController::class, 'create'])
+    ->name('rekap-absensi.create');
+
+// simpan / generate
+Route::post('/rekap-absensi/store', [rekap_absensiController::class, 'store'])->name('rekap-absensi.store');
+
+// form edit
+Route::get('/rekap-absensi/edit/{rekap_absensi}', [rekap_absensiController::class, 'edit'])->name('rekap-absensi.edit');
+
+// update
+Route::post('/rekap-absensi/update/{rekap_absensi}', [rekap_absensiController::class, 'update'])->name('rekap-absensi.update');
+
+// hapus
+Route::post('/rekap-absensi/delete/{rekap_absensi}', [rekap_absensiController::class, 'destroy'])->name('rekap-absensi.delete');
 /* READ */
 Route::get('/karyawan', [KaryawanController::class, 'index'])->name('karyawan');
 
