@@ -10,7 +10,7 @@ class rekap_absensi extends Model
     //
         use HasFactory;
 
-    protected $table = 'rekap_absen';
+     protected $table = 'rekap_absensi'; 
     protected $primaryKey = 'id_rekap';
 
     protected $fillable = [
