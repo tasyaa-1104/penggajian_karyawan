@@ -3,63 +3,63 @@
 namespace App\Http\Controllers;
 
 use App\Models\Jabatan;
+use App\Models\Divisi;
 use Illuminate\Http\Request;
 
 class JabatanController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
+   public function index()
+{
+    $jabatan = Jabatan::with('divisi')->orderBy('nama_jabatan')->get();
+    return view('admin.jabatan', compact('jabatan'));
+}
     public function create()
     {
-        //
+        $divisi = Divisi::orderBy('nama_divisi')->get();
+       return view('admin.jabatan-create', compact('divisi'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nama_jabatan' => 'required|string|max:255',
+            'gaji_pokok' => 'required|numeric',
+            'id_divisi' => 'required|exists:divisi,id_divisi',
+        ]);
+
+        Jabatan::create($request->all());
+
+        return redirect()->route('jabatan.index')
+            ->with('success', 'Jabatan berhasil ditambahkan');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Jabatan $jabatan)
+    public function edit($id)
     {
-        //
+        $jabatan = Jabatan::findOrFail($id);
+        $divisi = Divisi::orderBy('nama_divisi')->get();
+        return view('admin.jabatan-edit', compact('jabatan', 'divisi'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Jabatan $jabatan)
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'nama_jabatan' => 'required|string|max:255',
+            'gaji_pokok' => 'required|numeric',
+            'id_divisi' => 'required|exists:divisi,id_divisi',
+        ]);
+
+        $jabatan = Jabatan::findOrFail($id);
+        $jabatan->update($request->all());
+
+        return redirect()->route('jabatan.index')
+            ->with('success', 'Jabatan berhasil diupdate');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Jabatan $jabatan)
+    public function destroy($id)
     {
-        //
-    }
+        Jabatan::destroy($id);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Jabatan $jabatan)
-    {
-        //
+        return redirect()->route('jabatan.index')
+            ->with('success', 'Jabatan berhasil dihapus');
     }
 }

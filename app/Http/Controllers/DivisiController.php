@@ -7,59 +7,56 @@ use Illuminate\Http\Request;
 
 class DivisiController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $divisi = Divisi::orderBy('nama_divisi')->get();
+        return view('admin.divisi', compact('divisi'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
-    {
-        //
-    }
+{
+    return view('admin.divisi-create');
+}
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nama_divisi' => 'required|string|max:255',
+        ]);
+
+        Divisi::create([
+            'nama_divisi' => $request->nama_divisi,
+        ]);
+
+        return redirect()->route('divisi.index')
+            ->with('success', 'Divisi berhasil ditambahkan');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Divisi $divisi)
+    public function destroy($id)
     {
-        //
-    }
+        Divisi::where('id_divisi', $id)->delete();
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Divisi $divisi)
-    {
-        //
+        return redirect()->route('divisi.index')
+            ->with('success', 'Divisi berhasil dihapus');
     }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Divisi $divisi)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Divisi $divisi)
-    {
-        //
-    }
+public function edit($id)
+{
+    $divisi = Divisi::where('id_divisi', $id)->first();
+    return view('admin.divisi-edit', compact('divisi'));
 }
+
+public function update(Request $request, $id)
+{
+    $request->validate([
+        'nama_divisi' => 'required|string|max:255',
+    ]);
+
+    Divisi::where('id_divisi', $id)->update([
+        'nama_divisi' => $request->nama_divisi,
+    ]);
+
+    return redirect()->route('divisi.index')
+        ->with('success', 'Divisi berhasil diupdate');
+}
+}
+

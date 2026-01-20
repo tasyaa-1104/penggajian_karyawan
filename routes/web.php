@@ -6,6 +6,8 @@ use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\PotonganController;
 use App\Http\Controllers\slip_gajiController;
 use App\Http\Controllers\TunjanganController;
+use App\Http\Controllers\DivisiController;
+use App\Http\Controllers\JabatanController;
 
 Route::get('/', function () {
     return view('admin.template');
@@ -80,3 +82,30 @@ Route::put('/slip-gaji/update/{id}', [slip_gajiController::class, 'update'])->na
 
 Route::delete('/slip-gaji/delete/{id}', [slip_gajiController::class, 'destroy'])->name('slipgaji.destroy');
 
+
+
+
+
+
+Route::prefix('admin')->group(function () {
+    Route::get('/divisi', [DivisiController::class, 'index'])->name('divisi.index');
+    Route::get('/divisi/create', [DivisiController::class, 'create'])->name('divisi.create');
+    Route::post('/divisi', [DivisiController::class, 'store'])->name('divisi.store');
+
+    // Tambahkan ini:
+    Route::get('/divisi/{id}/edit', [DivisiController::class, 'edit'])->name('divisi.edit');
+    Route::put('/divisi/{id}', [DivisiController::class, 'update'])->name('divisi.update');
+
+    Route::delete('/divisi/{id}', [DivisiController::class, 'destroy'])
+        ->whereNumber('id')
+        ->name('divisi.destroy');
+});
+
+Route::prefix('admin')->group(function () {
+    Route::get('/jabatan', [JabatanController::class, 'index'])->name('jabatan.index');
+    Route::get('/jabatan/create', [JabatanController::class, 'create'])->name('jabatan.create');
+    Route::post('/jabatan', [JabatanController::class, 'store'])->name('jabatan.store');
+    Route::get('/jabatan/{id}/edit', [JabatanController::class, 'edit'])->name('jabatan.edit');
+    Route::put('/jabatan/{id}', [JabatanController::class, 'update'])->name('jabatan.update');
+    Route::delete('/jabatan/{id}', [JabatanController::class, 'destroy'])->name('jabatan.destroy');
+});
