@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Divisi;
+use App\Models\Jabatan;
 use App\Models\Karyawan;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class KaryawanController extends Controller
@@ -23,7 +26,11 @@ class KaryawanController extends Controller
     public function create()
     {
         //
-        return view('admin.karyawan-create');
+        $divisi  = Divisi::all();
+        $jabatan = Jabatan::all();
+        $users   = User::all(); // karena ada id_user
+
+        return view('admin.karyawan-create', compact('divisi', 'jabatan', 'users'));
     }
 
     /**
