@@ -9,7 +9,7 @@
     </a>
 
     <table class="table table-bordered">
-        <thead class="table-dark">
+        <thead>
             <tr>
                 <th>no</th>
                 <th>nik</th>

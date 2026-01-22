@@ -15,7 +15,7 @@
     @endif
 
     <table class="table table-bordered table-striped">
-        <thead class="table-dark">
+        <thead>
             <tr>
                 <th>no</th>
                 <th>nama karyawan</th>

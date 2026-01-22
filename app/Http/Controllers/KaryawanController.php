@@ -44,7 +44,7 @@ class KaryawanController extends Controller
             'nama_karyawan' => 'required',
             'id_divisi' => 'required|exists:divisi,id_divisi',
             'id_jabatan' => 'required|exists:jabatan,id_jabatan',
-            'id_user' => 'required|exists:users,id',
+            // 'id_user' => 'required|exists:users,id',
             'status_karyawan' => 'required|in:aktif,non-aktif'
         ]);
         Karyawan::create($request->all());
@@ -80,7 +80,7 @@ class KaryawanController extends Controller
             'nama_karyawan' => 'required',
             'id_divisi' => 'required|exists:divisi,id_divisi',
             'id_jabatan' => 'required|exists:jabatan,id_jabatan',
-            'id_user' => 'required|exists:users,id',
+            // 'id_user' => 'required|exists:users,id',
             'status_karyawan' => 'required|in:aktif,non-aktif'
         ]);
         $karyawan->update($request->all());
