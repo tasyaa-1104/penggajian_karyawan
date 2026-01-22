@@ -241,18 +241,18 @@
             </li>
             <li>
                 <li>
-    <li>
+    {{-- <li>
     <a href="{{ route('jabatan.index') }}"
        class="nav-link {{ request()->routeIs('jabatan.*') ? 'active' : '' }}">
         <i class="fa-solid fa-circle-info"></i> Jabatan
     </a>
-</li>
+</li> --}}
 
-    <a href="{{ route('divisi.index') }}"
+    {{-- <a href="{{ route('divisi.index') }}"
        class="nav-link {{ request()->routeIs('divisi.*') ? 'active' : '' }}">
         <i class="fa-solid fa-image"></i> Divisi
     </a>
-</li>
+</li> --}}
 
             {{-- <li>
                 <a href="{{ route('admin.gallery') }}"
