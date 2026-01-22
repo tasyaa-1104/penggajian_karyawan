@@ -195,6 +195,57 @@
         <li>
             <a href="#" class="nav-link">
                 <i class="fa-solid fa-right-from-bracket"></i> Logout
+            <a href="" class="nav-link">
+                <i class="fa-solid fa-user-tie"></i>
+                Jabatan
+            </a>
+        </li>
+
+        {{-- Divisi --}}
+        <li>
+            <a href="#" class="nav-link">
+                <i class="fa-solid fa-sitemap"></i>
+                Divisi
+            </a>
+        </li>
+
+        {{-- Slip Gaji --}}
+        <li>
+            <a href="{{route('slipgaji.index')}}" class="nav-link">
+                <i class="fa-solid fa-file-invoice-dollar"></i>
+                Slip Gaji
+            </a>
+        </li>
+
+        {{-- Potongan Gaji --}}
+        <li>
+            <a href="{{route('potongan.index')}}" class="nav-link">
+                <i class="fa-solid fa-minus-circle"></i>
+                Potongan Gaji
+            </a>
+        </li>
+
+        {{-- Gaji --}}
+        <li>
+            <a href="{{route('gaji.index')}}" class="nav-link">
+                <i class="fa-solid fa-wallet"></i>
+                Gaji
+            </a>
+        </li>
+
+        {{-- Tunjangan --}}
+        <li>
+            <a href="{{route('tunjangan.index')}}" class="nav-link">
+                <i class="fa-solid fa-hand-holding-dollar"></i>
+                Tunjangan
+            </a>
+        </li>
+
+        {{-- Logout --}}
+        <li>
+            <a href="#" class="nav-link">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                Logout
             </a>
         </li>
 
