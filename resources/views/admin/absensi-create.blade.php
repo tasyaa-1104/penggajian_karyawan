@@ -6,7 +6,7 @@
 
     <div class="card">
         <div class="card-body">
-            <form action="{{ route('absensi.store') }}" method="POST">
+           <form action="{{ route('absensi.store') }}" method="POST">
                 @csrf
 
                 <div class="mb-2">
@@ -14,7 +14,7 @@
                     <select name="id_karyawan" class="form-control" required>
                         <option value="">-- Pilih Karyawan --</option>
                         @foreach($karyawan as $k)
-                            <option value="{{ $k->id_karyawan }}">{{ $k->nama }}</option>
+                            <option value="{{ $k->id_karyawan }}">{{ $k->nama_karyawan }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -29,7 +29,6 @@
                     <select name="status_kehadiran" class="form-control" required>
                         <option value="hadir">Hadir</option>
                         <option value="izin">Izin</option>
-                        <option value="sakit">Sakit</option>
                         <option value="alpa">Alpa</option>
                     </select>
                 </div>

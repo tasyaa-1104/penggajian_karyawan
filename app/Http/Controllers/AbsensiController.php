@@ -26,24 +26,24 @@ class AbsensiController extends Controller
     }
 
     // SIMPAN DATA (TAMBAH)
-    public function store(Request $request)
-    {
-        $request->validate([
-            'id_karyawan' => 'required',
-            'tanggal' => 'required|date',
-            'status_kehadiran' => 'required',
-            'keterangan' => 'nullable'
-        ]);
+public function store(Request $request)
+{
+    $request->validate([
+        'id_karyawan' => 'required',
+        'tanggal' => 'required|date',
+        'status_kehadiran' => 'required',
+        'keterangan' => 'nullable'
+    ]);
 
-        Absensi::create([
-            'id_karyawan' => $request->id_karyawan,
-            'tanggal' => $request->tanggal,
-            'status_kehadiran' => $request->status_kehadiran,
-            'keterangan' => $request->keterangan
-        ]);
+    Absensi::create([
+        'id_karyawan' => $request->id_karyawan,
+        'tanggal' => $request->tanggal,
+        'status_kehadiran' => $request->status_kehadiran,
+        'keterangan' => $request->keterangan
+    ]);
 
-        return redirect()->back()->with('success', 'Absensi berhasil ditambahkan');
-    }
+    return redirect()->route('absensi')->with('success', 'Absensi berhasil ditambahkan');
+}
 
     // FORM EDIT
     public function edit($id)
@@ -72,14 +72,17 @@ class AbsensiController extends Controller
             'keterangan' => $request->keterangan
         ]);
 
-        return redirect()->route('absensi.index')
+        return redirect()->route('absensi')
                          ->with('success', 'Absensi berhasil diupdate');
     }
 
     // HAPUS DATA
-    public function destroy($id)
-    {
-        Absensi::findOrFail($id)->delete();
-        return redirect()->back()->with('success', 'Absensi berhasil dihapus');
-    }
+public function destroy($id)
+{
+    Absensi::where('id_absensi', $id)->delete();
+
+    return redirect()->route('absensi')
+        ->with('success', 'Data absensi berhasil dihapus');
+}
+
 }

@@ -30,7 +30,7 @@
             @forelse($rekap as $r)
             <tr>
                 <td>{{ $loop->iteration }}</td>
-                <td>{{ $r->karyawan->nama ?? '-' }}</td>
+                <td>{{ $r->karyawan->nama_karyawan ?? '-' }}</td>
                 <td>{{ $r->bulan }}</td>
                 <td>{{ $r->jumlah_hadir }}</td>
                 <td>{{ $r->jumlah_izin }}</td>

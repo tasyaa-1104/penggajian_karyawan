@@ -30,14 +30,19 @@ Route::get('/absensi/edit/{id}', [AbsensiController::class, 'edit'])->name('abse
 Route::post('/absensi/update/{id}', [AbsensiController::class, 'update'])->name('absensi.update');
 
 // hapus (POST)
-Route::post('/absensi/delete/{id}', [AbsensiController::class, 'destroy'])->name('absensi.delete');
+Route::delete('/absensi/delete/{id}', [AbsensiController::class, 'destroy'])
+    ->name('absensi.destroy');
 // tampil rekap
 Route::get('/rekap-absensi', [rekap_absensiController::class, 'index'])
     ->name('rekap-absensi.index');
 
+// proses generate rekap (POST)
+Route::post('/rekap-absensi', [rekap_absensiController::class, 'generate'])
+    ->name('rekap-absensi.generate');
 // form generate
 Route::get('/rekap-absensi/create', [rekap_absensiController::class, 'create'])
     ->name('rekap-absensi.create');
+
 
 // simpan / generate
 Route::post('/rekap-absensi/store', [rekap_absensiController::class, 'store'])->name('rekap-absensi.store');

@@ -28,17 +28,23 @@
             @foreach($absensi as $a)
             <tr>
                 <td>{{ $loop->iteration }}</td>
-                <td>{{ $a->karyawan->nama }}</td>
+                <td>{{ $a->karyawan->nama_karyawan ?? '-' }}</td>
                 <td>{{ $a->tanggal }}</td>
                 <td>{{ ucfirst($a->status_kehadiran) }}</td>
                 <td>{{ $a->keterangan }}</td>
                 <td>
-                    <form action="{{ route('absensi.delete', $a->id_absensi) }}" method="POST" style="display:inline">
-                        @csrf
-                        <button class="btn btn-danger btn-sm"
-                            onclick="return confirm('Hapus data?')">Hapus</button>
-                    </form>
-                </td>
+                <form action="{{ route('absensi.destroy', $a->id_absensi) }}"
+                    method="POST"
+                    style="display:inline">
+                    @csrf
+                    @method('DELETE')
+                    <button class="btn btn-danger btn-sm"
+                        onclick="return confirm('Hapus data?')">
+                        Hapus
+                    </button>
+                </form>
+            </td>
+
             </tr>
             @endforeach
         </tbody>
