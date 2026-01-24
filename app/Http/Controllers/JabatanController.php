@@ -8,15 +8,27 @@ use Illuminate\Http\Request;
 
 class JabatanController extends Controller
 {
-   public function index()
-{
-    $jabatan = Jabatan::with('divisi')->orderBy('nama_jabatan')->get();
-    return view('admin.jabatan', compact('jabatan'));
-}
+    public function index(Request $request)
+    {
+        $search = $request->search;
+
+        $jabatan = Jabatan::with('divisi')
+            ->when($search, function ($query, $search) {
+                $query->where('nama_jabatan', 'like', "%{$search}%")
+                      ->orWhereHas('divisi', function ($q) use ($search) {
+                          $q->where('nama_divisi', 'like', "%{$search}%");
+                      });
+            })
+            ->orderBy('nama_jabatan')
+            ->get();
+
+        return view('admin.jabatan', compact('jabatan', 'search'));
+    }
+
     public function create()
     {
         $divisi = Divisi::orderBy('nama_divisi')->get();
-       return view('admin.jabatan-create', compact('divisi'));
+        return view('admin.jabatan-create', compact('divisi'));
     }
 
     public function store(Request $request)
@@ -48,8 +60,7 @@ class JabatanController extends Controller
             'id_divisi' => 'required|exists:divisi,id_divisi',
         ]);
 
-        $jabatan = Jabatan::findOrFail($id);
-        $jabatan->update($request->all());
+        Jabatan::findOrFail($id)->update($request->all());
 
         return redirect()->route('jabatan.index')
             ->with('success', 'Jabatan berhasil diupdate');

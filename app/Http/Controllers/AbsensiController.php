@@ -8,53 +8,64 @@ use App\Models\Karyawan;
 
 class AbsensiController extends Controller
 {
-    // TAMPILKAN DATA
-    public function index()
+    // TAMPILKAN DATA + SEARCH
+    public function index(Request $request)
     {
+        $search = $request->search;
+
+        $absensi = Absensi::with('karyawan')
+            ->when($search, function ($query, $search) {
+                $query->whereHas('karyawan', function ($q) use ($search) {
+                        $q->where('nama_karyawan', 'like', "%{$search}%");
+                    })
+                    ->orWhere('tanggal', 'like', "%{$search}%")
+                    ->orWhere('status_kehadiran', 'like', "%{$search}%");
+            })
+            ->orderBy('tanggal', 'desc')
+            ->get();
+
         return view('admin.absensi', [
-            'karyawan' => Karyawan::all(),
-            'absensi'  => Absensi::with('karyawan')
-                            ->orderBy('tanggal', 'desc')
-                            ->get()
+            'absensi' => $absensi,
+            'search'  => $search
         ]);
     }
-     public function create()
+
+    public function create()
     {
         return view('admin.absensi-create', [
             'karyawan' => Karyawan::all()
         ]);
     }
 
-    // SIMPAN DATA (TAMBAH)
-public function store(Request $request)
-{
-    $request->validate([
-        'id_karyawan' => 'required',
-        'tanggal' => 'required|date',
-        'status_kehadiran' => 'required',
-        'keterangan' => 'nullable'
-    ]);
+    // SIMPAN DATA
+    public function store(Request $request)
+    {
+        $request->validate([
+            'id_karyawan' => 'required',
+            'tanggal' => 'required|date',
+            'status_kehadiran' => 'required',
+            'keterangan' => 'nullable'
+        ]);
 
-    Absensi::create([
-        'id_karyawan' => $request->id_karyawan,
-        'tanggal' => $request->tanggal,
-        'status_kehadiran' => $request->status_kehadiran,
-        'keterangan' => $request->keterangan
-    ]);
+        Absensi::create([
+            'id_karyawan' => $request->id_karyawan,
+            'tanggal' => $request->tanggal,
+            'status_kehadiran' => $request->status_kehadiran,
+            'keterangan' => $request->keterangan
+        ]);
 
-    return redirect()->route('absensi')->with('success', 'Absensi berhasil ditambahkan');
-}
+        return redirect()->route('absensi')
+            ->with('success', 'Absensi berhasil ditambahkan');
+    }
 
-    // FORM EDIT
     public function edit($id)
     {
-        return view('admin.absensi.edit', [
+        return view('admin.absensi-edit', [
             'absensi'  => Absensi::findOrFail($id),
             'karyawan' => Karyawan::all()
         ]);
     }
 
-    // UPDATE DATA
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -64,8 +75,7 @@ public function store(Request $request)
             'keterangan' => 'nullable'
         ]);
 
-        $absensi = Absensi::findOrFail($id);
-        $absensi->update([
+        Absensi::findOrFail($id)->update([
             'id_karyawan' => $request->id_karyawan,
             'tanggal' => $request->tanggal,
             'status_kehadiran' => $request->status_kehadiran,
@@ -73,16 +83,14 @@ public function store(Request $request)
         ]);
 
         return redirect()->route('absensi')
-                         ->with('success', 'Absensi berhasil diupdate');
+            ->with('success', 'Absensi berhasil diupdate');
     }
 
-    // HAPUS DATA
-public function destroy($id)
-{
-    Absensi::where('id_absensi', $id)->delete();
+    public function destroy($id)
+    {
+        Absensi::where('id_absensi', $id)->delete();
 
-    return redirect()->route('absensi')
-        ->with('success', 'Data absensi berhasil dihapus');
-}
-
+        return redirect()->route('absensi')
+            ->with('success', 'Data absensi berhasil dihapus');
+    }
 }

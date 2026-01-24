@@ -7,6 +7,28 @@
     + Tambah Divisi
 </a>
 
+{{-- SEARCH --}}
+<form action="{{ route('divisi.index') }}" method="GET" class="mb-3">
+    <div class="row">
+        <div class="col-md-4">
+            <input type="text"
+                   name="search"
+                   class="form-control"
+                   placeholder="Cari nama divisi..."
+                   value="{{ request('search') }}">
+        </div>
+        <div class="col-md-2">
+            <button class="btn btn-secondary" type="submit">Cari</button>
+
+            @if(request('search'))
+                <a href="{{ route('divisi.index') }}" class="btn btn-outline-danger">
+                    Reset
+                </a>
+            @endif
+        </div>
+    </div>
+</form>
+
 @if(session('success'))
     <div class="alert alert-success">
         {{ session('success') }}
@@ -19,6 +41,14 @@
         <th>Nama Divisi</th>
         <th>Aksi</th>
     </tr>
+
+    @if($divisi->count() == 0)
+        <tr>
+            <td colspan="3" class="text-center">
+                Data divisi tidak ditemukan
+            </td>
+        </tr>
+    @endif
 
     @foreach($divisi as $d)
     <tr>
