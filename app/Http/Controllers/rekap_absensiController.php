@@ -10,29 +10,17 @@ use Carbon\Carbon;
 
 class rekap_absensiController extends Controller
 {
-    /**
-     * TAMPIL DATA REKAP ABSENSI
+       /**
+     * TAMPIL DATA REKAP
      */
-   public function index()
+    public function index()
     {
-            $rekap = rekap_absensi::with('karyawan')->get();
-
-    return view('admin.rekap-absensi', compact('rekap'));
-
-    }
-
-    public function generate(Request $request)
-    {
-        $bulan = $request->bulan; // format: 2026-01
-
-        // sementara test dulu
-        return redirect()
-            ->route('rekap-absensi.index')
-            ->with('success', 'Rekap bulan '.$bulan.' berhasil digenerate');
+        $rekap = rekap_absensi::with('karyawan')->orderBy('bulan', 'desc')->get();
+        return view('admin.rekap-absensi', compact('rekap'));
     }
 
     /**
-     * FORM GENERATE REKAP
+     * FORM GENERATE
      */
     public function create()
     {
@@ -40,92 +28,92 @@ class rekap_absensiController extends Controller
     }
 
     /**
-     * PROSES GENERATE REKAP ABSENSI
+     * PROSES GENERATE REKAP BULANAN
      */
-public function store(Request $request)
+public function generate(Request $request)
 {
     $request->validate([
-        'id_karyawan' => 'required',
-        'bulan' => 'required', // format: 2026-01
+        'bulan' => 'required'
     ]);
 
-    $bulan = $request->bulan;
+    $bulan = $request->bulan; // contoh: 2026-01
 
-    $hadir = Absensi::where('id_karyawan', $request->id_karyawan)
-        ->whereMonth('tanggal', date('m', strtotime($bulan)))
-        ->whereYear('tanggal', date('Y', strtotime($bulan)))
-        ->where('status_kehadiran', 'Hadir')
-        ->count();
+    $awalBulan  = Carbon::createFromFormat('Y-m', $bulan)->startOfMonth();
+    $akhirBulan = Carbon::createFromFormat('Y-m', $bulan)->endOfMonth();
 
-    $izin = Absensi::where('id_karyawan', $request->id_karyawan)
-        ->whereMonth('tanggal', date('m', strtotime($bulan)))
-        ->whereYear('tanggal', date('Y', strtotime($bulan)))
-        ->where('status_kehadiran', 'Izin')
-        ->count();
+    $karyawan = Karyawan::all();
 
-    $alpha = Absensi::where('id_karyawan', $request->id_karyawan)
-        ->whereMonth('tanggal', date('m', strtotime($bulan)))
-        ->whereYear('tanggal', date('Y', strtotime($bulan)))
-        ->where('status_kehadiran', 'Alpha')
-        ->count();
+    foreach ($karyawan as $k) {
 
-    rekap_absensi::create([
-        'id_karyawan' => $request->id_karyawan,
-        'bulan' => $bulan,
-        'jumlah_hadir' => $hadir,
-        'jumlah_izin' => $izin,
-        'jumlah_alpha' => $alpha,
-    ]);
+        $hadir = Absensi::where('id_karyawan', $k->id_karyawan)
+            ->whereBetween('tanggal', [$awalBulan, $akhirBulan])
+            ->where('status_kehadiran', 'Hadir')
+            ->count();
 
-    return redirect()->route('rekap-absensi')
-        ->with('success', 'Rekap absensi berhasil digenerate');
+        $izin = Absensi::where('id_karyawan', $k->id_karyawan)
+            ->whereBetween('tanggal', [$awalBulan, $akhirBulan])
+            ->where('status_kehadiran', 'Izin')
+            ->count();
+
+        $alpha = Absensi::where('id_karyawan', $k->id_karyawan)
+            ->whereBetween('tanggal', [$awalBulan, $akhirBulan])
+            ->where('status_kehadiran', 'Alpha')
+            ->count();
+
+        rekap_absensi::updateOrCreate(
+            [
+                'id_karyawan' => $k->id_karyawan,
+                'bulan' => $bulan
+            ],
+            [
+                'jumlah_hadir' => $hadir,
+                'jumlah_izin' => $izin,
+                'jumlah_alpha' => $alpha
+            ]
+        );
+    }
+
+    return redirect()
+        ->route('rekap-absensi.index')
+        ->with('success', 'Rekap absensi bulan '.$bulan.' berhasil digenerate');
 }
-
-
     /**
-     * FORM EDIT REKAP
+     * EDIT MANUAL (OPSIONAL)
      */
-    public function edit(rekap_absensi $rekap_absensi)
+    public function edit(rekap_absensi $rekapAbsensi)
     {
-        return view('admin.rekap-absen.edit', [
-            'rekap' => $rekap_absensi,
+        return view('admin.rekap-absensi-edit', [
+            'rekap' => $rekapAbsensi,
             'karyawan' => Karyawan::all()
         ]);
     }
 
     /**
-     * UPDATE DATA REKAP
+     * UPDATE MANUAL
      */
-    public function update(Request $request, rekap_absensi $rekap_absensi)
+    public function update(Request $request, rekap_absensi $rekapAbsensi)
     {
         $request->validate([
-            'id_karyawan'  => 'required',
-            'bulan'        => 'required',
             'jumlah_hadir' => 'required|integer',
-            'jumlah_izin'  => 'required|integer',
+            'jumlah_izin' => 'required|integer',
             'jumlah_alpha' => 'required|integer',
         ]);
 
-        $rekap_absensi->update([
-            'id_karyawan'  => $request->id_karyawan,
-            'bulan'        => $request->bulan,
-            'jumlah_hadir' => $request->jumlah_hadir,
-            'jumlah_izin'  => $request->jumlah_izin,
-            'jumlah_alpha' => $request->jumlah_alpha,
-        ]);
+        $rekapAbsensi->update($request->all());
 
         return redirect()->route('rekap-absensi.index')
             ->with('success', 'Rekap absensi berhasil diupdate');
     }
 
     /**
-     * HAPUS DATA REKAP
+     * HAPUS REKAP
      */
-    public function destroy(rekap_absensi $rekap_absensi)
+    public function destroy(rekap_absensi $rekapAbsensi)
     {
-        $rekap_absensi->delete();
+        $rekapAbsensi->delete();
 
         return redirect()->route('rekap-absensi.index')
             ->with('success', 'Rekap absensi berhasil dihapus');
     }
+
 }

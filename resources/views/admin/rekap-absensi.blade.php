@@ -36,10 +36,10 @@
                 <td>{{ $r->jumlah_izin }}</td>
                 <td>{{ $r->jumlah_alpha }}</td>
                 <td>
-                    <a href="{{ route('rekap-absensi.edit', $r->id_rekap) }}"
+                    {{-- <a href="{{ route('rekap-absensi.edit', $r->id_rekap) }}"
                        class="btn btn-warning btn-sm">
                         Edit
-                    </a>
+                    </a> --}}
 
                     <form action="{{ route('rekap-absensi.delete', $r->id_rekap) }}"
                           method="POST"
