@@ -16,6 +16,7 @@
                 <th>nama</th>
                 <th>divisi</th>
                 <th>jabatan</th>
+                <th>gaji pokok</th>
                 <th>status</th>
                 <th>aksi</th>
             </tr>
@@ -28,6 +29,7 @@
                 <td>{{ $k->nama_karyawan }}</td>
                 <td>{{ $k->divisi->nama_divisi }}</td>
                 <td>{{ $k->jabatan->nama_jabatan }}</td>
+                <td>{{ $k->gaji_pokok}}</td>
                 <td>{{ $k->status_karyawan }}</td>
                 <td>
                     <a href="{{ route('karyawan-edit',$k->id_karyawan) }}" class="btn btn-warning btn-sm">
