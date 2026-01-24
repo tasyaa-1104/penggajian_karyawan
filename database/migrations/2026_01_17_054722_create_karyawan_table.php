@@ -15,6 +15,7 @@ return new class extends Migration
 
             $table->unsignedBigInteger('id_divisi');
             $table->unsignedBigInteger('id_jabatan');
+            $table->decimal('gaji_pokok', 15, 2);
 
             // TETAP pakai id_user (tidak dikurangi)
             $table->unsignedBigInteger('id_user')->nullable();

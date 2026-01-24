@@ -14,6 +14,7 @@ class Karyawan extends Model
         'nama_karyawan',
         'id_divisi',
         'id_jabatan',
+        'gaji_pokok',
         'id_user',
         'status_karyawan'
     ];
