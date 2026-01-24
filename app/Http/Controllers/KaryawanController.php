@@ -63,39 +63,33 @@ class KaryawanController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Karyawan $karyawan)
+    public function edit($id)
     {
-        //
-        $karyawan = Karyawan::findOrFail($karyawan->id_karyawan);
+        $karyawan = Karyawan::findOrFail($id);
         return view('admin.karyawan-edit', compact('karyawan'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Karyawan $karyawan)
+    public function update(Request $request, $id)
     {
-        //
-        request()->validate([
-            'nik' => 'required|unique:karyawan,nik,' . $karyawan->id_karyawan . ',id_karyawan',
+        $karyawan = Karyawan::findOrFail($id);
+
+        $request->validate([
+            'nik' => 'required|unique:karyawan,nik,' . $id . ',id_karyawan',
             'nama_karyawan' => 'required',
-            'id_divisi' => 'required|exists:divisi,id_divisi',
-            'id_jabatan' => 'required|exists:jabatan,id_jabatan',
+            'id_divisi' => 'required',
+            'id_jabatan' => 'required',
             'gaji_pokok' => 'required|numeric',
-            // 'id_user' => 'required|exists:users,id',
-            'status_karyawan' => 'required|in:aktif,non-aktif'
+            'status_karyawan' => 'required'
         ]);
+
         $karyawan->update($request->all());
-        return redirect()->route('karyawan')->with('success', 'Karyawan updated successfully.');
+
+        return redirect()->route('karyawan')->with('success','Data berhasil diupdate');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Karyawan $karyawan)
+    public function destroy($id)
     {
-        //
-        $karyawan->delete();
-        return redirect()->route('karyawan')->with('success', 'Karyawan deleted successfully.');
+        Karyawan::findOrFail($id)->delete();
+        return redirect()->route('karyawan')->with('success','Data berhasil dihapus');
     }
 }

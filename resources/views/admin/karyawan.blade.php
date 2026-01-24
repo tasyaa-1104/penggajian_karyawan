@@ -4,6 +4,16 @@
 <div class="container mt-4">
     <h4><i class="fa fa-users"></i> data karyawan</h4>
 
+    @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
+
     <a href="{{ route('karyawan-create') }}" class="btn btn-primary mb-3">
         <i class="fa fa-plus"></i> tambah
     </a>
