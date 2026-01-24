@@ -53,7 +53,7 @@
                 Update
             </button>
 
-            <a href="{{ route('absensi.index') }}" class="btn btn-secondary">
+            <a href="{{ route('absensi') }}" class="btn btn-secondary">
                 Kembali
             </a>
         </div>

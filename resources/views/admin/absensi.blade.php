@@ -63,6 +63,10 @@
                 <td>{{ ucfirst($a->status_kehadiran) }}</td>
                 <td>{{ $a->keterangan }}</td>
                 <td>
+                    <a href="{{ route('absensi.edit', $a->id_absensi) }}"
+                       class="btn btn-warning btn-sm">
+                        Edit
+                    </a>
                     <form action="{{ route('absensi.destroy', $a->id_absensi) }}"
                           method="POST"
                           style="display:inline">
