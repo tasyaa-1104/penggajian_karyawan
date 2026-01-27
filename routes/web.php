@@ -13,9 +13,16 @@ use App\Http\Controllers\UserController;
 
 
 
-Route::get('/', function () {
-    return view('admin.template');
-});
+// Route::get('/', function () {
+// //     return view('admin.template');
+// // });
+use App\Http\Controllers\HomeController;
+
+
+
+Route::get('/', [HomeController::class, 'index']);
+
+
 
 Route::get('/admin/dashboard', function () {return view('admin.dashboard');})->name('admin.dashboard');
 Route::get('/admin/dashboard', [UserController::class, 'index']) ->name('admin.dashboard');
@@ -158,6 +165,6 @@ Route::put('/gaji/update/{id}', [GajiController::class, 'update'])->name('gaji.u
 // DELETE
 Route::delete('/gaji/delete/{id}', [GajiController::class, 'destroy'])->name('gaji.destroy');
 
-Route::get('/', function () {return view('landing');});
+
 
 
