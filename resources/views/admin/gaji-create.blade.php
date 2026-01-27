@@ -2,45 +2,49 @@
 
 @section('content')
 <div class="container mt-4">
-    <h4>tambah gaji</h4>
+    <h4>Hitung Gaji Karyawan</h4>
 
-    <form action="{{ route('gaji.store') }}" method="post">
+    @if(session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
+
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    <form action="{{ route('gaji.store') }}" method="POST">
         @csrf
 
         <div class="mb-3">
-            <label>karyawan</label>
+            <label>Karyawan</label>
             <select name="id_karyawan" class="form-control" required>
                 <option value="">-- pilih karyawan --</option>
-                @foreach ($karyawan as $item)
-                    <option value="{{ $item->id_karyawan }}">
-                        {{ $item->nama_karyawan }}
+                @foreach($karyawan as $k)
+                    <option value="{{ $k->id_karyawan }}">
+                        {{ $k->nama_karyawan }} - {{ $k->jabatan->nama_jabatan }}
                     </option>
                 @endforeach
             </select>
         </div>
 
         <div class="mb-3">
-            <label>bulan</label>
+            <label>Bulan</label>
             <input type="month" name="bulan" class="form-control" required>
         </div>
 
-        <div class="mb-3">
-            <label>total tunjangan</label>
-            <input type="number" name="total_tunjangan" class="form-control" required>
-        </div>
+        <button class="btn btn-success">
+            <i class="fa fa-calculator"></i> Hitung Gaji
+        </button>
 
-        <div class="mb-3">
-            <label>total potongan</label>
-            <input type="number" name="total_potongan" class="form-control" required>
-        </div>
-
-        <div class="mb-3">
-            <label>gaji bersih</label>
-            <input type="number" name="gaji_bersih" class="form-control" required>
-        </div>
-
-        <button class="btn btn-success">simpan</button>
-        <a href="{{ route('gaji.index') }}" class="btn btn-secondary">kembali</a>
+        <a href="{{ route('gaji.index') }}" class="btn btn-secondary">
+            Kembali
+        </a>
     </form>
 </div>
 @endsection

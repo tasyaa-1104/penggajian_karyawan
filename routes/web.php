@@ -95,15 +95,15 @@ Route::delete('/potongan/delete/{id}', [PotonganController::class, 'destroy'])->
 
 
 //slip gaji
-Route::get('/slip-gaji', [slip_gajiController::class, 'index'])->name('slipgaji.index');
+Route::get('/slip-gaji', [slip_gajiController::class, 'index'])->name('slip-gaji.index');
 
-Route::get('/slip-gaji/create', [slip_gajiController::class, 'create'])->name('slipgaji.create');
-Route::post('/slip-gaji/store', [slip_gajiController::class, 'store'])->name('slipgaji.store');
+// Route::get('/slip-gaji/create', [slip_gajiController::class, 'create'])->name('slipgaji.create');
+Route::post('/slip-gaji/{id_gaji}', [slip_gajiController::class, 'store'])->name('slip-gaji.store');
+Route::post('/slip-gaji/{id}', [slip_gajiController::class, 'show'])->name('slip-gaji.show');
+// Route::get('/slip-gaji/edit/{id}', [slip_gajiController::class, 'edit'])->name('slipgaji.edit');
+// Route::put('/slip-gaji/update/{id}', [slip_gajiController::class, 'update'])->name('slipgaji.update');
 
-Route::get('/slip-gaji/edit/{id}', [slip_gajiController::class, 'edit'])->name('slipgaji.edit');
-Route::put('/slip-gaji/update/{id}', [slip_gajiController::class, 'update'])->name('slipgaji.update');
-
-Route::delete('/slip-gaji/delete/{id}', [slip_gajiController::class, 'destroy'])->name('slipgaji.destroy');
+// Route::delete('/slip-gaji/delete/{id}', [slip_gajiController::class, 'destroy'])->name('slipgaji.destroy');
 
 
 

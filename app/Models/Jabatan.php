@@ -22,4 +22,9 @@ class Jabatan extends Model
     {
         return $this->belongsTo(Divisi::class, 'id_divisi', 'id_divisi');
     }
+
+     public function karyawan()
+    {
+        return $this->hasMany(Karyawan::class, 'id_jabatan');
+    }
 }

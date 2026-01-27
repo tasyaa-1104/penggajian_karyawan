@@ -21,7 +21,7 @@ class TunjanganController extends Controller
     public function store(Request $request)
     {
         Tunjangan::create($request->all());
-        return redirect()->route('tunjangan.index');
+        return redirect()->route('tunjangan.index')->with('success','Data Berhasil Ditambahkan');
     }
 
     public function edit($id)
@@ -33,12 +33,12 @@ class TunjanganController extends Controller
     public function update(Request $request, $id)
     {
         Tunjangan::findOrFail($id)->update($request->all());
-        return redirect()->route('admin.tunjangan');
+        return redirect()->route('tunjangan.index')->with('success','Data Berhasil Di Update');
     }
 
     public function destroy($id)
     {
         Tunjangan::destroy($id);
-        return redirect()->route('tunjangan.index');
+        return redirect()->route('tunjangan.index')->with('success','Data Berhasil Di Hapus');
     }
 }

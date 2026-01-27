@@ -25,4 +25,10 @@ class Gaji extends Model
     {
         return $this->belongsTo(Karyawan::class, 'id_karyawan');
     }
+
+        public function slipGaji()
+    {
+        return $this->hasOne(slip_gaji::class, 'id_gaji');
+    }
+
 }

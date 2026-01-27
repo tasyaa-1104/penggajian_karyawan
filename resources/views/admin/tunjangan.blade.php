@@ -4,6 +4,16 @@
 <div class="container mt-4">
 <h4>data tunjangan</h4>
 
+   @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
+
 <a href="{{ route('tunjangan.create') }}" class="btn btn-primary mb-3">tambah</a>
 
 <table class="table table-bordered">

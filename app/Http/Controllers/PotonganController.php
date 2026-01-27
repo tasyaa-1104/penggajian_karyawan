@@ -9,7 +9,7 @@ class PotonganController extends Controller
 {
     public function index()
     {
-        $potongan = Potongan::all();
+        $potongan = Potongan::orderBy('nama_potongan')->get();
         return view('admin.potongan', compact('potongan'));
     }
 
@@ -20,8 +20,15 @@ class PotonganController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate([
+            'nama_potongan' => 'required',
+            'nominal' => 'required|numeric|min:0'
+        ]);
+
         Potongan::create($request->all());
-        return redirect()->route('potongan.index');
+
+        return redirect()->route('potongan.index')
+            ->with('success', 'Potongan berhasil ditambahkan');
     }
 
     public function edit($id)
@@ -32,13 +39,22 @@ class PotonganController extends Controller
 
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'nama_potongan' => 'required',
+            'nominal' => 'required|numeric|min:0'
+        ]);
+
         Potongan::findOrFail($id)->update($request->all());
-        return redirect()->route('potongan.index');
+
+        return redirect()->route('potongan.index')
+            ->with('success', 'Potongan berhasil diupdate');
     }
 
     public function destroy($id)
     {
         Potongan::destroy($id);
-        return redirect()->route('potongan.index');
+
+        return redirect()->route('potongan.index')
+            ->with('success', 'Potongan berhasil dihapus');
     }
 }

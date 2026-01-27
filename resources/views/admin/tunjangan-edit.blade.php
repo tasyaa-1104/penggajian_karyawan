@@ -3,6 +3,16 @@
 @section('content')
 <div class="container mt-4">
     <h4>edit tunjangan</h4>
+    
+       @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
 
     <form action="{{ route('tunjangan.update', $tunjangan->id_tunjangan) }}" method="post">
         @csrf

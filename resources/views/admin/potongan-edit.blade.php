@@ -2,32 +2,33 @@
 
 @section('content')
 <div class="container mt-4">
-    <h4>edit potongan</h4>
+    <h4>Edit Potongan</h4>
 
-    <form action="{{ route('potongan.update', $potongan->id_potongan) }}" method="post">
+    <form action="{{ route('potongan.update', $potongan->id_potongan) }}"
+          method="POST">
         @csrf
-        @method('put')
+        @method('PUT')
 
         <div class="mb-3">
-            <label>nama potongan</label>
+            <label>Nama Potongan</label>
             <input type="text"
                    name="nama_potongan"
-                   class="form-control"
                    value="{{ $potongan->nama_potongan }}"
+                   class="form-control"
                    required>
         </div>
 
         <div class="mb-3">
-            <label>nominal</label>
+            <label>Nominal</label>
             <input type="number"
                    name="nominal"
-                   class="form-control"
                    value="{{ $potongan->nominal }}"
+                   class="form-control"
                    required>
         </div>
 
-        <button class="btn btn-primary">update</button>
-        <a href="{{ route('potongan.index') }}" class="btn btn-secondary">kembali</a>
+        <button class="btn btn-success">Update</button>
+        <a href="{{ route('potongan.index') }}" class="btn btn-secondary">Kembali</a>
     </form>
 </div>
 @endsection
