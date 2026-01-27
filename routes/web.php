@@ -26,6 +26,8 @@ Route::get('/', [HomeController::class, 'index']);
 
 Route::get('/admin/dashboard', function () {return view('admin.dashboard');})->name('admin.dashboard');
 Route::get('/admin/dashboard', [UserController::class, 'index']) ->name('admin.dashboard');
+Route::get('/login', function () {return view('login');})->name('login');
+Route::post('/login', function () {return redirect('/dashboard');})->name('login.proses');
 
 
 Route::get('/absensi', [AbsensiController::class, 'index'])->name('absensi');
