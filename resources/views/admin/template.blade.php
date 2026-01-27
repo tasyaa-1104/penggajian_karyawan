@@ -207,23 +207,23 @@
             </a>
         </li>
 
-        <li class="nav-item">
-            <a href="{{ route('slip-gaji.index') }}"
-               class="nav-link {{ request()->routeIs('slipgaji*') ? 'active' : '' }}">
-                <i class="fa-solid fa-file-invoice-dollar"></i>
-                <span>Slip Gaji</span>
-            </a>
-        </li>
+    <li class="nav-item">
+        <a href="{{ route('slip-gaji.index') }}"
+           class="nav-link {{ request()->routeIs('slipgaji*') ? 'active' : '' }}">
+            <i class="fa-solid fa-file-invoice-dollar"></i>
+            <span>slip gaji</span>
+        </a>
+    </li>
 
-        {{-- logout --}}
-        <li class="nav-item mt-3">
-            <a href="#" class="nav-link text-danger">
-                <i class="fa-solid fa-right-from-bracket"></i>
-                <span>Logout</span>
-            </a>
-        </li>
+    {{-- logout --}}
+    <li class="nav-item mt-3">
+        <a href="#" class="nav-link text-danger">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <span>logout</span>
+        </a>
+    </li>
 
-    </ul>
+</ul>
 </nav>
 
 {{-- MAIN --}}
