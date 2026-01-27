@@ -131,99 +131,99 @@
 
     <ul class="nav flex-column">
 
-    {{-- dashboard --}}
-    <li class="nav-item">
-        <a href="{{ route('admin.dashboard') }}"
-           class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-            <i class="fa-solid fa-chart-line"></i>
-            <span>dashboard</span>
-        </a>
-    </li>
+        {{-- dashboard --}}
+        <li class="nav-item">
+            <a href="{{ route('admin.dashboard') }}"
+               class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+                <i class="fa-solid fa-chart-line"></i>
+                <span>Dashboard</span>
+            </a>
+        </li>
 
-    {{-- master data --}}
-    <li class="nav-item">
-        <a href="{{ route('karyawan') }}"
-           class="nav-link {{ request()->routeIs('karyawan*') ? 'active' : '' }}">
-            <i class="fa-solid fa-users"></i>
-            <span>karyawan</span>
-        </a>
-    </li>
+        {{-- master data --}}
+        <li class="nav-item">
+            <a href="{{ route('karyawan') }}"
+               class="nav-link {{ request()->routeIs('karyawan*') ? 'active' : '' }}">
+                <i class="fa-solid fa-users"></i>
+                <span>Karyawan</span>
+            </a>
+        </li>
 
-    <li class="nav-item">
-        <a href="{{ route('divisi.index') }}"
-           class="nav-link {{ request()->routeIs('divisi*') ? 'active' : '' }}">
-            <i class="fa-solid fa-sitemap"></i>
-            <span>divisi</span>
-        </a>
-    </li>
+        <li class="nav-item">
+            <a href="{{ route('divisi.index') }}"
+               class="nav-link {{ request()->routeIs('divisi*') ? 'active' : '' }}">
+                <i class="fa-solid fa-sitemap"></i>
+                <span>Divisi</span>
+            </a>
+        </li>
 
-    <li class="nav-item">
-        <a href="{{ route('jabatan.index') }}"
-           class="nav-link {{ request()->routeIs('jabatan*') ? 'active' : '' }}">
-            <i class="fa-solid fa-user-tie"></i>
-            <span>jabatan</span>
-        </a>
-    </li>
+        <li class="nav-item">
+            <a href="{{ route('jabatan.index') }}"
+               class="nav-link {{ request()->routeIs('jabatan*') ? 'active' : '' }}">
+                <i class="fa-solid fa-user-tie"></i>
+                <span>Jabatan</span>
+            </a>
+        </li>
 
-    {{-- absensi --}}
-    <li class="nav-item">
-        <a href="{{ route('absensi') }}"
-           class="nav-link {{ request()->routeIs('absensi*') ? 'active' : '' }}">
-            <i class="fa-solid fa-calendar-check"></i>
-            <span>absensi</span>
-        </a>
-    </li>
+        {{-- absensi --}}
+        <li class="nav-item">
+            <a href="{{ route('absensi') }}"
+               class="nav-link {{ request()->routeIs('absensi*') ? 'active' : '' }}">
+                <i class="fa-solid fa-calendar-check"></i>
+                <span>Absensi</span>
+            </a>
+        </li>
 
-    <li class="nav-item">
-        <a href="{{ route('rekap-absensi.index') }}"
-           class="nav-link {{ request()->routeIs('rekap-absensi*') ? 'active' : '' }}">
-            <i class="fa-solid fa-clipboard-list"></i>
-            <span>rekap absensi</span>
-        </a>
-    </li>
+        <li class="nav-item">
+            <a href="{{ route('rekap-absensi.index') }}"
+               class="nav-link {{ request()->routeIs('rekap-absensi*') ? 'active' : '' }}">
+                <i class="fa-solid fa-clipboard-list"></i>
+                <span>Rekap Absensi</span>
+            </a>
+        </li>
 
-    {{-- penggajian --}}
-    <li class="nav-item">
-        <a href="{{ route('potongan.index') }}"
-           class="nav-link {{ request()->routeIs('potongan*') ? 'active' : '' }}">
-            <i class="fa-solid fa-minus-circle"></i>
-            <span>potongan gaji</span>
-        </a>
-    </li>
+        {{-- penggajian --}}
+        <li class="nav-item">
+            <a href="{{ route('potongan.index') }}"
+               class="nav-link {{ request()->routeIs('potongan*') ? 'active' : '' }}">
+                <i class="fa-solid fa-minus-circle"></i>
+                <span>Potongan Gaji</span>
+            </a>
+        </li>
 
-    <li class="nav-item">
-        <a href="{{ route('tunjangan.index') }}"
-           class="nav-link {{ request()->routeIs('tunjangan*') ? 'active' : '' }}">
-            <i class="fa-solid fa-hand-holding-dollar"></i>
-            <span>tunjangan</span>
-        </a>
-    </li>
+        <li class="nav-item">
+            <a href="{{ route('tunjangan.index') }}"
+               class="nav-link {{ request()->routeIs('tunjangan*') ? 'active' : '' }}">
+                <i class="fa-solid fa-hand-holding-dollar"></i>
+                <span>Tunjangan</span>
+            </a>
+        </li>
 
-    <li class="nav-item">
-        <a href="{{ route('gaji.index') }}"
-           class="nav-link {{ request()->routeIs('gaji*') ? 'active' : '' }}">
-            <i class="fa-solid fa-wallet"></i>
-            <span>gaji</span>
-        </a>
-    </li>
+        <li class="nav-item">
+            <a href="{{ route('gaji.index') }}"
+               class="nav-link {{ request()->routeIs('gaji*') ? 'active' : '' }}">
+                <i class="fa-solid fa-wallet"></i>
+                <span>Gaji</span>
+            </a>
+        </li>
 
-    <li class="nav-item">
-        <a href="{{ route('slip-gaji.index') }}"
-           class="nav-link {{ request()->routeIs('slipgaji*') ? 'active' : '' }}">
-            <i class="fa-solid fa-file-invoice-dollar"></i>
-            <span>slip gaji</span>
-        </a>
-    </li>
+        <li class="nav-item">
+            <a href="{{ route('slip-gaji.index') }}"
+               class="nav-link {{ request()->routeIs('slipgaji*') ? 'active' : '' }}">
+                <i class="fa-solid fa-file-invoice-dollar"></i>
+                <span>Slip Gaji</span>
+            </a>
+        </li>
 
-    {{-- logout --}}
-    <li class="nav-item mt-3">
-        <a href="#" class="nav-link text-danger">
-            <i class="fa-solid fa-right-from-bracket"></i>
-            <span>logout</span>
-        </a>
-    </li>
+        {{-- logout --}}
+        <li class="nav-item mt-3">
+            <a href="#" class="nav-link text-danger">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Logout</span>
+            </a>
+        </li>
 
-</ul>
+    </ul>
 </nav>
 
 {{-- MAIN --}}

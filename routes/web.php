@@ -9,12 +9,16 @@ use App\Http\Controllers\rekap_absensiController;
 use App\Http\Controllers\TunjanganController;
 use App\Http\Controllers\DivisiController;
 use App\Http\Controllers\JabatanController;
+use App\Http\Controllers\UserController;
+
+
 
 Route::get('/', function () {
     return view('admin.template');
 });
 
 Route::get('/admin/dashboard', function () {return view('admin.dashboard');})->name('admin.dashboard');
+Route::get('/admin/dashboard', [UserController::class, 'index']) ->name('admin.dashboard');
 
 
 Route::get('/absensi', [AbsensiController::class, 'index'])->name('absensi');
