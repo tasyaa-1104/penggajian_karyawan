@@ -42,52 +42,67 @@ class rekap_absensiController extends Controller
      * PROSES GENERATE REKAP BULANAN
      */
     public function generate(Request $request)
-    {
-        $request->validate([
-            'bulan' => 'required'
-        ]);
+{
+    $request->validate([
+        'bulan' => 'required'
+    ]);
 
-        $bulan = $request->bulan; // contoh: 2026-01
+    $bulan = $request->bulan; // contoh: 2026-01
 
-        $awalBulan  = Carbon::createFromFormat('Y-m', $bulan)->startOfMonth();
-        $akhirBulan = Carbon::createFromFormat('Y-m', $bulan)->endOfMonth();
+    $awalBulan  = Carbon::createFromFormat('Y-m', $bulan)->startOfMonth();
+    $akhirBulan = Carbon::createFromFormat('Y-m', $bulan)->endOfMonth();
 
-        $karyawan = Karyawan::all();
+    // 🔥 HITUNG TOTAL HARI KERJA DALAM BULAN
+    $totalHariKerja = 0;
+    $tanggal = $awalBulan->copy();
 
-        foreach ($karyawan as $k) {
+    while ($tanggal <= $akhirBulan) {
+        if (!$tanggal->isWeekend()) {
+            $totalHariKerja++;
+        }
+        $tanggal->addDay();
+    }
 
-            $hadir = Absensi::where('id_karyawan', $k->id_karyawan)
-                ->whereBetween('tanggal', [$awalBulan, $akhirBulan])
-                ->where('status_kehadiran', 'Hadir')
-                ->count();
+    $karyawan = Karyawan::all();
 
-            $izin = Absensi::where('id_karyawan', $k->id_karyawan)
-                ->whereBetween('tanggal', [$awalBulan, $akhirBulan])
-                ->where('status_kehadiran', 'Izin')
-                ->count();
+    foreach ($karyawan as $k) {
 
-            $alpha = Absensi::where('id_karyawan', $k->id_karyawan)
-                ->whereBetween('tanggal', [$awalBulan, $akhirBulan])
-                ->where('status_kehadiran', 'Alpha')
-                ->count();
+        $hadir = Absensi::where('id_karyawan', $k->id_karyawan)
+            ->whereBetween('tanggal', [$awalBulan, $akhirBulan])
+            ->where('status_kehadiran', 'Hadir')
+            ->count();
 
-            rekap_absensi::updateOrCreate(
-                [
-                    'id_karyawan' => $k->id_karyawan,
-                    'bulan' => $bulan
-                ],
-                [
-                    'jumlah_hadir' => $hadir,
-                    'jumlah_izin' => $izin,
-                    'jumlah_alpha' => $alpha
-                ]
-            );
+        $izin = Absensi::where('id_karyawan', $k->id_karyawan)
+            ->whereBetween('tanggal', [$awalBulan, $akhirBulan])
+            ->where('status_kehadiran', 'Izin')
+            ->count();
+
+        // 🔥 ALPHA OTOMATIS PER BULAN
+        $alpha = $totalHariKerja - ($hadir + $izin);
+
+        if ($alpha < 0) {
+            $alpha = 0;
         }
 
-        return redirect()
-            ->route('rekap-absensi.index')
-            ->with('success', 'Rekap absensi bulan '.$bulan.' berhasil digenerate');
+        rekap_absensi::updateOrCreate(
+            [
+                'id_karyawan' => $k->id_karyawan,
+                'bulan' => $bulan
+            ],
+            [
+                'jumlah_hadir' => $hadir,
+                'jumlah_izin'  => $izin,
+                'jumlah_alpha' => $alpha
+            ]
+        );
     }
+
+    return redirect()
+        ->route('rekap-absensi.index')
+        ->with('success', 'Rekap absensi bulan '.$bulan.' berhasil digenerate');
+}
+
+
 
     /**
      * HAPUS REKAP
