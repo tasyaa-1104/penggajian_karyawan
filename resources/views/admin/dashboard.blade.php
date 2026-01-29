@@ -11,12 +11,12 @@
     <div class="col-md-4">
         <div style="background:#17c1e8;border-radius:16px;height:160px;
             display:flex;flex-direction:column;align-items:center;
-            justify-content:center;color:#fff;box-shadow:0 6px 16px rgba(0,0,0,.08);">
+            justify-content:center;color:#fff;">
             <i class="fas fa-users" style="font-size:26px;margin-bottom:8px;"></i>
             <div style="font-size:28px;font-weight:700;">
                 {{ $jumlah_karyawan }}
             </div>
-            <div style="font-size:13px;opacity:.9;">Total Karyawan</div>
+            <div style="font-size:13px;">Total Karyawan</div>
         </div>
     </div>
 
@@ -24,7 +24,7 @@
     <div class="col-md-4">
         <div style="background:#fbc02d;border-radius:16px;height:160px;
             display:flex;flex-direction:column;align-items:center;
-            justify-content:center;color:#000;box-shadow:0 6px 16px rgba(0,0,0,.08);">
+            justify-content:center;color:#000;">
             <i class="fas fa-file-invoice-dollar" style="font-size:26px;margin-bottom:8px;"></i>
             <div style="font-size:28px;font-weight:700;">
                 {{ $jumlah_gaji }}
@@ -37,24 +37,23 @@
     <div class="col-md-4">
         <div style="background:#e53935;border-radius:16px;height:160px;
             display:flex;flex-direction:column;align-items:center;
-            justify-content:center;color:#fff;box-shadow:0 6px 16px rgba(0,0,0,.08);">
+            justify-content:center;color:#fff;">
             <i class="fas fa-wallet" style="font-size:26px;margin-bottom:8px;"></i>
             <div style="font-size:26px;font-weight:700;">
                 Rp {{ number_format($total_gaji_bulan,0,',','.') }}
             </div>
-            <div style="font-size:13px;opacity:.9;">Total Gaji Bulanan</div>
+            <div style="font-size:13px;">Total Gaji Bulanan</div>
         </div>
     </div>
 
 </div>
 
 <!-- GRAFIK -->
-<div class="row mt-4">
+<div class="row">
 
-    <!-- Grafik Komposisi Gaji (DIPERKECIL) -->
+    <!-- Grafik Komposisi Gaji -->
     <div class="col-md-6">
-        <div style="background:#fff;border-radius:16px;
-            box-shadow:0 6px 16px rgba(0,0,0,.06);padding:20px;">
+        <div style="background:#fff;border-radius:16px;padding:20px;">
             <div style="font-weight:600;margin-bottom:10px;color:#1565c0;">
                 Grafik Komposisi Gaji
             </div>
@@ -65,17 +64,28 @@
         </div>
     </div>
 
-    <!-- Grafik Status Gaji -->
+    <!-- Status Gaji Karyawan -->
     <div class="col-md-6">
-        <div style="background:#fff;border-radius:16px;
-            box-shadow:0 6px 16px rgba(0,0,0,.06);padding:20px;">
+        <div style="background:#fff;border-radius:16px;padding:20px;">
             <div style="font-weight:600;margin-bottom:10px;color:#f9a825;">
                 Status Gaji Karyawan
             </div>
 
-            <div style="display:flex;justify-content:center;">
-                <canvas id="grafikStatusGaji" width="220" height="220"></canvas>
-            </div>
+            @foreach($status_karyawan as $row)
+                <div style="display:flex;justify-content:space-between;
+                    align-items:center;padding:8px 0;border-bottom:1px solid #eee;">
+
+                    <span>{{ $row['nama'] }}</span>
+
+                    @if($row['status'] == 'Dibayar')
+                        <span class="badge bg-success">Dibayar</span>
+                    @else
+                        <span class="badge bg-danger">Belum</span>
+                    @endif
+
+                </div>
+            @endforeach
+
         </div>
     </div>
 
@@ -84,10 +94,9 @@
 <!-- CHART JS -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-const grafikStatus = @json($status_gaji ?? []);
-const komposisi = @json($komposisi_gaji ?? [50,30,20]);
+const komposisi = @json($komposisi_gaji);
 
-// Grafik Komposisi Gaji (Kecil)
+// Grafik Komposisi Gaji
 new Chart(document.getElementById('grafikKomposisiGaji'), {
     type: 'pie',
     data: {
@@ -103,35 +112,15 @@ new Chart(document.getElementById('grafikKomposisiGaji'), {
                 position: 'right',
                 labels: {
                     boxWidth: 12,
-                    font: { size: 11 }
+                    font: {
+                        size: 11
+                    }
                 }
             }
         }
     }
 });
 
-// Grafik Status Gaji
-new Chart(document.getElementById('grafikStatusGaji'), {
-    type: 'pie',
-    data: {
-        labels: grafikStatus.map(item => item.status),
-        datasets: [{
-            data: grafikStatus.map(item => item.total)
-        }]
-    },
-    options: {
-        responsive: false,
-        plugins: {
-            legend: {
-                position: 'right',
-                labels: {
-                    boxWidth: 12,
-                    font: { size: 11 }
-                }
-            }
-        }
-    }
-});
 </script>
 
 @endsection
