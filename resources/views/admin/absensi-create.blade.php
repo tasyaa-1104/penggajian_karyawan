@@ -4,6 +4,16 @@
 <div class="container">
     <h3 class="mb-3">Tambah Absensi</h3>
 
+       @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
+
     <div class="card">
         <div class="card-body">
            <form action="{{ route('absensi.store') }}" method="POST">
@@ -27,9 +37,9 @@
                 <div class="mb-2">
                     <label>Status Kehadiran</label>
                     <select name="status_kehadiran" class="form-control" required>
-                        <option value="hadir">Hadir</option>
-                        <option value="izin">Izin</option>
-                        <option value="alpa">Alpa</option>
+                        <option value="Hadir">Hadir</option>
+                        <option value="Izin">Izin</option>
+                        <option value="Alpha">Alpa</option>
                     </select>
                 </div>
 

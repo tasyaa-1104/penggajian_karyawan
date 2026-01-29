@@ -4,6 +4,16 @@
 <div class="container">
     <h3 class="mb-3">Data Absensi</h3>
 
+       @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
+
     <a href="{{ route('absensi.create') }}" class="btn btn-primary mb-3">
         + Tambah Absensi
     </a>

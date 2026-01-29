@@ -183,13 +183,13 @@
         </li>
 
         {{-- penggajian --}}
-        <li class="nav-item">
+        {{-- <li class="nav-item">
             <a href="{{ route('potongan.index') }}"
                class="nav-link {{ request()->routeIs('potongan*') ? 'active' : '' }}">
                 <i class="fa-solid fa-minus-circle"></i>
                 <span>Potongan Gaji</span>
             </a>
-        </li>
+        </li> --}}
 
         <li class="nav-item">
             <a href="{{ route('tunjangan.index') }}"

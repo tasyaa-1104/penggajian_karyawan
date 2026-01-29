@@ -43,7 +43,7 @@ class AbsensiController extends Controller
         $request->validate([
             'id_karyawan' => 'required',
             'tanggal' => 'required|date',
-            'status_kehadiran' => 'required',
+            'status_kehadiran' => 'required|in:Hadir,Izin,Alpha',
             'keterangan' => 'nullable'
         ]);
 
@@ -71,7 +71,7 @@ class AbsensiController extends Controller
         $request->validate([
             'id_karyawan' => 'required',
             'tanggal' => 'required|date',
-            'status_kehadiran' => 'required',
+            'status_kehadiran' => 'required|in:Hadir,Izin,Alpha',
             'keterangan' => 'nullable'
         ]);
 

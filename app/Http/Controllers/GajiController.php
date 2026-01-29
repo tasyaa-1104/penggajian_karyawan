@@ -37,51 +37,59 @@ class GajiController extends Controller
         $karyawan = Karyawan::with('jabatan')->findOrFail($request->id_karyawan);
 
         /* =====================
-         * GAJI POKOK
-         * ===================== */
+        * GAJI POKOK
+        * ===================== */
         $gaji_pokok = $karyawan->jabatan->gaji_pokok;
 
         /* =====================
-         * AMBIL ABSENSI
-         * ===================== */
+        * ABSENSI BULAN TERPILIH
+        * ===================== */
         $absensi = Absensi::where('id_karyawan', $karyawan->id_karyawan)
             ->whereMonth('tanggal', date('m', strtotime($request->bulan)))
             ->whereYear('tanggal', date('Y', strtotime($request->bulan)))
             ->get();
 
         /* =====================
-         * AMBIL ATURAN POTONGAN
-         * ===================== */
-        $aturan_potongan = Potongan::pluck('nominal', 'nama_potongan');
-        // contoh: ['alfa'=>100000, 'izin'=>25000, 'sakit'=>10000]
+        * ATURAN POTONGAN
+        * ===================== */
+        $tarif = [
+            'alpha' => 100000,
+            'izin'  => 25000,
+            'sakit' => 10000,
+        ];
 
         $total_potongan = 0;
 
         foreach ($absensi as $a) {
-            if (isset($aturan_potongan[$a->status_kehadiran])) {
-                $total_potongan += $aturan_potongan[$a->status_kehadiran];
+            $status = strtolower($a->status_kehadiran);
+
+            if (isset($tarif[$status])) {
+                $total_potongan += $tarif[$status];
             }
         }
 
         /* =====================
-         * TUNJANGAN
-         * ===================== */
+        * TUNJANGAN
+        * ===================== */
         $total_tunjangan = Tunjangan::sum('nominal');
 
         /* =====================
-         * GAJI BERSIH
-         * ===================== */
-        $gaji_bersih = $gaji_pokok + $total_tunjangan - $total_potongan;
+        * GAJI BERSIH
+        * ===================== */
+        $gaji_bersih =
+            $gaji_pokok +
+            $total_tunjangan -
+            $total_potongan;
 
         /* =====================
-         * SIMPAN
-         * ===================== */
+        * SIMPAN
+        * ===================== */
         Gaji::create([
-            'id_karyawan' => $karyawan->id_karyawan,
-            'bulan' => $request->bulan,
+            'id_karyawan'     => $karyawan->id_karyawan,
+            'bulan'           => $request->bulan,
             'total_tunjangan' => $total_tunjangan,
-            'total_potongan' => $total_potongan,
-            'gaji_bersih' => $gaji_bersih,
+            'total_potongan'  => $total_potongan,
+            'gaji_bersih'     => $gaji_bersih,
         ]);
 
         return redirect()->route('gaji.index')
