@@ -40,7 +40,25 @@
                     </strong>
                 </td>
                 <td>
-                    <form action="{{ route('gaji.destroy',$g->id_gaji) }}" method="POST">
+                    {{-- LIHAT / BUAT SLIP --}}
+                    @if($g->slipGaji)
+                        <a href="{{ route('slip-gaji.show', $g->slipGaji->id_slip_gaji) }}"
+                        class="btn btn-info btn-sm mb-1">
+                            <i class="fa fa-eye"></i> Slip
+                        </a>
+                    @else
+                        <form action="{{ route('slip-gaji.store', $g->id_gaji) }}"
+                            method="POST">
+                            @csrf
+                            <button class="btn btn-success btn-sm mb-1">
+                                <i class="fa fa-file"></i> Buat Slip
+                            </button>
+                        </form>
+                    @endif
+
+                    {{-- HAPUS GAJI --}}
+                    <form action="{{ route('gaji.destroy',$g->id_gaji) }}"
+                        method="POST">
                         @csrf
                         @method('DELETE')
                         <button class="btn btn-danger btn-sm"

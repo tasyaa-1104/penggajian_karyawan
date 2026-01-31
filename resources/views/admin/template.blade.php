@@ -140,6 +140,15 @@
             </a>
         </li>
 
+        {{-- user management --}}
+        <li class="nav-item">
+            <a href="{{ route('user.list') }}"
+               class="nav-link {{ request()->routeIs('user.list*') ? 'active' : '' }}">
+                <i class="fa-solid fa-minus-circle"></i>
+                <span>User</span>
+            </a>
+        </li>
+
         {{-- master data --}}
         <li class="nav-item">
             <a href="{{ route('karyawan') }}"
@@ -182,15 +191,6 @@
             </a>
         </li>
 
-        {{-- penggajian --}}
-        {{-- <li class="nav-item">
-            <a href="{{ route('potongan.index') }}"
-               class="nav-link {{ request()->routeIs('potongan*') ? 'active' : '' }}">
-                <i class="fa-solid fa-minus-circle"></i>
-                <span>Potongan Gaji</span>
-            </a>
-        </li> --}}
-
         <li class="nav-item">
             <a href="{{ route('tunjangan.index') }}"
                class="nav-link {{ request()->routeIs('tunjangan*') ? 'active' : '' }}">
@@ -207,13 +207,13 @@
             </a>
         </li>
 
-    <li class="nav-item">
+    {{-- <li class="nav-item">
         <a href="{{ route('slip-gaji.index') }}"
            class="nav-link {{ request()->routeIs('slipgaji*') ? 'active' : '' }}">
             <i class="fa-solid fa-file-invoice-dollar"></i>
             <span>slip gaji</span>
         </a>
-    </li>
+    </li> --}}
 
     {{-- logout --}}
     <li class="nav-item mt-3">

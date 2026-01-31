@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Karyawan;
 use App\Models\Gaji;
+use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -46,6 +48,93 @@ public function index()
         'komposisi_gaji'
     ));
 }
+
+/* ======================
+    * LIST USER
+* ====================== */
+    public function list()
+    {
+        $users = User::orderBy('role')
+            ->orderBy('nama')
+            ->get();
+
+        return view('admin.user', compact('users'));
+    }
+
+ public function create()
+    {
+        return view('admin.user-create');
+    }
+
+    /* ======================
+     * SIMPAN USER
+     * ====================== */
+    public function store(Request $request)
+    {
+        $request->validate([
+            'username' => 'required|unique:users',
+            'nama'     => 'required',
+            'password' => 'required|min:6',
+            'role'     => 'required|in:admin,karyawan'
+        ]);
+
+        User::create([
+            'username'    => $request->username,
+            'nama'        => $request->nama,
+            'password'    => Hash::make($request->password),
+            'role'        => $request->role,
+            'status_akun' => 'aktif'
+        ]);
+
+        return redirect()->route('user.list')
+            ->with('success', 'User berhasil ditambahkan');
+    }
+
+    /* ======================
+     * FORM EDIT USER
+     * ====================== */
+    public function edit($id)
+    {
+        $user = User::findOrFail($id);
+        return view('admin.user-edit', compact('user'));
+    }
+
+    /* ======================
+     * UPDATE USER
+     * ====================== */
+    public function update(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+
+        $request->validate([
+            'username' => 'required|unique:users,username,' . $id,
+            'nama'     => 'required',
+            'role'     => 'required|in:admin,karyawan',
+            'status_akun' => 'required|in:aktif,nonaktif'
+        ]);
+
+        $data = $request->only('username', 'nama', 'role', 'status_akun');
+
+        if ($request->password) {
+            $data['password'] = Hash::make($request->password);
+        }
+
+        $user->update($data);
+
+        return redirect()->route('user.list')
+            ->with('success', 'User berhasil diupdate');
+    }
+
+    /* ======================
+     * HAPUS USER
+     * ====================== */
+    public function destroy($id)
+    {
+        User::findOrFail($id)->delete();
+
+        return redirect()->route('user.list')
+            ->with('success', 'User berhasil dihapus');
+    }
 
 
 }

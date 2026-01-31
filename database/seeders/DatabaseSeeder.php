@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -11,6 +12,30 @@ class DatabaseSeeder extends Seeder
     {
         // Nonaktifkan FK sementara
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+
+        /* =====================
+         * SEEDER USERS
+         * ===================== */
+        DB::table('users')->insert([
+            [
+                'username'     => 'admin',
+                'nama'         => 'Administrator',
+                'password'     => Hash::make('admin123'),
+                'role'         => 'admin',
+                'status_akun'  => 'aktif',
+                'created_at'   => now(),
+                'updated_at'   => now(),
+            ],
+            [
+                'username'     => 'karyawan',
+                'nama'         => 'User Karyawan',
+                'password'     => Hash::make('karyawan123'),
+                'role'         => 'karyawan',
+                'status_akun'  => 'aktif',
+                'created_at'   => now(),
+                'updated_at'   => now(),
+            ],
+        ]);
 
         /* =====================
          * SEEDER DIVISI
@@ -46,7 +71,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         /* =====================
-         * SEEDER KARYAWAN (SESUI MIGRATION)
+         * SEEDER KARYAWAN
          * ===================== */
         DB::table('karyawan')->insert([
             [
