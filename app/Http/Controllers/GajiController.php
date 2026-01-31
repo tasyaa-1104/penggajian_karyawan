@@ -63,7 +63,7 @@ class GajiController extends Controller
         foreach ($absensi as $a) {
             $status = strtolower($a->status_kehadiran);
 
-            if (isset($tarif[$status])) {
+            if (isset($tarif[$status])) { 
                 $total_potongan += $tarif[$status];
             }
         }
