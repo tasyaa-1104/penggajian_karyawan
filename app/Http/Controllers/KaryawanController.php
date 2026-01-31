@@ -37,18 +37,26 @@ class KaryawanController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+   public function store(Request $request)
     {
         $request->validate([
             'nik' => 'required|unique:karyawan,nik',
             'nama_karyawan' => 'required',
             'id_divisi' => 'required|exists:divisi,id_divisi',
             'id_jabatan' => 'required|exists:jabatan,id_jabatan',
-            'gaji_pokok' => 'required|numeric|min:0',
             'status_karyawan' => 'required|in:aktif,nonaktif',
         ]);
 
-        Karyawan::create($request->all());
+        $jabatan = Jabatan::findOrFail($request->id_jabatan);
+
+        Karyawan::create([
+            'nik'             => $request->nik,
+            'nama_karyawan'   => $request->nama_karyawan,
+            'id_divisi'       => $request->id_divisi,
+            'id_jabatan'      => $request->id_jabatan,
+            'gaji_pokok'      => $jabatan->gaji_pokok, // ⬅️ AUTO DARI JABATAN
+            'status_karyawan' => $request->status_karyawan,
+        ]);
 
         return redirect()->route('karyawan')
             ->with('success', 'Karyawan berhasil ditambahkan');
@@ -74,7 +82,16 @@ class KaryawanController extends Controller
             'status_karyawan' => 'required|in:aktif,nonaktif',
         ]);
 
-        Karyawan::findOrFail($id)->update($request->all());
+        $karyawan = Karyawan::findOrFail($id);
+
+        $karyawan->update([
+            'nik'             => $request->nik,
+            'nama_karyawan'   => $request->nama_karyawan,
+            'id_divisi'       => $request->id_divisi,
+            'id_jabatan'      => $request->id_jabatan,
+            'gaji_pokok'      => $request->gaji_pokok, // ⬅️ NILAI REAL
+            'status_karyawan' => $request->status_karyawan,
+        ]);
 
         return redirect()->route('karyawan')
             ->with('success', 'Karyawan berhasil diupdate');

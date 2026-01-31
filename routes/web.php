@@ -8,6 +8,7 @@ use App\Http\Controllers\slip_gajiController;
 use App\Http\Controllers\rekap_absensiController;
 use App\Http\Controllers\TunjanganController;
 use App\Http\Controllers\DivisiController;
+use App\Http\Controllers\GajiController;
 use App\Http\Controllers\JabatanController;
 use App\Http\Controllers\UserController;
 
@@ -23,6 +24,7 @@ use App\Http\Controllers\HomeController;
 Route::get('/', [HomeController::class, 'index']);
 
 
+Route::middleware(['role:admin'])->group(function () {
 
 Route::get('/admin/dashboard', function () {return view('admin.dashboard');})->name('admin.dashboard');
 Route::get('/admin/dashboard', [UserController::class, 'index']) ->name('admin.dashboard');
@@ -107,26 +109,8 @@ Route::put('/potongan/update/{id}', [PotonganController::class, 'update'])->name
 Route::delete('/potongan/delete/{id}', [PotonganController::class, 'destroy'])->name('potongan.destroy');
 
 
-//slip gaji
-Route::get('/slip-gaji', [slip_gajiController::class, 'index'])->name('slip-gaji.index');
-
-// Route::get('/slip-gaji/create', [slip_gajiController::class, 'create'])->name('slipgaji.create');
-Route::post('/slip-gaji/{id_gaji}', [slip_gajiController::class, 'store'])->name('slip-gaji.store');
-Route::post('/slip-gaji/{id}', [slip_gajiController::class, 'show'])->name('slip-gaji.show');
-// Route::get('/slip-gaji/edit/{id}', [slip_gajiController::class, 'edit'])->name('slipgaji.edit');
-// Route::put('/slip-gaji/update/{id}', [slip_gajiController::class, 'update'])->name('slipgaji.update');
-
-// Route::delete('/slip-gaji/delete/{id}', [slip_gajiController::class, 'destroy'])->name('slipgaji.destroy');
-
-
-
-
-
-
-
-Route::prefix('admin')->group(function () {
-    Route::get('/divisi', [DivisiController::class, 'index'])->name('divisi.index');
-    Route::get('/divisi/create', [DivisiController::class, 'create'])->name('divisi.create');
+Route::get('/divisi', [DivisiController::class, 'index'])->name('divisi.index');
+Route::get('/divisi/create', [DivisiController::class, 'create'])->name('divisi.create');
     Route::post('/divisi', [DivisiController::class, 'store'])->name('divisi.store');
 
     // Tambahkan ini:
@@ -136,18 +120,15 @@ Route::prefix('admin')->group(function () {
     Route::delete('/divisi/{id}', [DivisiController::class, 'destroy'])
         ->whereNumber('id')
         ->name('divisi.destroy');
-});
 
-Route::prefix('admin')->group(function () {
-    Route::get('/jabatan', [JabatanController::class, 'index'])->name('jabatan.index');
+        Route::get('/jabatan', [JabatanController::class, 'index'])->name('jabatan.index');
     Route::get('/jabatan/create', [JabatanController::class, 'create'])->name('jabatan.create');
     Route::post('/jabatan', [JabatanController::class, 'store'])->name('jabatan.store');
     Route::get('/jabatan/{id}/edit', [JabatanController::class, 'edit'])->name('jabatan.edit');
     Route::put('/jabatan/{id}', [JabatanController::class, 'update'])->name('jabatan.update');
     Route::delete('/jabatan/{id}', [JabatanController::class, 'destroy'])->name('jabatan.destroy');
-});
 
-use App\Http\Controllers\GajiController;
+
 
 // ================== GAJI ==================
 
@@ -173,5 +154,28 @@ Route::post('/user/store', [UserController::class, 'store'])->name('user.store')
 Route::get('/user/edit/{id}', [UserController::class, 'edit'])->name('user.edit');
 Route::put('/user/update/{id}', [UserController::class, 'update'])->name('user.update');
 Route::delete('/user/delete/{id}', [UserController::class, 'destroy'])->name('user.destroy');
+}); // end middleware admin
 
+
+
+Route::middleware(['role:karyawan'])->group(function () {
+//slip gaji
+Route::get('/slip-gaji', [slip_gajiController::class, 'index'])->name('slip-gaji.index');
+
+// Route::get('/slip-gaji/create', [slip_gajiController::class, 'create'])->name('slipgaji.create');
+Route::post('/slip-gaji/{id_gaji}', [slip_gajiController::class, 'store'])->name('slip-gaji.store');
+Route::get('/slip-gaji/{id}', [slip_gajiController::class, 'show'])->name('slip-gaji.show');
+// Route::get('/slip-gaji/edit/{id}', [slip_gajiController::class, 'edit'])->name('slipgaji.edit');
+// Route::put('/slip-gaji/update/{id}', [slip_gajiController::class, 'update'])->name('slipgaji.update');
+
+// Route::delete('/slip-gaji/delete/{id}', [slip_gajiController::class, 'destroy'])->name('slipgaji.destroy');
+});
+
+
+Route::get('/login', function () {
+    return view('login');
+    })->name('login');
+
+Route::post('/login', [UserController::class, 'login'])
+->name('login.proses');
 

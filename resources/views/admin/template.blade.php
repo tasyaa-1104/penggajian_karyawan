@@ -217,7 +217,7 @@
 
     {{-- logout --}}
     <li class="nav-item mt-3">
-        <a href="#" class="nav-link text-danger">
+        <a href="{{route('login')}}" class="nav-link text-danger">
             <i class="fa-solid fa-right-from-bracket"></i>
             <span>logout</span>
         </a>

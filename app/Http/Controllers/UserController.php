@@ -7,6 +7,7 @@ use App\Models\Karyawan;
 use App\Models\Gaji;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -135,6 +136,95 @@ public function index()
         return redirect()->route('user.list')
             ->with('success', 'User berhasil dihapus');
     }
+
+    /* ======================
+    * FORM LOGIN
+    * ====================== */
+    public function loginForm()
+    {
+        return view('login');
+    }
+
+    /* ======================
+    * PROSES LOGIN
+    * ====================== */
+    public function loginProses(Request $request)
+    {
+        $request->validate([
+            'username' => 'required',
+            'password' => 'required'
+        ]);
+
+        $user = User::where('username', $request->username)->first();
+
+        // USER TIDAK ADA
+        if (!$user) {
+            return back()->withErrors([
+                'username' => 'Username tidak ditemukan'
+            ]);
+        }
+
+        // AKUN NONAKTIF
+        if ($user->status_akun !== 'aktif') {
+            return back()->withErrors([
+                'username' => 'Akun tidak aktif'
+            ]);
+        }
+
+        // PASSWORD SALAH
+        if (!Hash::check($request->password, $user->password)) {
+            return back()->withErrors([
+                'password' => 'Password salah'
+            ]);
+        }
+
+        // LOGIN SUKSES
+        Auth::login($user);
+
+        // REDIRECT BERDASARKAN ROLE
+        if ($user->role === 'admin') {
+            return redirect()->route('dashboard');
+        }
+
+        return redirect()->route('karyawan.dashboard');
+    }
+
+    public function login(Request $request)
+{
+    $request->validate([
+        'username' => 'required',
+        'password' => 'required',
+    ]);
+
+    $user = User::where('username', $request->username)
+        ->where('status_akun', 'aktif')
+        ->first();
+
+    if (!$user || !Hash::check($request->password, $user->password)) {
+        return back()->with('error', 'Username atau password salah');
+    }
+
+    // SIMPAN SESSION
+    session([
+        'user' => [
+            'id'   => $user->id,
+            'nama' => $user->nama,
+            'role' => $user->role,
+        ]
+    ]);
+
+    // REDIRECT BERDASARKAN ROLE
+    if ($user->role === 'admin') {
+        return redirect()->route('admin.dashboard');
+    }
+
+    if ($user->role === 'karyawan') {
+        return redirect()->route('karyawan.dashboard');
+    }
+
+    abort(403);
+}
+
 
 
 }

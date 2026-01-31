@@ -78,6 +78,19 @@
         .login-box button:hover{
             background:#114fc9;
         }
+
+        .back-home{
+            display:block;
+            margin-top:15px;
+            font-size:13px;
+            color:#555;
+            text-decoration:none;
+        }
+
+        .back-home:hover{
+            color:#1f6cff;
+            text-decoration:underline;
+        }
     </style>
 </head>
 <body>
@@ -88,12 +101,17 @@
         <h2>Login</h2>
         <p>Enter your credentials</p>
 
-        <input type="email" placeholder="Email address">
-        <input type="password" placeholder="Password">
+        <input type="text" name="username" placeholder="Username" required>
+        <input type="password" name="password" placeholder="Password" required>
 
         <a href="#">Forgotten password?</a>
 
         <button type="submit">LOGIN</button>
+
+        <!-- 🔥 KEMBALI KE HALAMAN AWAL -->
+        <a href="{{ url('/') }}" class="back-home">
+            ← Kembali ke Halaman Awal
+        </a>
     </form>
 
 </body>

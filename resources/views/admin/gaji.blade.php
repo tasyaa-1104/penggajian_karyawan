@@ -40,25 +40,25 @@
                     </strong>
                 </td>
                 <td>
-                    {{-- LIHAT / BUAT SLIP --}}
-                    @if($g->slipGaji)
-                        <a href="{{ route('slip-gaji.show', $g->slipGaji->id_slip_gaji) }}"
-                        class="btn btn-info btn-sm mb-1">
-                            <i class="fa fa-eye"></i> Slip
+                    @if ($g->slipGaji)
+                        {{-- JIKA SLIP SUDAH ADA --}}
+                        <a href="{{ route('slip-gaji.show', $g->id_gaji) }}"
+                        class="btn btn-info btn-sm">
+                            <i class="fa fa-eye"></i> Lihat Slip
                         </a>
                     @else
+                        {{-- JIKA SLIP BELUM ADA --}}
                         <form action="{{ route('slip-gaji.store', $g->id_gaji) }}"
-                            method="POST">
+                            method="POST" class="d-inline">
                             @csrf
-                            <button class="btn btn-success btn-sm mb-1">
-                                <i class="fa fa-file"></i> Buat Slip
+                            <button class="btn btn-success btn-sm">
+                                <i class="fa fa-plus"></i> Buat Slip
                             </button>
                         </form>
                     @endif
 
-                    {{-- HAPUS GAJI --}}
                     <form action="{{ route('gaji.destroy',$g->id_gaji) }}"
-                        method="POST">
+                        method="POST" class="d-inline">
                         @csrf
                         @method('DELETE')
                         <button class="btn btn-danger btn-sm"
