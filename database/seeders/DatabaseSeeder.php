@@ -73,41 +73,41 @@ class DatabaseSeeder extends Seeder
         /* =====================
          * SEEDER KARYAWAN
          * ===================== */
-        DB::table('karyawan')->insert([
-            [
-                'nik' => 'KRY001',
-                'nama_karyawan' => 'Andi Saputra',
-                'id_divisi' => 1,
-                'id_jabatan' => 1,
-                'gaji_pokok' => 4000000,
-                'id_user' => null,
-                'status_karyawan' => 'aktif',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'nik' => 'KRY002',
-                'nama_karyawan' => 'Budi Santoso',
-                'id_divisi' => 2,
-                'id_jabatan' => 2,
-                'gaji_pokok' => 4500000,
-                'id_user' => null,
-                'status_karyawan' => 'aktif',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'nik' => 'KRY003',
-                'nama_karyawan' => 'Citra Lestari',
-                'id_divisi' => 3,
-                'id_jabatan' => 3,
-                'gaji_pokok' => 6000000,
-                'id_user' => null,
-                'status_karyawan' => 'aktif',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-        ]);
+        // DB::table('karyawan')->insert([
+        //     [
+        //         'nik' => 'KRY001',
+        //         'nama_karyawan' => 'Andi Saputra',
+        //         'id_divisi' => 1,
+        //         'id_jabatan' => 1,
+        //         'gaji_pokok' => 4000000,
+        //         'id_user' => null,
+        //         'status_karyawan' => 'aktif',
+        //         'created_at' => now(),
+        //         'updated_at' => now(),
+        //     ],
+        //     [
+        //         'nik' => 'KRY002',
+        //         'nama_karyawan' => 'Budi Santoso',
+        //         'id_divisi' => 2,
+        //         'id_jabatan' => 2,
+        //         'gaji_pokok' => 4500000,
+        //         'id_user' => null,
+        //         'status_karyawan' => 'aktif',
+        //         'created_at' => now(),
+        //         'updated_at' => now(),
+        //     ],
+        //     [
+        //         'nik' => 'KRY003',
+        //         'nama_karyawan' => 'Citra Lestari',
+        //         'id_divisi' => 3,
+        //         'id_jabatan' => 3,
+        //         'gaji_pokok' => 6000000,
+        //         'id_user' => null,
+        //         'status_karyawan' => 'aktif',
+        //         'created_at' => now(),
+        //         'updated_at' => now(),
+        //     ],
+        // ]);
 
         // Aktifkan kembali FK
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');

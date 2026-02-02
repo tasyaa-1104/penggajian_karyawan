@@ -15,7 +15,7 @@ class slip_gajiController extends Controller
             ->orderBy('tanggal_cetak','desc')
             ->get();
 
-        return view('admin.slip-gaji', compact('slip'));
+        return view('slip-gaji', compact('slip'));
     }
 
     // generate slip dari gaji
@@ -36,6 +36,6 @@ class slip_gajiController extends Controller
         $slip = slip_gaji::with('gaji.karyawan.jabatan')
             ->findOrFail($id);
 
-        return view('admin.slip-gaji-show', compact('slip'));
+        return view('slip-gaji-show', compact('slip'));
     }
 }

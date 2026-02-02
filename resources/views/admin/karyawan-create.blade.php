@@ -18,7 +18,13 @@
         @csrf
 
         <input name="nik" class="form-control mb-2" placeholder="NIK" required>
-        <input name="nama_karyawan" class="form-control mb-2" placeholder="Nama Karyawan" required>
+        
+        <select name="id_user" class="form-control mb-2" required>
+            <option value="">-- Pilih User --</option>
+            @foreach($users as $u)
+                <option value="{{ $u->id }}">{{ $u->nama }}</option>
+            @endforeach
+        </select>
 
         <select name="id_divisi" class="form-control mb-2" required>
             <option value="">-- Pilih Divisi --</option>

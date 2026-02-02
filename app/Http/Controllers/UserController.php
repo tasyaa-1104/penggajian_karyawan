@@ -218,7 +218,7 @@ public function index()
         return redirect()->route('admin.dashboard');
     }
 
-    if ($user->role === 'karyawan') {
+   if ($user->role === 'karyawan') {
         return redirect()->route('karyawan.dashboard');
     }
 
