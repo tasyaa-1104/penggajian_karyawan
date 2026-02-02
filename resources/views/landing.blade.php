@@ -5,22 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistem Penggajian Karyawan</title>
 
-    <!-- Bootstrap 5 -->
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
-    <!-- Google Fonts -->
+
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- AOS Animation Library -->
+
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
     <style>
         :root {
-            /* PALET WARNA BIRU MUDA SEGAR (SKY BLUE) */
-            --primary: #0284c7;      /* Biru Langit Kuat (untuk Tombol/Teks Utama) */
-            --secondary: #38bdf8;    /* Biru Langit Terang (untuk Gradien) */
-            --dark: #0c4a6e;         /* Biru Gelap (untuk Heading/Navbar Teks) */
-            --light: #f0f9ff;        /* Latar Belakang Sangat Muda (Sky 50) */
+
+            --primary: #0284c7;
+            --secondary: #38bdf8;
+            --dark: #0c4a6e;
+            --light: #f0f9ff;
         }
 
         body {
@@ -29,7 +29,7 @@
             overflow-x: hidden;
         }
 
-        /* --- ANIMATED BACKGROUND --- */
+
         .bg-animation {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -53,7 +53,7 @@
             100% { transform: translate(30px, 50px) scale(1.1); }
         }
 
-        /* --- NAVBAR --- */
+
         .navbar {
             background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(12px);
@@ -64,7 +64,7 @@
         }
         .navbar-brand {
             font-weight: 800;
-            color: var(--primary) !important; /* Warna Brand Biru Muda */
+            color: var(--primary) !important;
             font-size: 1.5rem;
         }
         .btn-login {
@@ -84,7 +84,7 @@
             box-shadow: 0 10px 25px rgba(56, 189, 248, 0.4);
         }
 
-        /* --- HERO --- */
+
         .hero {
             min-height: 100vh;
             display: flex;
@@ -97,7 +97,7 @@
             font-size: 3.5rem;
             font-weight: 800;
             margin-bottom: 20px;
-            color: var(--dark); /* Teks Judul Biru Gelap agar kontras */
+            color: var(--dark);
         }
         .hero p {
             font-size: 1.2rem;
@@ -230,7 +230,7 @@
         </div>
     </nav>
 
-    <!-- HERO -->
+
     <section class="hero">
         <div class="container position-relative">
             <div data-aos="fade-up" data-aos-duration="1000">
