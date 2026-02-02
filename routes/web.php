@@ -11,6 +11,7 @@ use App\Http\Controllers\DivisiController;
 use App\Http\Controllers\GajiController;
 use App\Http\Controllers\JabatanController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\KaryawanDashboardController;
 
 
 
@@ -184,4 +185,7 @@ Route::get('/login', function () {
 
 Route::post('/login', [UserController::class, 'login'])
 ->name('login.proses');
+
+// Route::get('/karyawan/dashboard', [KaryawanDashboardController::class, 'index'])
+//     ->name('karyawan.dashboard');
 
