@@ -15,43 +15,87 @@
             margin:0;
             min-height:100vh;
             background:#f4f7fb;
+            display:flex;
         }
 
-        /* NAVBAR */
-        .navbar{
+        /* SIDEBAR */
+        .sidebar{
+            width:240px;
             background:#1f6cff;
             color:#fff;
+            padding:24px 18px;
+            display:flex;
+            flex-direction:column;
+        }
+
+        .sidebar h3{
+            margin:0 0 30px;
+            font-size:22px;
+            font-weight:700;
+            text-align:center;
+        }
+
+        .menu a{
+            display:block;
+            padding:12px 14px;
+            margin-bottom:10px;
+            color:#fff;
+            text-decoration:none;
+            border-radius:10px;
+            font-weight:600;
+            transition:0.3s;
+        }
+
+        .menu a:hover,
+        .menu a.active{
+            background:#114fc9;
+        }
+
+        .sidebar .logout-form{
+            margin-top:auto;
+        }
+
+        .sidebar .logout-form button{
+            width:100%;
+            background:#fff;
+            color:#1f6cff;
+            border:none;
+            padding:10px;
+            border-radius:10px;
+            font-weight:600;
+            cursor:pointer;
+        }
+
+        /* MAIN */
+        .main{
+            flex:1;
+            display:flex;
+            flex-direction:column;
+        }
+
+        /* TOP BAR */
+        .topbar{
+            background:#fff;
             padding:16px 24px;
             display:flex;
             justify-content:space-between;
             align-items:center;
-            font-size:18px;
+            box-shadow:0 4px 12px rgba(0,0,0,0.06);
+        }
+
+        .topbar .hi{
+            font-size:16px;
             font-weight:600;
+            color:#333;
         }
 
-        .logout-form button{
-            background:#fff;
-            color:#1f6cff;
-            border:none;
-            padding:8px 14px;
-            border-radius:8px;
-            font-weight:600;
-            cursor:pointer;
-            transition:0.3s;
-        }
-
-        .logout-form button:hover{
-            background:#e9efff;
-        }
-
-        /* CONTAINER */
+        /* CONTENT */
         .container{
             max-width:800px;
             margin:40px auto;
             padding:0 16px;
         }
 
-        /* CARD */
         .card{
             background:#fff;
             border-radius:14px;
@@ -78,7 +122,6 @@
             color:#555;
         }
 
-        /* BUTTON */
         .btn{
             display:inline-block;
             margin-top:22px;
@@ -88,54 +131,88 @@
             text-decoration:none;
             border-radius:10px;
             font-weight:600;
-            transition:0.3s;
-        }
-
-        .btn:hover{
-            background:#114fc9;
         }
 
         /* RESPONSIVE */
+        @media (max-width:768px){
+            .sidebar{
+                width:200px;
+            }
+        }
+
         @media (max-width:600px){
-            .card p strong{
-                width:auto;
-                display:block;
-                margin-bottom:4px;
+            body{
+                flex-direction:column;
+            }
+
+            .sidebar{
+                width:100%;
+                flex-direction:row;
+                align-items:center;
+                justify-content:space-between;
+            }
+
+            .menu{
+                display:flex;
+                gap:10px;
+            }
+
+            .sidebar h3{
+                margin-bottom:0;
             }
         }
     </style>
 </head>
 <body>
 
-<div class="navbar">
-    <div>Dashboard Karyawan</div>
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <h3>Karyawan</h3>
 
-    <!-- LOGOUT -->
-    <form action="{{route('login')}}" class="logout-form">
+    <div class="menu">
+        <a href="#" class="active">🏠 Beranda</a>
+        <a href="{{ route('karyawan.absensi.create') }}">📍 Absensi</a>
+    </div>
+
+    <form action="{{ route('login') }}" method="POST" class="logout-form">
         @csrf
         <button type="submit">Logout</button>
     </form>
 </div>
 
-<div class="container">
+<!-- MAIN -->
+<div class="main">
 
-@isset($karyawan)
-    <div class="card">
-        <h2>{{ $karyawan->nama_karyawan }}</h2>
-
-        <p><strong>NIK:</strong> {{ $karyawan->nik }}</p>
-        <p><strong>Divisi:</strong> {{ $karyawan->divisi->nama_divisi }}</p>
-        <p><strong>Jabatan:</strong> {{ $karyawan->jabatan->nama_jabatan }}</p>
-        <p><strong>Gaji Pokok:</strong>
-            Rp {{ number_format($karyawan->gaji_pokok,0,',','.') }}
-        </p>
-
-        <a href="{{ route('slip-gaji.index') }}" class="btn">
-            Lihat Slip Gaji
-        </a>
+    <!-- TOP BAR -->
+    <div class="topbar">
+        @isset($karyawan)
+            <div class="hi">
+                Hi, {{ $karyawan->nama_karyawan }} 👋
+            </div>
+        @endisset
     </div>
-@endisset
 
+    <!-- CONTENT -->
+    <div class="container">
+
+    @isset($karyawan)
+        <div class="card">
+            <h2>{{ $karyawan->nama_karyawan }}</h2>
+
+            <p><strong>NIK:</strong> {{ $karyawan->nik }}</p>
+            <p><strong>Divisi:</strong> {{ $karyawan->divisi->nama_divisi }}</p>
+            <p><strong>Jabatan:</strong> {{ $karyawan->jabatan->nama_jabatan }}</p>
+            <p><strong>Gaji Pokok:</strong>
+                Rp {{ number_format($karyawan->gaji_pokok,0,',','.') }}
+            </p>
+
+            <a href="{{ route('slip-gaji.index') }}" class="btn">
+                Lihat Slip Gaji
+            </a>
+        </div>
+    @endisset
+
+    </div>
 </div>
 
 </body>

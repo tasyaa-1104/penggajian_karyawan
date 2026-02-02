@@ -34,11 +34,12 @@ Route::get('/admin/dashboard', [UserController::class, 'index']) ->name('admin.d
 
 
 Route::get('/absensi', [AbsensiController::class, 'index'])->name('absensi');
-// FORM TAMBAH ABSENSI
+
 Route::get('/absensi/create', [AbsensiController::class, 'create'])->name('absensi.create');
 
 // simpan absensi
 Route::post('/absensi/store', [AbsensiController::class, 'store'])->name('absensi.store');
+
 // form edit
 Route::get('/absensi/edit/{id}', [AbsensiController::class, 'edit'])->name('absensi.edit');
 
@@ -160,6 +161,7 @@ Route::delete('/user/delete/{id}', [UserController::class, 'destroy'])->name('us
 
 
 Route::middleware(['role:karyawan'])->group(function () {
+
 //slip gaji
 Route::get('/slip-gaji', [slip_gajiController::class, 'index'])->name('slip-gaji.index');
 
@@ -177,7 +179,14 @@ Route::get('/karyawan/dashboard',
 
 
 });
+Route::get('/absensi', [AbsensiController::class, 'index'])
+    ->name('absensi');
 
+Route::get('/karyawan/absensi/create', [AbsensiController::class, 'createKaryawan'])
+    ->name('karyawan.absensi.create');
+
+Route::post('absensi/store', [AbsensiController::class, 'storeKaryawan'])
+    ->name('karyawan.absensi.store');
 
 Route::get('/login', function () {
     return view('login');

@@ -93,4 +93,35 @@ class AbsensiController extends Controller
         return redirect()->route('absensi')
             ->with('success', 'Data absensi berhasil dihapus');
     }
+
+    
+public function createKaryawan()
+{
+    // sementara hardcode (nanti bisa diganti)
+    $karyawan = Karyawan::find(1);
+
+    return view('admin.karyawan-absensi-create', compact('karyawan'));
+}
+
+public function storeKaryawan(Request $request)
+{
+    $request->validate([
+        'id_karyawan' => 'required',
+        'tanggal' => 'required|date',
+        'status_kehadiran' => 'required|in:Hadir,Izin,Alpha',
+        'keterangan' => 'nullable'
+    ]);
+
+    // ⬇️ MASUK KE TABEL ABSENSI (ADMIN JUGA LIAT INI)
+    Absensi::create([
+        'id_karyawan' => $request->id_karyawan,
+        'tanggal' => $request->tanggal,
+        'status_kehadiran' => $request->status_kehadiran,
+        'keterangan' => $request->keterangan
+    ]);
+
+    return redirect()->route('karyawan.dashboard')
+        ->with('success', 'Absensi berhasil');
+}
+
 }
