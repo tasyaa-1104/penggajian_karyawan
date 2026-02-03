@@ -33,12 +33,9 @@ Route::get('/admin/dashboard', [UserController::class, 'index']) ->name('admin.d
 // Route::post('/login', function () {return redirect('/dashboard');})->name('login.proses');
 
 
-Route::get('/absensi', [AbsensiController::class, 'index'])->name('absensi');
-
-Route::get('/absensi/create', [AbsensiController::class, 'create'])->name('absensi.create');
-
-// simpan absensi
-Route::post('/absensi/store', [AbsensiController::class, 'store'])->name('absensi.store');
+    Route::get('/absensi', [AbsensiController::class, 'index'])->name('absensi.index');
+    Route::get('/absensi/create', [AbsensiController::class, 'create'])->name('absensi.create');
+    Route::post('/absensi', [AbsensiController::class, 'store'])->name('absensi.store');
 
 // form edit
 Route::get('/absensi/edit/{id}', [AbsensiController::class, 'edit'])->name('absensi.edit');
@@ -187,6 +184,15 @@ Route::get('/karyawan/absensi/create', [AbsensiController::class, 'createKaryawa
 
 Route::post('absensi/store', [AbsensiController::class, 'storeKaryawan'])
     ->name('karyawan.absensi.store');
+
+Route::post('/karyawan/absen-masuk', [AbsensiController::class, 'absenMasuk'])
+    ->name('karyawan.absen.masuk');
+
+Route::post('/karyawan/absen-pulang', [AbsensiController::class, 'absenPulang'])
+    ->name('karyawan.absen.pulang');
+
+Route::get('/karyawan/absensi', [AbsensiController::class, 'halamanAbsensi'])
+        ->name('karyawan.absensi');
 
 Route::get('/login', function () {
     return view('login');
