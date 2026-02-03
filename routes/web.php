@@ -194,6 +194,10 @@ Route::post('/karyawan/absen-pulang', [AbsensiController::class, 'absenPulang'])
 Route::get('/karyawan/absensi', [AbsensiController::class, 'halamanAbsensi'])
         ->name('karyawan.absensi');
 
+ Route::post('/karyawan/absen-izin', [AbsensiController::class, 'absenIzin'])
+    ->name('karyawan.absen.izin');
+
+
 Route::get('/login', function () {
     return view('login');
     })->name('login');

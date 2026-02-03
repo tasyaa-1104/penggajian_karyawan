@@ -22,6 +22,28 @@
         .alert{padding:12px;border-radius:10px;margin-bottom:16px;}
         .alert-success{background:#e6fffa;color:#065f46;}
         .alert-danger{background:#ffe5e5;color:#b40000;}
+
+        /* MODAL */
+        .modal{
+            display:none;
+            position:fixed;
+            top:0;left:0;
+            width:100%;height:100%;
+            background:rgba(0,0,0,.4);
+        }
+        .modal-box{
+            background:#fff;
+            max-width:420px;
+            margin:100px auto;
+            padding:24px;
+            border-radius:14px;
+        }
+        textarea,select{
+            width:100%;
+            padding:10px;
+            margin-top:6px;
+            margin-bottom:14px;
+        }
     </style>
 </head>
 <body>
@@ -53,29 +75,69 @@
                 <div class="alert alert-danger">{{ session('error') }}</div>
             @endif
 
-            {{-- LOGIKA TOMBOL --}}
+            {{-- LOGIKA --}}
             @if(!$absensiHariIni)
-                {{-- BELUM ABSEN --}}
+
+                {{-- ABSEN MASUK --}}
                 <form action="{{ route('karyawan.absen.masuk') }}" method="POST">
                     @csrf
                     <button class="btn btn-success">✅ Absen Masuk</button>
                 </form>
 
-            @elseif($absensiHariIni && !$absensiHariIni->jam_pulang)
-                {{-- SUDAH MASUK --}}
+                {{-- IZIN / SAKIT --}}
+                <button class="btn btn-secondary"
+                        onclick="document.getElementById('izinModal').style.display='block'">
+                    📝 Sakit / Izin
+                </button>
+
+          @elseif(
+                    $absensiHariIni &&
+                    $absensiHariIni->status_kehadiran === 'Hadir' &&
+                    !$absensiHariIni->jam_pulang
+                )
+
+
+                {{-- ABSEN PULANG --}}
                 <form action="{{ route('karyawan.absen.pulang') }}" method="POST">
                     @csrf
                     <button class="btn btn-danger">⏰ Absen Pulang</button>
                 </form>
 
             @else
-                {{-- SUDAH SELESAI --}}
                 <button class="btn btn-secondary" disabled>
-                    ✔ Absensi Hari Ini Selesai
+                    ✔ Absensi Selesai ({{ $absensiHariIni->status_kehadiran }})
                 </button>
             @endif
 
         </div>
+    </div>
+</div>
+
+{{-- MODAL IZIN --}}
+<div class="modal" id="izinModal">
+    <div class="modal-box">
+        <h3>Form Izin / Sakit</h3>
+
+        <form action="{{ route('karyawan.absen.izin') }}" method="POST">
+            @csrf
+
+            <label>Status</label>
+            <select name="status_kehadiran" required>
+                <option value="">-- Pilih --</option>
+                <option value="Izin">Izin</option>
+                <option value="Sakit">Sakit</option>
+            </select>
+
+            <label>Keterangan</label>
+            <textarea name="keterangan" required
+                placeholder="Isi alasan izin / sakit"></textarea>
+
+            <button class="btn btn-success">Kirim</button>
+            <button type="button" class="btn btn-secondary"
+                onclick="document.getElementById('izinModal').style.display='none'">
+                Batal
+            </button>
+        </form>
     </div>
 </div>
 
