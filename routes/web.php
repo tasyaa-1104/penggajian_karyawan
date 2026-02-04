@@ -86,7 +86,11 @@ Route::get('/rekap-absensi/edit/{rekap_absensi}', [rekap_absensiController::clas
 Route::post('/rekap-absensi/update/{rekap_absensi}', [rekap_absensiController::class, 'update'])->name('rekap-absensi.update');
 
 // hapus
-Route::post('/rekap-absensi/delete/{rekap_absensi}', [rekap_absensiController::class, 'destroy'])->name('rekap-absensi.delete');
+Route::delete(
+    '/rekap-absensi/delete/{id}',
+    [rekap_absensiController::class, 'destroy']
+)->name('rekap-absensi.delete');
+
 /* READ */
 Route::get('/karyawan', [KaryawanController::class, 'index'])->name('karyawan');
 
@@ -225,7 +229,7 @@ Route::get('/karyawan/absensi', [AbsensiController::class, 'halamanAbsensi'])
  Route::post('/karyawan/absen-izin', [AbsensiController::class, 'absenIzin'])
     ->name('karyawan.absen.izin');
 
-    
+
 
 Route::get('/login', function () {
     return view('login');
