@@ -1,4 +1,4 @@
-@extends('admin.template')
+{{-- @extends('admin.template')
 
 @section('content')
 <div class="container mt-4">
@@ -20,7 +20,7 @@
                     <label>Gaji Pokok</label>
                     <input type="number" name="gaji_pokok" class="form-control" value="{{ old('gaji_pokok', $jabatan->gaji_pokok) }}" required>
                 </div>
- 
+
                 <div class="mb-3">
                     <label>Divisi</label>
                     <select name="id_divisi" class="form-control" required>
@@ -38,4 +38,4 @@
         </div>
     </div>
 </div>
-@endsection
+@endsection --}}

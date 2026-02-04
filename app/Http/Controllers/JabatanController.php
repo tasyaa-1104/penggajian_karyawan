@@ -22,13 +22,20 @@ class JabatanController extends Controller
             ->orderBy('nama_jabatan')
             ->get();
 
-        return view('admin.jabatan', compact('jabatan', 'search'));
+        // PERBAIKAN 1: Ambil data divisi untuk dropdown di modal
+        $divisis = Divisi::orderBy('nama_divisi')->get();
+
+        // PERBAIKAN 2: Kirim variable $divisis ke view
+        return view('admin.jabatan', compact('jabatan', 'divisis', 'search'));
     }
 
+    // PERBAIKAN 3: Method create() sekarang tidak perlu menampilkan view create lagi
+    // Karena tombol tambah sekarang membuka Modal di halaman Index.
+    // Jika kamu memiliki route 'jabatan.create', kamu bisa alihkan ke index atau hapus.
     public function create()
     {
-        $divisi = Divisi::orderBy('nama_divisi')->get();
-        return view('admin.jabatan-create', compact('divisi'));
+        // Redirect saja ke halaman index karena modal sudah ada di sana
+        return redirect()->route('jabatan.index');
     }
 
     public function store(Request $request)
@@ -45,11 +52,11 @@ class JabatanController extends Controller
             ->with('success', 'Jabatan berhasil ditambahkan');
     }
 
+    // PERBAIKAN 4: Method edit() juga tidak perlu view edit lagi
     public function edit($id)
     {
-        $jabatan = Jabatan::findOrFail($id);
-        $divisi = Divisi::orderBy('nama_divisi')->get();
-        return view('admin.jabatan-edit', compact('jabatan', 'divisi'));
+        // Data diambil langsung oleh JS di Modal, redirect ke index saja
+        return redirect()->route('jabatan.index');
     }
 
     public function update(Request $request, $id)

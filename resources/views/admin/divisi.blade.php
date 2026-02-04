@@ -1,3 +1,4 @@
+
 @extends('admin.template')
 
 @section('title', 'Data Divisi')
@@ -6,7 +7,7 @@
     <!-- Topbar Style Website (Header) -->
     <div class="website-header animate-header">
         <div class="header-content">
-            <h1>Data Divisi</h1>
+            <h1>Manajemen Divisi</h1>
             <div class="user-profile">
                 <span>Admin 👋</span>
                 <div class="avatar-small">🛡️</div>
@@ -17,7 +18,7 @@
 
 @section('content')
 
-<!-- CSS STYLING -->
+<!-- CSS STYLING (Sama persis seperti User) -->
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
@@ -38,14 +39,15 @@
         min-height: 100vh;
         margin: 0;
         color: var(--text-dark);
+        overflow-x: hidden;
     }
 
-    /* CONTAINER UTAMA */
-    .container-custom {
+    /* LAYOUT WEBSITE */
+    .website-layout {
         width: 100%;
         max-width: 1200px;
-        margin: 40px auto;
-        padding: 20px;
+        margin: 0 auto;
+        padding: 40px 20px;
         position: relative;
         z-index: 10;
         padding-top: 100px;
@@ -72,147 +74,109 @@
     .website-header h1 { font-size: 1.4rem; color: var(--secondary); margin: 0; font-weight: 700; }
     .user-profile { display: flex; align-items: center; gap: 15px; font-weight: 600; color: var(--text-dark); }
     .avatar-small {
-        width: 40px; height: 40px; background: var(--bg-gradient); color: white; border-radius: 50%;
-        display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        width: 40px; height: 40px; background: var(--bg-gradient); color: white;
+        border-radius: 50%; display: flex; align-items: center; justify-content: center;
+        font-size: 1.2rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
 
-    /* GLASS CARD WRAPPER */
+    /* --- TABEL STYLE --- */
     .glass-card {
-        background: var(--glass);
-        border-radius: 24px;
-        box-shadow: var(--shadow);
-        border: 1px solid rgba(255,255,255,0.6);
-        padding: 30px;
-        position: relative;
-        overflow: hidden;
+        background: var(--glass); border-radius: 24px; box-shadow: var(--shadow);
+        border: 1px solid rgba(255,255,255,0.6); padding: 30px;
+        position: relative; overflow: hidden;
         background-image: radial-gradient(#e0e0e0 1px, transparent 1px);
         background-size: 20px 20px;
     }
     .glass-card::after {
-        content: '';
-        position: absolute;
-        top: 0; left: 0; width: 100%; height: 5px;
+        content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 5px;
         background: linear-gradient(90deg, var(--secondary), var(--primary));
     }
 
-    .page-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 25px;
-        flex-wrap: wrap;
-        gap: 15px;
-    }
-    .page-title {
-        font-size: 1.8rem;
-        color: var(--text-dark);
-        margin: 0;
-        font-weight: 700;
-    }
+    .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 15px; }
+    .page-title { font-size: 1.8rem; color: var(--text-dark); margin: 0; font-weight: 700; }
 
-    /* BUTTONS */
     .btn-modern {
-        padding: 12px 25px;
-        border-radius: 50px;
-        border: none;
-        text-decoration: none;
-        font-weight: 600;
-        font-size: 0.95rem;
-        transition: all 0.3s ease;
-        display: inline-flex; align-items: center; gap: 8px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        padding: 12px 25px; border-radius: 50px; border: none; font-weight: 600; font-size: 0.95rem;
+        cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 10px rgba(0,0,0,0.1); text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
     }
     .btn-add { background: linear-gradient(to right, #11998e, #38ef7d); color: white; }
     .btn-add:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(56, 239, 125, 0.4); }
 
-    /* SEARCH BAR */
-    .search-container {
-        background: #fff;
-        padding: 15px;
-        border-radius: 15px;
-        margin-bottom: 25px;
-        display: flex;
-        gap: 15px;
-        flex-wrap: wrap;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.02);
-        border: 1px solid rgba(0,0,0,0.05);
+    /* Search Bar Style */
+    .search-wrapper {
+        display: flex; gap: 10px; margin-bottom: 20px; background: #f8f9fa; padding: 10px; border-radius: 15px; border: 1px solid #eee;
     }
     .search-input {
-        flex: 1;
-        padding: 12px 20px;
-        border: 2px solid #f0f0f0;
-        border-radius: 12px;
-        font-size: 0.95rem;
-        transition: border-color 0.3s;
+        flex: 1; border: none; background: transparent; padding: 10px 15px; font-size: 0.95rem; outline: none; font-family: 'Poppins', sans-serif; color: #555;
     }
-    .search-input:focus { border-color: var(--primary); outline: none; }
-    .btn-search { background: var(--bg-gradient); color: white; border-radius: 12px; border:none; padding: 10px 25px; font-weight: 600; cursor: pointer; transition: opacity 0.3s; }
-    .btn-search:hover { opacity: 0.9; }
-    .btn-reset { background: transparent; color: #dc3545; border: 2px solid #dc3545; border-radius: 12px; padding: 10px 20px; font-weight: 600; text-decoration: none; transition: all 0.3s; }
-    .btn-reset:hover { background: #dc3545; color: white; }
+    .search-input::placeholder { color: #aaa; }
+    .btn-icon { border: none; background: transparent; cursor: pointer; font-size: 1.2rem; transition: transform 0.2s; }
+    .btn-icon:hover { transform: scale(1.1); }
 
-    /* TABEL MODERN */
-    .modern-table {
-        width: 100%;
-        border-collapse: separate;
-        border-spacing: 0;
-    }
-    .modern-table thead tr {
-        background: linear-gradient(90deg, var(--secondary), var(--primary));
-        color: white;
-    }
-    .modern-table thead th {
-        padding: 18px;
-        text-align: left;
-        font-weight: 600;
-        text-transform: uppercase;
-        font-size: 0.85rem;
-        color: white;
-    }
-    .modern-table thead th:first-child { border-radius: 15px 0 0 0; }
-    .modern-table thead th:last-child { border-radius: 0 15px 0 0; }
+    table.modern-table { width: 100%; border-collapse: separate; border-spacing: 0; }
+    table.modern-table thead tr { background: linear-gradient(90deg, var(--secondary), var(--primary)); color: white; }
+    table.modern-table thead th { padding: 18px; text-align: left; font-weight: 600; text-transform: uppercase; font-size: 0.85rem; color: white; }
+    table.modern-table thead th:first-child { border-radius: 15px 0 0 0; }
+    table.modern-table thead th:last-child { border-radius: 0 15px 0 0; }
 
-    .modern-table tbody tr {
-        background: rgba(255,255,255,0.7);
-        border-bottom: 1px solid rgba(0,0,0,0.05);
-        transition: all 0.2s ease;
-    }
-    .modern-table tbody tr:hover {
-        background: rgba(102, 126, 234, 0.05);
-        transform: scale(1.005);
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        z-index: 2;
-        position: relative;
-    }
-    .modern-table td {
-        padding: 18px;
-        color: #555;
-        font-size: 0.95rem;
-    }
-    .modern-table td:first-child { font-weight: 700; color: var(--secondary); }
+    table.modern-table tbody tr { background: rgba(255,255,255,0.6); border-bottom: 1px solid rgba(0,0,0,0.05); transition: all 0.2s ease; }
+    table.modern-table tbody tr:hover { background: rgba(102, 126, 234, 0.05); transform: scale(1.005); box-shadow: 0 4px 15px rgba(0,0,0,0.05); z-index: 2; position: relative; }
+    table.modern-table td { padding: 18px; color: #555; font-size: 0.95rem; }
+    table.modern-table td:first-child { font-weight: 700; color: var(--secondary); }
 
-    /* TOMBOL AKSI KECIL */
-    .btn-action-sm {
-        padding: 8px 15px;
-        border-radius: 10px;
-        font-size: 0.85rem;
-        font-weight: 600;
-        cursor: pointer;
-        text-decoration: none;
-        display: inline-flex; align-items: center; gap: 5px;
-        transition: all 0.2s;
-    }
-    .btn-edit { background: linear-gradient(to right, #f6d365, #fda085); color: white; }
+    .btn-action-sm { padding: 8px 15px; border-radius: 10px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; }
+    .btn-edit { background: linear-gradient(to right, #f6d365, #fda085); color: white; border: none; }
     .btn-edit:hover { filter: brightness(1.1); transform: translateY(-2px); }
     .btn-delete { background: #fee2e2; color: #ef4444; border: none; }
     .btn-delete:hover { background: #fecaca; transform: translateY(-2px); }
 
-    /* ALERT */
-    .alert-modern {
-        background: #d1fae5; color: #065f46; padding: 15px; border-radius: 12px; margin-bottom: 25px; font-weight: 500; border: 1px solid #a7f3d0; display: flex; align-items: center; gap: 10px;
+    .alert-modern { background: #d1fae5; color: #065f46; padding: 15px; border-radius: 12px; margin-bottom: 25px; font-weight: 500; text-align: center; border: 1px solid #a7f3d0; }
+
+    /* --- MODAL STYLE --- */
+    .modal {
+        display: none; position: fixed; z-index: 200; left: 0; top: 0; width: 100%; height: 100%;
+        background-color: rgba(0,0,0,0.6); backdrop-filter: blur(8px);
+        align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease;
     }
-    .empty-state { text-align: center; padding: 30px; color: #888; font-style: italic; }
+    .modal.show { display: flex; opacity: 1; }
+
+    .modal-box {
+        background-color: #fff; padding: 0; border-radius: 24px; width: 90%; max-width: 450px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.2); transform: scale(0.8);
+        transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        position: relative; overflow: hidden;
+        border: 1px solid rgba(255,255,255,0.6);
+        background-image: radial-gradient(#e0e0e0 1px, transparent 1px); background-size: 20px 20px;
+    }
+    .modal.show .modal-box { transform: scale(1); }
+
+    .modal-header {
+        background: linear-gradient(135deg, var(--secondary), var(--primary));
+        padding: 30px 20px; text-align: center; position: relative;
+    }
+    .modal-icon {
+        width: 60px; height: 60px; background: rgba(255,255,255,0.2); border: 2px solid rgba(255,255,255,0.4);
+        border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: white;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    .modal-header h3 { margin: 0; color: white; font-size: 1.5rem; font-weight: 700; }
+
+    .modal-body { padding: 30px; }
+
+    .form-group { margin-bottom: 20px; text-align: left; }
+    .form-group label { display: block; margin-bottom: 10px; font-weight: 600; font-size: 0.9rem; color: #555; margin-left: 5px; }
+    .form-control {
+        width: 100%; padding: 14px 20px; border: 2px solid #eee; border-radius: 12px;
+        box-sizing: border-box; font-family: inherit; font-size: 1rem; transition: all 0.3s;
+        background: #f9fafb; color: #333;
+    }
+    .form-control:focus { border-color: var(--primary); outline: none; background: #fff; box-shadow: 0 0 0 4px rgba(79, 172, 254, 0.1); }
+
+    .modal-buttons { display: flex; gap: 15px; margin-top: 30px; }
+    .btn-submit { flex: 1; background: var(--bg-gradient); color: white; padding: 14px; border-radius: 12px; border:none; font-weight: 700; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+    .btn-submit:hover { opacity: 0.9; transform: scale(0.98); }
+    .btn-cancel { flex: 1; background: #f3f4f6; color: #666; padding: 14px; border-radius: 12px; border:none; font-weight: 600; cursor: pointer; transition: 0.2s; }
+    .btn-cancel:hover { background: #e5e7eb; color: #333; }
 
     /* WAVE ANIMATION */
     .waves { position: fixed; bottom: 0; left: 0; width: 100%; height: 15vh; margin-bottom: -7px; min-height: 100px; max-height: 150px; z-index: 1; pointer-events: none; }
@@ -224,41 +188,38 @@
     @keyframes move-forever { 0% { transform: translate3d(-90px,0,0); } 100% { transform: translate3d(85px,0,0); } }
 </style>
 
-<div class="container-custom">
+<div class="website-layout">
 
     <!-- GLASS CARD CONTAINER -->
     <div class="glass-card">
 
-        <!-- HEADER & TOMBOL TAMBAH -->
+        <!-- HEADER & TOMBOL ADD -->
         <div class="page-header">
-            <h3 class="page-title">Data Divisi</h3>
-            <a href="{{ route('divisi.create') }}" class="btn-modern btn-add">
+            <h4 class="page-title">Data Divisi</h4>
+            <button class="btn-modern btn-add" onclick="openModal('create')">
                 ➕ Tambah Divisi
-            </a>
+            </button>
         </div>
 
-        <!-- SEARCH BAR -->
-        <form action="{{ route('divisi.index') }}" method="GET" class="search-container">
+        <!-- SEARCH BAR (Disesuaikan dengan Style) -->
+        <form action="{{ route('divisi.index') }}" method="GET" class="search-wrapper">
             <input type="text"
                    name="search"
                    class="search-input"
-                   placeholder="Cari nama divisi..."
+                   placeholder="🔍 Cari nama divisi..."
                    value="{{ request('search') }}">
-            <button class="btn-search" type="submit">
-                🔍 Cari
-            </button>
-
             @if(request('search'))
-                <a href="{{ route('divisi.index') }}" class="btn-reset">
-                    🔄 Reset
-                </a>
+                <a href="{{ route('divisi.index') }}" class="btn-icon" title="Reset">❌</a>
+                <button type="submit" class="btn-icon" title="Cari">🔍</button>
+            @else
+                <button type="submit" class="btn-icon" title="Cari">🔍</button>
             @endif
         </form>
 
         <!-- ALERT SUKSES -->
         @if(session('success'))
             <div class="alert-modern">
-                <span>✅</span> {{ session('success') }}
+                ✅ {{ session('success') }}
             </div>
         @endif
 
@@ -267,15 +228,15 @@
             <table class="modern-table">
                 <thead>
                     <tr>
-                        <th>No</th>
-                        <th>Nama Divisi</th>
-                        <th>Aksi</th>
+                        <th width="10%">No</th>
+                        <th width="60%">Nama Divisi</th>
+                        <th width="30%" style="text-align: center;">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     @if($divisi->count() == 0)
                         <tr>
-                            <td colspan="3" class="empty-state">
+                            <td colspan="3" style="text-align: center; padding: 30px; color: #999;">
                                 Data divisi tidak ditemukan
                             </td>
                         </tr>
@@ -285,24 +246,20 @@
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td><strong>{{ $d->nama_divisi }}</strong></td>
-                            <td>
-                                <div style="display: flex; gap: 8px;">
-                                    <a href="{{ route('divisi.edit', $d->id_divisi) }}"
-                                       class="btn-action-sm btn-edit">
-                                        ✏️ Edit
-                                    </a>
+                            <td style="text-align: center;">
+                                <!-- Tombol Edit Membuka Modal Edit -->
+                                <button class="btn-action-sm btn-edit"
+                                    onclick="openModal('edit', {{ $d->id_divisi }}, '{{ $d->nama_divisi }}')">
+                                    ✏️ Edit
+                                </button>
 
-                                    <form action="{{ route('divisi.destroy', $d->id_divisi) }}"
-                                          method="POST"
-                                          style="display: inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button class="btn-action-sm btn-delete"
-                                                onclick="return confirm('Yakin ingin menghapus divisi ini?')">
-                                            🗑️ Hapus
-                                        </button>
-                                    </form>
-                                </div>
+                                <form action="{{ route('divisi.destroy',$d->id_divisi) }}" method="POST" style="display: inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="btn-action-sm btn-delete" onclick="return confirm('Yakin ingin menghapus divisi ini?')">
+                                        🗑️ Hapus
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                     @endforeach
@@ -312,6 +269,44 @@
 
     </div>
 
+</div>
+
+<!-- MODAL DIVISI (Create / Edit) -->
+<div class="modal" id="divisiModal">
+    <div class="modal-box">
+
+        <!-- HEADER GRADASI -->
+        <div class="modal-header">
+            <div class="modal-icon">🏢</div>
+            <h3 id="modalTitle">Tambah Divisi</h3>
+        </div>
+
+        <div class="modal-body">
+            <form id="divisiForm" action="{{ route('divisi.store') }}" method="POST">
+                @csrf
+                <!-- Hidden ID untuk Edit -->
+                <input type="hidden" name="id_divisi" id="divisiId">
+
+                <!-- Hidden Method (SOLUSI ERROR 405) -->
+                <input type="hidden" name="_method" value="POST" id="methodInput">
+
+                <div class="form-group">
+                    <label>Nama Divisi</label>
+                    <input type="text"
+                           name="nama_divisi"
+                           id="nama_divisi"
+                           class="form-control"
+                           placeholder="Masukkan nama divisi..."
+                           required>
+                </div>
+
+                <div class="modal-buttons">
+                    <button type="submit" class="btn-submit">💾 Simpan Data</button>
+                    <button type="button" class="btn-cancel" onclick="closeModal()">❌ Batal</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
 <!-- WAVE ANIMATION SVG -->
@@ -328,4 +323,61 @@
     </g>
 </svg>
 
+<!-- JAVASCRIPT LOGIC -->
+<script>
+    // --- FUNGSI MODAL ---
+    function openModal(mode, id = null, nama_divisi = '') {
+        const modal = document.getElementById('divisiModal');
+        const form = document.getElementById('divisiForm');
+        const title = document.getElementById('modalTitle');
+
+        // Tampilkan Modal
+        modal.style.display = "flex";
+        setTimeout(() => { modal.classList.add('show'); }, 10);
+
+        if (mode === 'create') {
+            // --- MODE CREATE ---
+            form.action = "{{ route('divisi.store') }}";
+            form.method = "POST";
+
+            // Set Method Hidden menjadi POST (Default)
+            document.getElementById('methodInput').value = "POST";
+
+            // UI Update
+            title.innerText = "Tambah Divisi Baru";
+            document.getElementById('divisiId').value = "";
+            document.getElementById('nama_divisi').value = "";
+
+        } else {
+            // --- MODE EDIT ---
+            // Ganti route dengan ID dinamis
+            form.action = "{{ route('divisi.update', ':id') }}".replace(':id', id);
+            form.method = "POST";
+
+            // Set Method Hidden menjadi PUT (SOLUSI ERROR 405)
+            document.getElementById('methodInput').value = "PUT";
+
+            // UI Update & Isi Data
+            title.innerText = "Edit Data Divisi";
+            document.getElementById('divisiId').value = id;
+            document.getElementById('nama_divisi').value = nama_divisi;
+        }
+    }
+
+    function closeModal() {
+        const modal = document.getElementById('divisiModal');
+        modal.classList.remove('show');
+        setTimeout(() => { modal.style.display = "none"; }, 300);
+    }
+
+    // Klik di luar modal untuk menutup
+    window.onclick = function(event) {
+        const modal = document.getElementById('divisiModal');
+        if (event.target == modal) {
+            closeModal();
+        }
+    }
+</script>
+
 @endsection
+```

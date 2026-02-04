@@ -311,13 +311,14 @@
                             <td><span class="badge-stat stat-a">{{ $r->jumlah_alpha }}</span></td>
                             <td>
                                 <form action="{{ route('rekap-absensi.delete', $r->id_rekap) }}"
-                                      method="POST"
-                                      style="display: inline-block;">
+                                    method="POST"
+                                    style="display:inline-block;">
                                     @csrf
                                     @method('DELETE')
-                                    <button class="btn-action-sm btn-delete"
-                                            onclick="return confirm('Yakin hapus data rekap ini?')">
-                                        🗑️ Hapus
+                                    <button type="submit"
+                                            onclick="return confirm('Yakin hapus data ini?')"
+                                            class="btn btn-danger btn-sm">
+                                        Hapus
                                     </button>
                                 </form>
                             </td>
