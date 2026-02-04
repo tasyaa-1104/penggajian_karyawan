@@ -8,7 +8,6 @@ use App\Models\Jabatan;
 use App\Models\Karyawan;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class KaryawanController extends Controller
 {
@@ -16,20 +15,16 @@ class KaryawanController extends Controller
     {
         $search = $request->search;
 
-        $karyawans = Karyawan::with(['divisi', 'jabatan', 'user'])
-            ->when($search, function ($query) use ($search) {
-                $query->where('nik', 'like', "%$search%")
-                    ->orWhereHas('user', fn ($q) =>
-                        $q->where('nama', 'like', "%$search%"))
-                    ->orWhereHas('divisi', fn ($q) =>
-                        $q->where('nama_divisi', 'like', "%$search%"))
-                    ->orWhereHas('jabatan', fn ($q) =>
-                        $q->where('nama_jabatan', 'like', "%$search%"));
+        $karyawans = Karyawan::with(['divisi','jabatan','user'])
+            ->when($search, function ($q) use ($search) {
+                $q->where('nik', 'like', "%$search%")
+                  ->orWhereHas('user', fn ($u) =>
+                        $u->where('nama', 'like', "%$search%"));
             })
-            ->orderBy('id_karyawan', 'desc')
+            ->orderBy('id_karyawan','desc')
             ->get();
 
-        return view('admin.karyawan', compact('karyawans', 'search'));
+        return view('admin.karyawan', compact('karyawans','search'));
     }
 
     public function create()
@@ -37,7 +32,7 @@ class KaryawanController extends Controller
         return view('admin.karyawan-create', [
             'divisi'  => Divisi::all(),
             'jabatan' => Jabatan::all(),
-            'users'   => User::where('role', 'karyawan')->get(),
+            'users'   => User::where('role','karyawan')->get(),
         ]);
     }
 
@@ -46,9 +41,9 @@ class KaryawanController extends Controller
         $request->validate([
             'id_user'   => 'required|exists:users,id',
             'nik'       => 'required|unique:karyawan,nik',
-            'id_divisi' => 'required|exists:divisi,id_divisi',
-            'id_jabatan'=> 'required|exists:jabatan,id_jabatan',
-            'status_karyawan' => 'required|in:aktif,nonaktif',
+            'id_divisi' => 'required',
+            'id_jabatan'=> 'required',
+            'status_karyawan' => 'required',
         ]);
 
         $user    = User::findOrFail($request->id_user);
@@ -57,7 +52,7 @@ class KaryawanController extends Controller
         Karyawan::create([
             'id_user'         => $user->id,
             'nik'             => $request->nik,
-            'nama_karyawan'   => $user->nama, // 🔥 AMBIL DARI USER
+            'nama_karyawan'   => $user->nama,
             'id_divisi'       => $request->id_divisi,
             'id_jabatan'      => $request->id_jabatan,
             'gaji_pokok'      => $jabatan->gaji_pokok,
@@ -65,16 +60,15 @@ class KaryawanController extends Controller
         ]);
 
         return redirect()->route('karyawan')
-            ->with('success', 'Karyawan berhasil ditambahkan');
+            ->with('success','Karyawan berhasil ditambahkan');
     }
 
     public function edit($id)
     {
         return view('admin.karyawan-edit', [
-            'karyawan' => Karyawan::with('user')->findOrFail($id),
+            'karyawan' => Karyawan::findOrFail($id),
             'divisi'   => Divisi::all(),
             'jabatan'  => Jabatan::all(),
-            'users'    => User::where('role', 'karyawan')->get(),
         ]);
     }
 
@@ -83,18 +77,18 @@ class KaryawanController extends Controller
         $request->validate([
             'id_user'   => 'required|exists:users,id',
             'nik'       => 'required|unique:karyawan,nik,' . $id . ',id_karyawan',
-            'id_divisi' => 'required|exists:divisi,id_divisi',
-            'id_jabatan'=> 'required|exists:jabatan,id_jabatan',
-            'gaji_pokok'=> 'required|numeric|min:0',
-            'status_karyawan' => 'required|in:aktif,nonaktif',
+            'id_divisi' => 'required',
+            'id_jabatan'=> 'required',
+            'gaji_pokok'=> 'required|numeric',
+            'status_karyawan' => 'required',
         ]);
 
         $user = User::findOrFail($request->id_user);
 
-        Karyawan::findOrFail($id)->update([
+        Karyawan::where('id_karyawan',$id)->update([
             'id_user'         => $user->id,
             'nik'             => $request->nik,
-            'nama_karyawan'   => $user->nama, // 🔥 SYNC ULANG
+            'nama_karyawan'   => $user->nama,
             'id_divisi'       => $request->id_divisi,
             'id_jabatan'      => $request->id_jabatan,
             'gaji_pokok'      => $request->gaji_pokok,
@@ -102,50 +96,14 @@ class KaryawanController extends Controller
         ]);
 
         return redirect()->route('karyawan')
-            ->with('success', 'Karyawan berhasil diupdate');
+            ->with('success','Karyawan berhasil diupdate');
     }
 
     public function destroy($id)
     {
-        Karyawan::destroy($id);
+        Karyawan::where('id_karyawan',$id)->delete();
 
         return redirect()->route('karyawan')
-            ->with('success', 'Karyawan berhasil dihapus');
+            ->with('success','Karyawan berhasil dihapus');
     }
-
-   // Menampilkan dashboard karyawan (public tapi pakai login + role)
-   // Tambahkan ini di paling atas file bersama use yang lain
-
-// ... (kode lainnya tetap sama)
-
-    public function dashboardKaryawan()
-    {
-        $userId = session('user.id');
-
-        $karyawan = Karyawan::with(['jabatan','divisi'])
-            ->where('id_user', $userId)
-            ->firstOrFail();
-
-        // --- LOGIKA HITUNG DATA ABSENSI ---
-        $totalHadir = Absensi::where('id_karyawan', $karyawan->id_karyawan)
-                            ->where('status_kehadiran', 'Hadir')
-                            ->count();
-
-        // Gabungkan Izin dan Sakit menjadi satu kategori "Izin"
-        $totalIzin = Absensi::where('id_karyawan', $karyawan->id_karyawan)
-                           ->whereIn('status_kehadiran', ['Izin', 'Sakit'])
-                           ->count();
-
-        $totalAlpha = Absensi::where('id_karyawan', $karyawan->id_karyawan)
-                            ->where('status_kehadiran', 'Alpha')
-                            ->count();
-
-        return view('karyawan-dashboard', compact(
-            'karyawan',
-            'totalHadir',
-            'totalIzin',
-            'totalAlpha'
-        ));
-    }
-
 }
