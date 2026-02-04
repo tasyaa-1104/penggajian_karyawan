@@ -4,14 +4,14 @@
 <div class="container">
     <h3 class="mb-3">Data Absensi</h3>
 
-       @if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
     @endif
 
     <a href="{{ route('absensi.create') }}" class="btn btn-primary mb-3">
@@ -51,6 +51,8 @@
                 <th>No</th>
                 <th>Karyawan</th>
                 <th>Tanggal</th>
+                <th>Jam Masuk</th>
+                <th>Jam Pulang</th>
                 <th>Status</th>
                 <th>Keterangan</th>
                 <th>Aksi</th>
@@ -59,7 +61,7 @@
         <tbody>
             @if($absensi->count() == 0)
                 <tr>
-                    <td colspan="6" class="text-center">
+                    <td colspan="8" class="text-center">
                         Data absensi tidak ditemukan
                     </td>
                 </tr>
@@ -70,8 +72,10 @@
                 <td>{{ $loop->iteration }}</td>
                 <td>{{ $a->karyawan->nama_karyawan ?? '-' }}</td>
                 <td>{{ $a->tanggal }}</td>
+                <td>{{ $a->jam_masuk ?? '-' }}</td>
+                <td>{{ $a->jam_pulang ?? '-' }}</td>
                 <td>{{ ucfirst($a->status_kehadiran) }}</td>
-                <td>{{ $a->keterangan }}</td>
+                <td>{{ $a->keterangan ?? '-' }}</td>
                 <td>
                     <a href="{{ route('absensi.edit', $a->id_absensi) }}"
                        class="btn btn-warning btn-sm">
