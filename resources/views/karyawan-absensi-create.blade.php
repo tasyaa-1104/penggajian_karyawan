@@ -3,521 +3,342 @@
 @section('title', 'Absensi Karyawan')
 
 @section('topbar')
-    <!-- Topbar Style Website (Header) -->
-    <div class="website-header animate-header">
-        <div class="header-content">
-            <h1>Halaman Absensi</h1>
-            <div class="user-profile">
-                <span>Hi, {{ $karyawan->nama_karyawan }} 👋</span>
-                <div class="avatar-small">👤</div>
-            </div>
-        </div>
-    </div>
+    <div style="display:none;"></div>
 @endsection
 
 @section('content')
 
-<!-- CSS STYLING -->
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
 
     :root {
         --primary: #4facfe;
-        --primary-dark: #00f2fe;
-        --secondary: #667eea;
-        --text-dark: #333;
-        --glass: rgba(255, 255, 255, 0.85);
-        --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        --bg-gradient: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+        --secondary: #00f2fe;
+        --text-main: #1e293b;
+        --text-light: #64748b;
+        --bg-body: #f0f9ff;
+        --alert-orange: #f97316;
     }
 
-    /* RESET & UTAMA */
-    body {
-        font-family: 'Poppins', sans-serif;
-        background: var(--bg-gradient);
-        min-height: 100vh;
-        margin: 0;
-        color: var(--text-dark);
-        overflow-x: hidden;
-    }
-
-    /* LAYOUT WEBSITE */
-    .website-layout {
+    /* --- LAYOUT UTAMA (No Scroll) --- */
+    .split-layout {
+        height: 100vh;
         width: 100%;
-        max-width: 650px; /* Lebar dibatasi agar seragam dan rapi */
-        margin: 0 auto;
-        padding: 40px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #e0f2fe;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 25px;
+        width: 95%;
+        max-width: 1200px;
+        height: 85vh;
         position: relative;
         z-index: 10;
-        padding-top: 100px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
     }
 
-    /* --- ANIMASI CSS --- */
-    @keyframes slideDown {
-        from { transform: translateY(-100%); }
-        to { transform: translateY(0); }
-    }
-    .animate-header { animation: slideDown 0.8s ease-out; }
-
-    @keyframes fadeInUp {
-        from { opacity: 0; transform: translateY(30px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    .animate-up {
-        opacity: 0;
-        animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-    }
-    .delay-1 { animation-delay: 0.1s; }
-    .delay-2 { animation-delay: 0.2s; }
-
-    /* --- STYLING HEADER --- */
-    .website-header {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 80px;
-        background: rgba(255, 255, 255, 0.9);
-        backdrop-filter: blur(10px);
-        z-index: 100;
-        border-bottom: 1px solid rgba(0,0,0,0.05);
-        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-    }
-    .header-content {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 20px;
-        height: 100%;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    .website-header h1 { font-size: 1.4rem; color: var(--secondary); margin: 0; font-weight: 700; }
-    .user-profile { display: flex; align-items: center; gap: 15px; font-weight: 600; color: var(--text-dark); }
-    .avatar-small {
-        width: 40px; height: 40px;
-        background: var(--bg-gradient); color: white;
-        border-radius: 50%;
-        display: flex; align-items: center; justify-content: center;
-        font-size: 1.2rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
-
-    /* --- LAYOUT STACKED --- */
-    .attendance-grid {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        gap: 25px;
-    }
-
-    /* --- KARTU JAM (VISUAL RICH) --- */
-    .clock-card {
-        width: 100%;
-        background: var(--glass);
-        padding: 40px;
-        border-radius: 30px;
-        box-shadow: var(--shadow);
-        text-align: center;
-        border: 1px solid rgba(255,255,255,0.6);
+    /* --- CARD SHARED --- */
+    .glass-card {
+        border-radius: 32px;
+        padding: 0;
         position: relative;
         overflow: hidden;
-        /* Pola Background agar tidak polos */
-        background-image: radial-gradient(#e0e0e0 1px, transparent 1px);
-        background-size: 20px 20px;
+        box-shadow: 0 25px 50px -12px rgba(79, 172, 254, 0.25);
+        transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        display: flex;
+        flex-direction: column;
     }
 
-    /* Dekorasi Background Jam */
-    .clock-card::before {
-        content: '🕒';
+    /* --- KARTU KANAN (JAM) --- */
+    .right-card {
+        background: linear-gradient(160deg, #4facfe 0%, #00f2fe 100%);
+        color: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        border: 2px solid rgba(255,255,255,0.4);
+        order: 2;
+    }
+
+    /* Gelombang & Gelembung (Kanan) */
+    .wave-container { position: absolute; bottom: 0; left: 0; width: 100%; height: 150px; z-index: 1; pointer-events: none; }
+    .wave { position: absolute; bottom: 0; left: 0; width: 200%; height: 100%; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 88.7'%3E%3Cpath d='M800 56.9c-155.5 0-204.9-50-405.5-49.9-200 0-250 49.9-394.5 49.9v31.8h800z' fill='rgba(255,255,255,0.4)'/%3E%3C/svg%3E"); background-size: 50% 100%; animation: moveWave 8s linear infinite; }
+    .wave:nth-child(2) { bottom: 10px; opacity: 0.3; animation-duration: 12s; animation-direction: reverse; }
+    .wave:nth-child(3) { bottom: 20px; opacity: 0.2; animation-duration: 15s; }
+
+    .bubble { position: absolute; border-radius: 50%; background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.9), rgba(255,255,255,0.1)); box-shadow: 0 0 10px rgba(255,255,255,0.3); z-index: 1; animation: bubbleUp linear infinite; }
+    .b1 { width: 30px; height: 30px; left: 10%; animation-duration: 6s; }
+    .b2 { width: 50px; height: 50px; left: 30%; animation-duration: 9s; animation-delay: 2s; }
+    .b3 { width: 20px; height: 20px; left: 70%; animation-duration: 5s; animation-delay: 1s; }
+    .b4 { width: 40px; height: 40px; left: 85%; animation-duration: 8s; animation-delay: 3s; }
+    .b5 { width: 15px; height: 15px; left: 50%; animation-duration: 7s; animation-delay: 0s; }
+
+    @keyframes bubbleUp { 0% { bottom: -50px; transform: translateX(0) scale(0.8); opacity: 0; } 20% { opacity: 0.8; } 100% { bottom: 100%; transform: translateX(-20px) scale(1.2); opacity: 0; } }
+    @keyframes moveWave { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+    .content-clock { position: relative; z-index: 5; padding: 40px; display: flex; flex-direction: column; justify-content: center; height: 100%; }
+    .big-time { font-size: 7rem; font-weight: 800; line-height: 0.9; text-shadow: 0 10px 30px rgba(0,0,0,0.1); letter-spacing: -2px; animation: breathe 4s ease-in-out infinite; }
+    @keyframes breathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
+
+    /* --- KARTU KIRI (MENU ABSENSI - ENHANCED) --- */
+    .left-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        padding: 35px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        order: 1;
+        position: relative;
+        /* 1. Pola Background agar tidak polos */
+        background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+        background-size: 24px 24px;
+    }
+
+    /* 2. Ikon Melayang di Background (Dekorasi) */
+    .deco-icon {
         position: absolute;
-        font-size: 15rem;
-        opacity: 0.05;
-        top: -20px;
-        right: -20px;
+        font-size: 6rem;
+        opacity: 0.03;
         z-index: 0;
         pointer-events: none;
+        animation: floatDeco linear infinite;
+    }
+    .deco-1 { top: 10%; right: 10%; animation-duration: 10s; }
+    .deco-2 { bottom: 15%; left: 10%; animation-duration: 12s; animation-delay: 2s; }
+
+    @keyframes floatDeco {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(-20px) rotate(5deg); }
     }
 
-    .time-display {
-        font-size: 4rem;
-        font-weight: 700;
-        line-height: 1;
-        margin: 20px 0;
-        font-variant-numeric: tabular-nums;
-        background: linear-gradient(to right, var(--secondary), var(--primary));
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-        position: relative;
-        z-index: 1;
-    }
+    .header-action { position: relative; z-index: 2; margin-bottom: 25px; }
+    .header-action h2 { font-size: 1.6rem; font-weight: 800; color: var(--text-main); margin-bottom: 5px; }
+    .header-action p { color: var(--text-light); margin-bottom: 25px; font-weight: 500; }
 
-    .date-display {
-        color: #555;
-        font-size: 1.2rem;
-        font-weight: 500;
-        background: #fff;
-        padding: 8px 25px;
-        border-radius: 50px;
-        display: inline-block;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        position: relative;
-        z-index: 1;
-    }
-
-    .clock-subtext {
-        margin-top: 15px;
-        color: #777;
-        font-size: 0.9rem;
-        position: relative;
-        z-index: 1;
-    }
-
-    /* --- KARTU AKSI (VISUAL RICH) --- */
-    .action-card {
-        width: 100%;
-        /* Menjaga keseimbangan visual, pakai min-height supaya tidak terlihat gepeng */
-        min-height: 350px;
-        background: rgba(255, 255, 255, 0.95);
-        padding: 35px;
-        border-radius: 30px;
-        box-shadow: var(--shadow);
-        border: 2px solid rgba(255,255,255,0.8);
-        display: flex;
-        flex-direction: column;
-        position: relative;
-        overflow: hidden;
-    }
-
-    /* Border gradient mengkilap */
-    .action-card::after {
-        content: '';
-        position: absolute;
-        top: 0; left: 0; right: 0; height: 5px;
-        background: linear-gradient(90deg, var(--secondary), var(--primary));
-    }
-
-    .card-header {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        margin-bottom: 25px;
-        padding-bottom: 20px;
-        border-bottom: 2px dashed #eee;
-    }
-
-    .header-icon {
-        width: 50px; height: 50px;
-        background: var(--bg-gradient);
-        color: white;
-        border-radius: 15px;
-        display: flex; align-items: center; justify-content: center;
-        font-size: 1.5rem;
-    }
-
-    .card-header h2 { margin: 0; font-size: 1.3rem; color: var(--text-dark); }
-
-    /* ALERT */
-    .alert {
-        padding: 12px;
+    /* Deadline Badge with Glow */
+    .deadline-badge {
+        position: relative; z-index: 2;
+        background: #fff7ed;
+        border: 1px solid #ffedd5;
+        color: #c2410c;
+        padding: 12px 20px;
         border-radius: 12px;
-        margin-bottom: 20px;
         font-size: 0.9rem;
-        text-align: center;
-        font-weight: 500;
+        font-weight: 700;
+        display: flex; align-items: center; gap: 10px;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 6px -1px rgba(249, 115, 22, 0.1);
+        animation: glowPulse 3s infinite alternate;
     }
-    .alert-success { background-color: #d4edda; color: #155724; border: none; }
-    .alert-danger { background-color: #f8d7da; color: #721c24; border: none; }
-
-    /* TOMBOL STYLE */
-    .btn {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 100%;
-        padding: 18px;
-        margin-bottom: 15px;
-        border: none;
-        border-radius: 16px;
-        font-family: inherit;
-        font-size: 1.05rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        text-decoration: none;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-        position: relative;
-        z-index: 2;
-    }
-    .btn:active { transform: scale(0.97); }
-
-    .btn-success {
-        background: linear-gradient(to right, #11998e, #38ef7d);
-        color: white;
-    }
-    .btn-success:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(56, 239, 125, 0.4); }
-
-    .btn-danger {
-        background: linear-gradient(to right, #cb2d3e, #ef473a);
-        color: white;
-    }
-    .btn-danger:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(239, 71, 58, 0.4); }
-
-    .btn-secondary {
-        background: #f8f9fa;
-        color: var(--text-dark);
-        border: 1px solid #e9ecef;
-    }
-    .btn-secondary:hover { background: #e2e6ea; transform: translateY(-2px); }
-
-    .btn:disabled { background: #e9ecef; color: #adb5bd; cursor: not-allowed; box-shadow: none; }
-    .btn-group { display: flex; gap: 12px; }
-
-    /* TAMPILAN SELESAI */
-    .finish-message {
-        text-align: center;
-        padding: 40px 10px;
-        color: #555;
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    }
-    .finish-emoji { font-size: 5rem; margin-bottom: 15px; display: block; animation: bounce 2s infinite; }
-
-    @keyframes bounce {
-        0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
-        40% {transform: translateY(-20px);}
-        60% {transform: translateY(-10px);}
+    @keyframes glowPulse {
+        from { box-shadow: 0 0 5px rgba(249, 115, 22, 0.2); border-color: #ffedd5; }
+        to { box-shadow: 0 0 15px rgba(249, 115, 22, 0.4); border-color: #fdba74; }
     }
 
-    /* MODAL */
-    .modal {
-        display: none;
-        position: fixed;
-        z-index: 200;
-        left: 0; top: 0;
+    /* Tombol dengan Efek Kilau (Shine) */
+    .btn-action {
+        position: relative; z-index: 2;
+        width: 100%; padding: 18px; border: none; border-radius: 16px;
+        font-family: inherit; font-weight: 700; font-size: 1rem;
+        cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px;
+        transition: all 0.3s; margin-bottom: 15px;
+        overflow: hidden; /* Penting untuk efek shine */
+    }
+
+    /* Efek Kilau */
+    .btn-action::before {
+        content: ''; position: absolute; top: 0; left: -100%;
         width: 100%; height: 100%;
-        background-color: rgba(0,0,0,0.5);
-        backdrop-filter: blur(5px);
-        align-items: center; justify-content: center;
-        opacity: 0; transition: opacity 0.3s ease;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+        transition: 0.5s;
+        z-index: 1;
     }
-    .modal.show { display: flex; opacity: 1; }
-    .modal-box {
-        background-color: #fff;
-        padding: 30px;
-        border-radius: 20px;
-        width: 90%; max-width: 400px;
-        box-shadow: 0 15px 50px rgba(0,0,0,0.2);
-        transform: scale(0.7);
-        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-    .modal.show .modal-box { transform: scale(1); }
-    .modal h3 { margin-top: 0; color: var(--text-dark); text-align: center; margin-bottom: 20px; }
+    .btn-action:hover::before { left: 100%; }
+    .btn-action span { z-index: 2; transition: transform 0.2s; }
+    .btn-action:hover span { transform: scale(1.2) rotate(-10deg); }
 
-    .form-group { margin-bottom: 15px; text-align: left; }
-    .form-group label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem; color: #555; }
-    .form-control {
-        width: 100%; padding: 12px;
-        border: 2px solid #eee; border-radius: 12px;
-        box-sizing: border-box; font-family: inherit; font-size: 0.95rem;
-        transition: border-color 0.3s;
-    }
-    .form-control:focus { border-color: var(--primary); outline: none; background: #fafdff; }
-    textarea.form-control { resize: vertical; min-height: 80px; }
+    .btn-main { background: linear-gradient(90deg, #2563eb, #06b6d4); color: white; box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3); }
+    .btn-main:hover { transform: translateY(-4px); box-shadow: 0 15px 30px rgba(37, 99, 235, 0.4); }
 
-    /* WAVE ANIMATION */
-    .waves {
-        position: fixed; bottom: 0; left: 0; width: 100%; height: 15vh;
-        margin-bottom: -7px; min-height: 100px; max-height: 150px; z-index: 1; pointer-events: none;
+    .btn-danger { background: linear-gradient(90deg, #ef4444, #f87171); color: white; box-shadow: 0 10px 25px rgba(239, 68, 68, 0.3); }
+    .btn-danger:hover { transform: translateY(-4px); box-shadow: 0 15px 30px rgba(239, 68, 68, 0.4); }
+
+    .btn-outline { background: #f1f5f9; color: var(--text-light); border: 2px solid transparent; }
+    .btn-outline:hover { background: white; border-color: var(--primary); color: var(--primary); }
+    .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    .status-working {
+        background: #ecfdf5; border: 1px solid #a7f3d0; color: #059669;
+        padding: 15px; border-radius: 12px; text-align: center; font-weight: 700; margin-bottom: 25px;
+        display: flex; align-items: center; justify-content: center; gap: 10px;
+        animation: pulseStatus 2s infinite;
     }
-    .parallax > use { animation: move-forever 25s cubic-bezier(.55,.5,.45,.5) infinite; }
-    .parallax > use:nth-child(1) { animation-delay: -2s; animation-duration: 7s; fill: rgba(255,255,255,0.7); }
-    .parallax > use:nth-child(2) { animation-delay: -3s; animation-duration: 10s; fill: rgba(255,255,255,0.5); }
-    .parallax > use:nth-child(3) { animation-delay: -4s; animation-duration: 13s; fill: rgba(255,255,255,0.3); }
-    .parallax > use:nth-child(4) { animation-delay: -5s; animation-duration: 20s; fill: #fff; }
-    @keyframes move-forever { 0% { transform: translate3d(-90px,0,0); } 100% { transform: translate3d(85px,0,0); } }
+    @keyframes pulseStatus { 0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); } 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } }
+
+    /* Modal */
+    .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(5px); align-items: center; justify-content: center; }
+    .modal-box { background: white; width: 90%; max-width: 380px; padding: 30px; border-radius: 24px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.2); animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+    @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .form-group { margin-bottom: 20px; }
+    .form-control { width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 12px; font-family: inherit; }
+    .form-control:focus { border-color: var(--primary); outline: none; background: #f0f9ff; }
+
+    /* Animations Slide */
+    @keyframes slideInLeft { from { opacity: 0; transform: translateX(-50px); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes slideInRight { from { opacity: 0; transform: translateX(50px); } to { opacity: 1; transform: translateX(0); } }
+    .anim-left { animation: slideInLeft 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+    .anim-right { animation: slideInRight 0.8s 0.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; opacity: 0; }
+
+    @media (max-width: 900px) {
+        .split-layout { height: auto; padding: 80px 20px 20px; overflow-y: auto; }
+        .dashboard-grid { grid-template-columns: 1fr; height: auto; gap: 20px; }
+        .right-card, .left-card { order: initial; }
+        .right-card { min-height: 350px; }
+        .big-time { font-size: 5rem; }
+    }
 </style>
 
-<!-- WEBSITE CONTENT -->
-<div class="website-layout">
+<!-- SPLIT LAYOUT -->
+<div class="split-layout">
+    <div class="dashboard-grid">
 
-    <div class="attendance-grid">
+        <!-- KARTU KIRI (TOMBOL AKSI) -->
+        <div class="glass-card left-card anim-left">
 
-        <!-- 1. KARTU JAM (ATAS - FULL WIDTH, PATTERN) -->
-        <div class="clock-card animate-up delay-1">
-            <div style="z-index: 1; position: relative;">
-                <p style="margin:0; color:#666; font-weight:600; text-transform:uppercase; letter-spacing:2px; font-size:0.85rem;">
-                    Waktu Lokal
-                </p>
+            <!-- Dekorasi Icon Melayang (Agar Tidak Polos) -->
+            <div class="deco-icon deco-1">📍</div>
+            <div class="deco-icon deco-2">🏠</div>
 
-                <div class="time-display" id="realTimeClock">--:--:--</div>
-
-                <div class="date-display">
-                    📅 {{ now()->format('l, d F Y') }}
-                </div>
-
-                <p class="clock-subtext">
-                    Pastikan status absensi Anda tercatat dengan benar.
-                </p>
+            <div class="header-action">
+                <h2>Menu Absensi</h2>
+                <p>Lakukan aktivitas harian Anda.</p>
             </div>
-        </div>
 
-        <!-- 2. KARTU AKSI (BAWAH - VISUAL RICH) -->
-        <div class="action-card animate-up delay-2">
-            <div class="card-header">
-                <div class="header-icon">📋</div>
-                <h2>Aktivitas Absensi</h2>
+            <!-- BADGE DEADLINE -->
+            <div class="deadline-badge">
+                <i class="fa-regular fa-clock"></i>
+                Batas Absen Masuk: 10.00 WIB
             </div>
 
             {{-- ALERT --}}
             @if(session('success'))
-                <div class="alert alert-success">✅ {{ session('success') }}</div>
+                <div style="background:#d1fae5; color:#065f46; padding:12px; border-radius:10px; margin-bottom:20px; text-align:center; font-weight:600; position:relative; z-index:2;">
+                    ✅ {{ session('success') }}
+                </div>
             @endif
             @if(session('error'))
-                <div class="alert alert-danger">⚠️ {{ session('error') }}</div>
+                <div style="background:#fee2e2; color:#991b1b; padding:12px; border-radius:10px; margin-bottom:20px; text-align:center; font-weight:600; position:relative; z-index:2;">
+                    ⚠️ {{ session('error') }}
+                </div>
             @endif
 
-            {{-- LOGIKA TOMBOL --}}
+            {{-- LOGIKA --}}
             @if(!$absensiHariIni)
 
                 <form action="{{ route('karyawan.absen.masuk') }}" method="POST">
                     @csrf
-                    <button type="submit" class="btn btn-success">
-                        📍 Mulai Absen Masuk
+                    <button type="submit" class="btn-action btn-main">
+                        <span style="font-size:1.3rem;">📍</span> Absen Masuk
                     </button>
                 </form>
 
-                <div style="text-align: center; color: #888; font-size: 0.9rem; margin: 15px 0;">
-                    —— Atau beritahu jika tidak masuk ——
+                <div class="btn-grid">
+                    <button class="btn-action btn-outline" onclick="openModal()"><span>🏥</span> Sakit</button>
+                    <button class="btn-action btn-outline" onclick="openModal()"><span>📝</span> Izin</button>
                 </div>
 
-                <div class="btn-group">
-                    <button class="btn btn-secondary" style="flex:1;" onclick="openModal('izinModal')">
-                        🏥 Sakit
-                    </button>
-                    <button class="btn btn-secondary" style="flex:1;" onclick="openModal('izinModal')">
-                        📝 Izin
-                    </button>
-                </div>
+            @elseif($absensiHariIni && $absensiHariIni->status_kehadiran === 'Hadir' && !$absensiHariIni->jam_pulang)
 
-            @elseif(
-                $absensiHariIni &&
-                $absensiHariIni->status_kehadiran === 'Hadir' &&
-                !$absensiHariIni->jam_pulang
-            )
-
-                <div style="text-align: center; margin-bottom: 25px; padding: 15px; background: #f0fff4; border-radius: 12px; border: 1px solid #c6f6d5; color: #22543d; font-weight: 600;">
-                    🟢 Status: Sedang Bekerja
+                <div class="status-working">
+                    <span>⏳</span> Sedang Bekerja
                 </div>
 
                 <form action="{{ route('karyawan.absen.pulang') }}" method="POST">
                     @csrf
-                    <button type="submit" class="btn btn-danger">
-                        🏠 Akhiri Jam Kerja (Pulang)
+                    <button type="submit" class="btn-action btn-danger">
+                        <span style="font-size:1.3rem;">🏠</span> Absen Pulang
                     </button>
                 </form>
 
             @else
-                <div class="finish-message">
-                    <span class="finish-emoji">🎉</span>
-                    <h3>Absensi Selesai!</h3>
-                    <p>Status hari ini: <strong>{{ $absensiHariIni->status_kehadiran }}</strong></p>
+                <div style="text-align: center; color: var(--text-light); margin-top: 20px; position: relative; z-index:2;">
+                    <div style="font-size: 4rem; margin-bottom: 10px;">🎉</div>
+                    <h3>Selesai!</h3>
+                    <p>Status: <strong>{{ $absensiHariIni->status_kehadiran }}</strong></p>
                 </div>
             @endif
+
+        </div>
+
+        <!-- KARTU KANAN (JAM & ANIMASI) -->
+        <div class="glass-card right-card anim-right">
+            <div class="wave-container">
+                <div class="wave"></div>
+                <div class="wave"></div>
+                <div class="wave"></div>
+            </div>
+
+            <div class="bubble b1"></div>
+            <div class="bubble b2"></div>
+            <div class="bubble b3"></div>
+            <div class="bubble b4"></div>
+            <div class="bubble b5"></div>
+
+            <div class="content-clock">
+                <div class="big-time" id="clock">00:00</div>
+                <div class="date-box" style="margin-top:10px; background: white; color: var(--primary); padding: 8px 24px; border-radius: 15px; font-weight: 700; font-size: 1.1rem; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                    📅 {{ now()->format('l, d F Y') }}
+                </div>
+            </div>
         </div>
 
     </div>
-
 </div>
 
-<!-- WAVE ANIMATION SVG -->
-<svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
-    <defs><path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" /></defs>
-    <g class="parallax">
-        <use xlink:href="#gentle-wave" x="48" y="0" />
-        <use xlink:href="#gentle-wave" x="48" y="3" />
-        <use xlink:href="#gentle-wave" x="48" y="5" />
-        <use xlink:href="#gentle-wave" x="48" y="7" />
-    </g>
-</svg>
-
-{{-- MODAL IZIN --}}
+<!-- MODAL -->
 <div class="modal" id="izinModal">
     <div class="modal-box">
-        <h3>Form Pengajuan</h3>
-
+        <h3 style="margin:0 0 20px 0; color:#1e293b;">Form Izin</h3>
         <form action="{{ route('karyawan.absen.izin') }}" method="POST">
             @csrf
-
             <div class="form-group">
-                <label>Status Kehadiran</label>
+                <label style="display:block; margin-bottom:5px; font-weight:600; font-size:0.9rem;">Jenis Izin</label>
                 <select name="status_kehadiran" class="form-control" required>
-                    <option value="" disabled selected>-- Pilih Keterangan --</option>
-                    <option value="Izin">Izin</option>
                     <option value="Sakit">Sakit</option>
+                    <option value="Izin">Izin</option>
                 </select>
             </div>
-
             <div class="form-group">
-                <label>Alasan</label>
-                <textarea name="keterangan" class="form-control" required
-                    placeholder="Tuliskan alasan Anda secara detail..."></textarea>
+                <label style="display:block; margin-bottom:5px; font-weight:600; font-size:0.9rem;">Alasan</label>
+                <textarea name="keterangan" class="form-control" rows="3" required></textarea>
             </div>
-
-            <div style="display: flex; gap: 10px; margin-top: 25px;">
-                <button type="submit" class="btn btn-success" style="margin-bottom: 0;">
-                    Kirim
-                </button>
-                <button type="button" class="btn btn-secondary" style="margin-bottom: 0;"
-                    onclick="closeModal('izinModal')">
-                    Batal
-                </button>
+            <div style="display:flex; gap:10px;">
+                <button type="button" class="btn-action btn-outline" style="margin-bottom:0;" onclick="closeModal()">Batal</button>
+                <button type="submit" class="btn-action btn-main" style="margin-bottom:0;">Kirim</button>
             </div>
         </form>
     </div>
 </div>
 
-{{-- JAVASCRIPT --}}
 <script>
-    function updateClock() {
+    setInterval(() => {
         const now = new Date();
-        let hours = now.getHours();
-        let minutes = now.getMinutes();
-        let seconds = now.getSeconds();
+        document.getElementById('clock').innerText =
+            now.toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'});
+    }, 1000);
 
-        hours = hours < 10 ? "0" + hours : hours;
-        minutes = minutes < 10 ? "0" + minutes : minutes;
-        seconds = seconds < 10 ? "0" + seconds : seconds;
-
-        document.getElementById('realTimeClock').innerText = hours + ":" + minutes + ":" + seconds;
-    }
-    updateClock();
-    setInterval(updateClock, 1000);
-
-    function openModal(modalID) {
-        const modal = document.getElementById(modalID);
-        modal.style.display = "flex";
-        setTimeout(() => { modal.classList.add('show'); }, 10);
-    }
-
-    function closeModal(modalID) {
-        const modal = document.getElementById(modalID);
-        modal.classList.remove('show');
-        setTimeout(() => { modal.style.display = "none"; }, 300);
-    }
-
-    window.onclick = function(event) {
-        const modal = document.getElementById('izinModal');
-        if (event.target == modal) {
-            closeModal('izinModal');
-        }
-    }
+    function openModal() { document.getElementById('izinModal').style.display = 'flex'; }
+    function closeModal() { document.getElementById('izinModal').style.display = 'none'; }
+    window.onclick = (e) => { if(e.target == document.getElementById('izinModal')) closeModal(); };
 </script>
 
 @endsection
