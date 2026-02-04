@@ -27,6 +27,24 @@ Route::get('/', [HomeController::class, 'index']);
 
 Route::middleware(['role:admin'])->group(function () {
 
+// ================= SLIP GAJI (ADMIN) =================
+
+// list semua slip
+Route::get('/admin/slip-gaji',
+    [slip_gajiController::class, 'indexAdmin']
+)->name('admin.slip-gaji.index');
+
+// generate slip
+Route::post('/admin/slip-gaji/{id_gaji}',
+    [slip_gajiController::class, 'store']
+)->name('admin.slip-gaji.store');
+
+// detail slip
+Route::get('/admin/slip-gaji/{id}',
+    [slip_gajiController::class, 'showAdmin']
+)->name('admin.slip-gaji.show');
+
+
 Route::get('/admin/dashboard', function () {return view('admin.dashboard');})->name('admin.dashboard');
 Route::get('/admin/dashboard', [UserController::class, 'index']) ->name('admin.dashboard');
 // Route::get('/login', function () {return view('login');})->name('login');
@@ -160,15 +178,25 @@ Route::delete('/user/delete/{id}', [UserController::class, 'destroy'])->name('us
 Route::middleware(['role:karyawan'])->group(function () {
 
 //slip gaji
-Route::get('/slip-gaji', [slip_gajiController::class, 'index'])->name('slip-gaji.index');
+// Route::get('/slip-gaji', [slip_gajiController::class, 'index'])->name('slip-gaji.index');
 
 // Route::get('/slip-gaji/create', [slip_gajiController::class, 'create'])->name('slipgaji.create');
-Route::post('/slip-gaji/{id_gaji}', [slip_gajiController::class, 'store'])->name('slip-gaji.store');
-Route::get('/slip-gaji/{id}', [slip_gajiController::class, 'show'])->name('slip-gaji.show');
+// Route::post('/slip-gaji/{id_gaji}', [slip_gajiController::class, 'store'])->name('slip-gaji.store');
+// Route::get('/slip-gaji/{id}', [slip_gajiController::class, 'show'])->name('slip-gaji.show');
 // Route::get('/slip-gaji/edit/{id}', [slip_gajiController::class, 'edit'])->name('slipgaji.edit');
 // Route::put('/slip-gaji/update/{id}', [slip_gajiController::class, 'update'])->name('slipgaji.update');
 
 // Route::delete('/slip-gaji/delete/{id}', [slip_gajiController::class, 'destroy'])->name('slipgaji.destroy');
+
+// ================= SLIP GAJI (KARYAWAN) =================
+Route::get('/karyawan/slip-gaji',
+    [slip_gajiController::class, 'indexKaryawan']
+)->name('karyawan.slip-gaji.index');
+
+Route::get('/karyawan/slip-gaji',
+    [slip_gajiController::class, 'showKaryawan']
+)->name('karyawan.slip-gaji.show');
+
 
 Route::get('/karyawan/dashboard',
     [KaryawanController::class, 'dashboardKaryawan']
@@ -197,6 +225,7 @@ Route::get('/karyawan/absensi', [AbsensiController::class, 'halamanAbsensi'])
  Route::post('/karyawan/absen-izin', [AbsensiController::class, 'absenIzin'])
     ->name('karyawan.absen.izin');
 
+    
 
 Route::get('/login', function () {
     return view('login');

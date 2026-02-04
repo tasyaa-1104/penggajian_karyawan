@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Absensi;
 use App\Models\Divisi;
 use App\Models\Jabatan;
 use App\Models\Karyawan;
@@ -113,6 +114,10 @@ class KaryawanController extends Controller
     }
 
    // Menampilkan dashboard karyawan (public tapi pakai login + role)
+   // Tambahkan ini di paling atas file bersama use yang lain
+
+// ... (kode lainnya tetap sama)
+
     public function dashboardKaryawan()
     {
         $userId = session('user.id');
@@ -121,7 +126,26 @@ class KaryawanController extends Controller
             ->where('id_user', $userId)
             ->firstOrFail();
 
-        return view('karyawan-dashboard', compact('karyawan'));
+        // --- LOGIKA HITUNG DATA ABSENSI ---
+        $totalHadir = Absensi::where('id_karyawan', $karyawan->id_karyawan)
+                            ->where('status_kehadiran', 'Hadir')
+                            ->count();
+
+        // Gabungkan Izin dan Sakit menjadi satu kategori "Izin"
+        $totalIzin = Absensi::where('id_karyawan', $karyawan->id_karyawan)
+                           ->whereIn('status_kehadiran', ['Izin', 'Sakit'])
+                           ->count();
+
+        $totalAlpha = Absensi::where('id_karyawan', $karyawan->id_karyawan)
+                            ->where('status_kehadiran', 'Alpha')
+                            ->count();
+
+        return view('karyawan-dashboard', compact(
+            'karyawan',
+            'totalHadir',
+            'totalIzin',
+            'totalAlpha'
+        ));
     }
 
 }

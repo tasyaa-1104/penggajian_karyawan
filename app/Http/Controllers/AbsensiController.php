@@ -116,7 +116,7 @@ public function createKaryawan()
         ->where('tanggal', Carbon::now('Asia/Jakarta')->toDateString())
         ->first();
 
-    return view('admin.karyawan-absensi-create', compact(
+    return view('karyawan-absensi-create', compact(
         'karyawan',
         'absensiHariIni'
     ));
