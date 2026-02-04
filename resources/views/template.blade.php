@@ -156,6 +156,12 @@
             </a>
         </li>
 
+        <li class="nav-item mt-3">
+            <a href="{{ route('login') }}" class="nav-link text-danger">
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </a>
+        </li>
+
     </ul>
 
     <div class="wave-container">
