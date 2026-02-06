@@ -1,50 +1,64 @@
 @extends('admin.template')
 
+@section('title', 'Hitung Gaji Massal')
+
 @section('content')
-<div class="container mt-4">
-    <h4>Hitung Gaji Karyawan</h4>
 
-    @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
+<div class="container-custom">
+    <div class="glass-card">
 
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+        <h3>🧮 Hitung Gaji Massal</h3>
 
-    <form action="{{ route('gaji.store') }}" method="POST">
-        @csrf
+        <form action="{{ route('gaji.store') }}" method="POST">
+            @csrf
 
-        <div class="mb-3">
-            <label>Karyawan</label>
-            <select name="id_karyawan" class="form-control" required>
-                <option value="">-- pilih karyawan --</option>
-                @foreach($karyawan as $k)
-                    <option value="{{ $k->id_karyawan }}">
-                        {{ $k->nama_karyawan }} - {{ $k->jabatan->nama_jabatan }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
+            <div style="margin-bottom:20px;">
+                <label>Bulan</label>
+                <input type="month" name="bulan" required class="search-input">
+            </div>
 
-        <div class="mb-3">
-            <label>Bulan</label>
-            <input type="month" name="bulan" class="form-control" required>
-        </div>
+            <table class="modern-table">
+                <thead>
+                    <tr>
+                        <th>
+                            <input type="checkbox" id="checkAll">
+                        </th>
+                        <th>Nama</th>
+                        <th>Jabatan</th>
+                        <th>Gaji Pokok</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($karyawan as $k)
+                        <tr>
+                            <td>
+                                <input type="checkbox"
+                                       name="id_karyawan[]"
+                                       value="{{ $k->id_karyawan }}">
+                            </td>
+                            <td>{{ $k->nama_karyawan }}</td>
+                            <td>{{ $k->jabatan->nama_jabatan ?? '-' }}</td>
+                            <td>Rp {{ number_format($k->gaji_pokok,0,',','.') }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
 
-        <button class="btn btn-success">
-            <i class="fa fa-calculator"></i> Hitung Gaji
-        </button>
+            <button class="btn-modern btn-add" style="margin-top:20px;">
+                💾 Hitung & Simpan Gaji
+            </button>
 
-        <a href="{{ route('gaji.index') }}" class="btn btn-secondary">
-            Kembali
-        </a>
-    </form>
+        </form>
+
+    </div>
 </div>
+
+<script>
+document.getElementById('checkAll').addEventListener('click', function(){
+    document.querySelectorAll('input[name="id_karyawan[]"]').forEach(cb => {
+        cb.checked = this.checked;
+    });
+});
+</script>
+
 @endsection

@@ -106,4 +106,34 @@ class KaryawanController extends Controller
         return redirect()->route('karyawan')
             ->with('success','Karyawan berhasil dihapus');
     }
+
+     public function dashboardKaryawan()
+    {
+        $userId = session('user.id');
+
+        $karyawan = Karyawan::with(['jabatan','divisi'])
+            ->where('id_user', $userId)
+            ->firstOrFail();
+
+        // --- LOGIKA HITUNG DATA ABSENSI ---
+        $totalHadir = Absensi::where('id_karyawan', $karyawan->id_karyawan)
+                            ->where('status_kehadiran', 'Hadir')
+                            ->count();
+
+        // Gabungkan Izin dan Sakit menjadi satu kategori "Izin"
+        $totalIzin = Absensi::where('id_karyawan', $karyawan->id_karyawan)
+                           ->whereIn('status_kehadiran', ['Izin', 'Sakit'])
+                           ->count();
+
+        $totalAlpha = Absensi::where('id_karyawan', $karyawan->id_karyawan)
+                            ->where('status_kehadiran', 'Alpha')
+                            ->count();
+
+        return view('karyawan-dashboard', compact(
+            'karyawan',
+            'totalHadir',
+            'totalIzin',
+            'totalAlpha'
+        ));
+    }
 }
