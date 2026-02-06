@@ -163,11 +163,11 @@ public function absenMasuk()
     $tanggal = $now->toDateString();
 
     // ⛔ BATAS ABSEN MASUK JAM 10:00
-    $batasMasuk = Carbon::createFromTime(10, 0, 0, 'Asia/Jakarta');
+    // $batasMasuk = Carbon::createFromTime(10, 0, 0, 'Asia/Jakarta');
 
-    if ($now->greaterThan($batasMasuk)) {
-        return back()->with('error', 'Absen masuk hanya bisa sampai jam 10:00');
-    }
+    // if ($now->greaterThan($batasMasuk)) {
+    //     return back()->with('error', 'Absen masuk hanya bisa sampai jam 10:00');
+    // }
 
     // 🔍 CEK SUDAH ABSEN ATAU BELUM
     $cek = Absensi::where('id_karyawan', $karyawan->id_karyawan)
@@ -230,11 +230,11 @@ public function absenIzin(Request $request)
     $tanggal = $now->toDateString();
 
     // ⛔ BATAS ABSEN MASUK JAM 10:00
-    $batasMasuk = Carbon::createFromTime(10, 0, 0, 'Asia/Jakarta');
+    // $batasMasuk = Carbon::createFromTime(10, 0, 0, 'Asia/Jakarta');
 
-    if ($now->greaterThan($batasMasuk)) {
-        return back()->with('error', 'Absen izin hanya bisa sampai jam 10:00');
-    }
+    // if ($now->greaterThan($batasMasuk)) {
+    //     return back()->with('error', 'Absen izin hanya bisa sampai jam 10:00');
+    // }
     $request->validate([
         'status_kehadiran' => 'required|in:Izin,Sakit',
         'keterangan'       => 'required|min:5'
@@ -278,6 +278,7 @@ public function absenIzin(Request $request)
 
     return back()->with('success', 'Izin berhasil dikirim');
 }
+
 
 
     // public function halamanAbsensi()

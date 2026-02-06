@@ -55,13 +55,20 @@ class rekap_absensiController extends Controller
 
         // 🔥 batas hari untuk alpha
         $batasHari = $carbon->isSameMonth($hariIni)
-            ? $hariIni->day
+            ? $hariIni->addDays(2)->day
             : $carbon->daysInMonth;
+            
+            $day = $carbon->isSameMonth($hariIni)
+            ? 2
+            : 0;
+
+
 
         // 🔥 hitung hari kerja yang sudah lewat
         $totalHariKerja = 0;
         for ($i = 1; $i <= $batasHari; $i++) {
-            $tgl = Carbon::create($tahunAngka, $bulanAngka, $i);
+            
+            $tgl = Carbon::create($tahunAngka, $bulanAngka, $i)->addDays($day);
             if (!$tgl->isWeekend()) {
                 $totalHariKerja++;
             }
