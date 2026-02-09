@@ -363,10 +363,65 @@
             </a>
         </div>
 
+        <!-- KARTU PENGAJUAN CUTI -->
+        <div class="card animate-up delay-5">
+            <div class="card-header">
+                <div class="header-dot" style="background:#38ef7d;"></div>
+                <h2>Pengajuan Cuti</h2>
+            </div>
+
+            <p style="margin-bottom:15px;">
+                Ajukan cuti langsung tanpa pindah halaman.
+            </p>
+
+            <button class="btn-web" onclick="openCutiModal()">
+                📝 Ajukan Cuti
+            </button>
+        </div>
+
+
     </div>
 
 </div>
 @endisset
+
+<!-- MODAL CUTI -->
+<div class="modal" id="cutiModal">
+    <div class="modal-box">
+
+        <div class="modal-header">
+            <div class="modal-icon">🌴</div>
+            <h3>Pengajuan Cuti</h3>
+        </div>
+
+        <div class="modal-body">
+            <form action="{{ route('cuti.store') }}" method="POST">
+                @csrf
+
+                <div class="form-group">
+                    <label>Tanggal Mulai</label>
+                    <input type="date" name="tanggal_mulai" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Tanggal Selesai</label>
+                    <input type="date" name="tanggal_selesai" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Alasan Cuti</label>
+                    <textarea name="alasan" rows="3" class="form-control" required></textarea>
+                </div>
+
+                <div class="modal-buttons">
+                    <button class="btn-submit">📨 Kirim</button>
+                    <button type="button" class="btn-cancel" onclick="closeCutiModal()">❌ Batal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 
 <!-- WAVE ANIMATION SVG -->
 <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -381,5 +436,28 @@
         <use xlink:href="#gentle-wave" x="48" y="7" />
     </g>
 </svg>
+
+<script>
+function openCutiModal(){
+    const modal = document.getElementById('cutiModal');
+    modal.style.display = 'flex';
+    setTimeout(()=> modal.classList.add('show'),10);
+}
+
+function closeCutiModal(){
+    const modal = document.getElementById('cutiModal');
+    modal.classList.remove('show');
+    setTimeout(()=> modal.style.display='none',300);
+}
+
+window.addEventListener('click', function(e){
+    const modal = document.getElementById('cutiModal');
+    if(e.target === modal){
+        closeCutiModal();
+    }
+});
+</script>
+
+
 
 @endsection
