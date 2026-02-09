@@ -1,4 +1,4 @@
-@extends('admin.template')
+{{-- @extends('admin.template')
 
 @section('content')
 <div class="container">
@@ -7,7 +7,7 @@
     <form action="{{ route('absensi.update', $absensi->id_absensi) }}" method="POST">
         @csrf
 
-        {{-- KARYAWAN --}}
+
         <div class="mb-3">
             <label class="form-label">Nama Karyawan</label>
             <select name="id_karyawan" class="form-control" required>
@@ -21,7 +21,7 @@
             </select>
         </div>
 
-        {{-- TANGGAL --}}
+
         <div class="mb-3">
             <label class="form-label">Tanggal</label>
             <input type="date"
@@ -31,7 +31,7 @@
                    required>
         </div>
 
-        {{-- STATUS --}}
+
         <div class="mb-3">
             <label class="form-label">Status Kehadiran</label>
             <select name="status_kehadiran" class="form-control" required>
@@ -41,13 +41,12 @@
             </select>
         </div>
 
-        {{-- KETERANGAN --}}
+
         <div class="mb-3">
             <label class="form-label">Keterangan</label>
             <textarea name="keterangan" class="form-control" rows="3">{{ $absensi->keterangan }}</textarea>
         </div>
 
-        {{-- BUTTON --}}
         <div class="d-flex gap-2">
             <button type="submit" class="btn btn-primary">
                 Update
@@ -59,4 +58,4 @@
         </div>
     </form>
 </div>
-@endsection
+@endsection --}}

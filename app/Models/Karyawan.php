@@ -43,4 +43,9 @@ class Karyawan extends Model
     {
         return $this->hasMany(Gaji::class, 'id_karyawan');
     }
+    public function overtimes()
+{
+    return $this->hasMany(Overtime::class, 'karyawan_id', 'id_karyawan');
+}
+
 }

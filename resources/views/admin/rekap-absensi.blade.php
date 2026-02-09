@@ -3,7 +3,7 @@
 @section('title', 'Rekap Absensi')
 
 @section('topbar')
-    <!-- Topbar Style Website (Header) -->
+
     <div class="website-header animate-header">
         <div class="header-content">
             <h1>Rekap Absensi</h1>
@@ -17,7 +17,7 @@
 
 @section('content')
 
-<!-- CSS STYLING -->
+
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
@@ -31,7 +31,7 @@
         --bg-gradient: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
     }
 
-    /* RESET & UTAMA */
+
     body {
         font-family: 'Poppins', sans-serif;
         background: var(--bg-gradient);
@@ -40,7 +40,7 @@
         color: var(--text-dark);
     }
 
-    /* CONTAINER UTAMA */
+
     .container-custom {
         width: 100%;
         max-width: 1200px;
@@ -51,14 +51,14 @@
         padding-top: 100px;
     }
 
-    /* --- ANIMASI CSS --- */
+
     @keyframes slideDown {
         from { transform: translateY(-100%); }
         to { transform: translateY(0); }
     }
     .animate-header { animation: slideDown 0.8s ease-out; }
 
-    /* HEADER STYLE */
+
     .website-header {
         position: fixed; top: 0; left: 0; width: 100%; height: 80px;
         background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px);
@@ -77,7 +77,7 @@
         box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
 
-    /* GLASS CARD WRAPPER */
+
     .glass-card {
         background: var(--glass);
         border-radius: 24px;
@@ -111,7 +111,7 @@
         font-weight: 700;
     }
 
-    /* BUTTONS */
+
     .btn-modern {
         padding: 12px 25px;
         border-radius: 50px;
@@ -126,7 +126,7 @@
     .btn-add { background: linear-gradient(to right, #11998e, #38ef7d); color: white; }
     .btn-add:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(56, 239, 125, 0.4); }
 
-    /* SEARCH BAR */
+
     .search-container {
         background: #fff;
         padding: 15px;
@@ -152,7 +152,7 @@
     .btn-reset { background: transparent; color: #dc3545; border: 2px solid #dc3545; border-radius: 12px; padding: 10px 20px; font-weight: 600; text-decoration: none; transition: all 0.3s; }
     .btn-reset:hover { background: #dc3545; color: white; }
 
-    /* TABEL MODERN */
+
     .modern-table {
         width: 100%;
         border-collapse: separate;
@@ -193,7 +193,7 @@
     }
     .modern-table td:first-child { font-weight: 700; color: var(--secondary); }
 
-    /* TOMBOL HAPUS KECIL */
+
     .btn-action-sm {
         padding: 8px 15px;
         border-radius: 10px;
@@ -208,7 +208,7 @@
     .btn-delete { background: #fee2e2; color: #ef4444; border: none; }
     .btn-delete:hover { background: #fecaca; transform: translateY(-2px); }
 
-    /* BADGE STATISTIK (Warna Angka) */
+
     .badge-stat {
         padding: 5px 12px;
         border-radius: 10px;
@@ -222,7 +222,7 @@
     .stat-i { background: #fef3c7; color: #92400e; }
     .stat-a { background: #fee2e2; color: #991b1b; }
 
-    /* ALERT */
+
     .alert-modern {
         background: #d1fae5; color: #065f46;
         padding: 15px; border-radius: 12px; margin-bottom: 25px;
@@ -230,7 +230,7 @@
     }
     .empty-state { text-align: center; padding: 30px; color: #888; font-style: italic; }
 
-    /* WAVE ANIMATION */
+
     .waves { position: fixed; bottom: 0; left: 0; width: 100%; height: 15vh; margin-bottom: -7px; min-height: 100px; max-height: 150px; z-index: 1; pointer-events: none; }
     .parallax > use { animation: move-forever 25s cubic-bezier(.55,.5,.45,.5) infinite; }
     .parallax > use:nth-child(1) { animation-delay: -2s; animation-duration: 7s; fill: rgba(255,255,255,0.7); }
@@ -242,10 +242,10 @@
 
 <div class="container-custom">
 
-    <!-- GLASS CARD CONTAINER -->
+
     <div class="glass-card">
 
-        <!-- HEADER & TOMBOL GENERATE -->
+
         <div class="page-header">
             <h3 class="page-title">Rekap Absensi</h3>
             <a href="{{ route('rekap-absensi.create') }}" class="btn-modern btn-add">
@@ -253,7 +253,7 @@
             </a>
         </div>
 
-        <!-- SEARCH BAR -->
+
         <form action="{{ route('rekap-absensi.index') }}" method="GET" class="search-container">
             <input type="text"
                    name="search"

@@ -3,10 +3,10 @@
 @section('title', 'Data Tunjangan')
 
 @section('topbar')
-    <!-- Topbar Style Website (Header) -->
+
     <div class="website-header animate-header">
         <div class="header-content">
-            <h1>Data Tunjangan</h1>
+            <h1>Manajemen Tunjangan</h1>
             <div class="user-profile">
                 <span>Admin 👋</span>
                 <div class="avatar-small">🛡️</div>
@@ -17,7 +17,7 @@
 
 @section('content')
 
-<!-- CSS STYLING -->
+
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
@@ -31,34 +31,35 @@
         --bg-gradient: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
     }
 
-    /* RESET & UTAMA */
+
     body {
         font-family: 'Poppins', sans-serif;
         background: var(--bg-gradient);
         min-height: 100vh;
         margin: 0;
         color: var(--text-dark);
+        overflow-x: hidden;
     }
 
-    /* CONTAINER UTAMA */
-    .container-custom {
+
+    .website-layout {
         width: 100%;
         max-width: 1200px;
-        margin: 40px auto;
-        padding: 20px;
+        margin: 0 auto;
+        padding: 40px 20px;
         position: relative;
         z-index: 10;
         padding-top: 100px;
     }
 
-    /* --- ANIMASI CSS --- */
+
     @keyframes slideDown {
         from { transform: translateY(-100%); }
         to { transform: translateY(0); }
     }
     .animate-header { animation: slideDown 0.8s ease-out; }
 
-    /* HEADER STYLE */
+
     .website-header {
         position: fixed; top: 0; left: 0; width: 100%; height: 80px;
         background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px);
@@ -72,134 +73,117 @@
     .website-header h1 { font-size: 1.4rem; color: var(--secondary); margin: 0; font-weight: 700; }
     .user-profile { display: flex; align-items: center; gap: 15px; font-weight: 600; color: var(--text-dark); }
     .avatar-small {
-        width: 40px; height: 40px; background: var(--bg-gradient); color: white; border-radius: 50%;
-        display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        width: 40px; height: 40px; background: var(--bg-gradient); color: white;
+        border-radius: 50%; display: flex; align-items: center; justify-content: center;
+        font-size: 1.2rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
 
-    /* GLASS CARD WRAPPER */
+  
     .glass-card {
-        background: var(--glass);
-        border-radius: 24px;
-        box-shadow: var(--shadow);
-        border: 1px solid rgba(255,255,255,0.6);
-        padding: 30px;
-        position: relative;
-        overflow: hidden;
+        background: var(--glass); border-radius: 24px; box-shadow: var(--shadow);
+        border: 1px solid rgba(255,255,255,0.6); padding: 30px;
+        position: relative; overflow: hidden;
         background-image: radial-gradient(#e0e0e0 1px, transparent 1px);
         background-size: 20px 20px;
     }
     .glass-card::after {
-        content: '';
-        position: absolute;
-        top: 0; left: 0; width: 100%; height: 5px;
+        content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 5px;
         background: linear-gradient(90deg, var(--secondary), var(--primary));
     }
 
-    .page-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 25px;
-        flex-wrap: wrap;
-        gap: 15px;
-    }
-    .page-title {
-        font-size: 1.8rem;
-        color: var(--text-dark);
-        margin: 0;
-        font-weight: 700;
-    }
+    .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 15px; }
+    .page-title { font-size: 1.8rem; color: var(--text-dark); margin: 0; font-weight: 700; }
 
-    /* BUTTONS */
     .btn-modern {
-        padding: 12px 25px;
-        border-radius: 50px;
-        border: none;
-        text-decoration: none;
-        font-weight: 600;
-        font-size: 0.95rem;
-        transition: all 0.3s ease;
-        display: inline-flex; align-items: center; gap: 8px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        padding: 12px 25px; border-radius: 50px; border: none; font-weight: 600; font-size: 0.95rem;
+        cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 10px rgba(0,0,0,0.1); text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
     }
     .btn-add { background: linear-gradient(to right, #11998e, #38ef7d); color: white; }
     .btn-add:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(56, 239, 125, 0.4); }
 
-    /* TABEL MODERN */
-    .modern-table {
-        width: 100%;
-        border-collapse: separate;
-        border-spacing: 0;
-    }
-    .modern-table::ad tr {
-        background: linear-gradient(90deg, var(--secondary), var(--primary));
-        color: white;
-    }
-    .modern-table::ad th {
-        padding: 18px;
-        text-align: left;
-        font-weight: 600;
-        text-transform: uppercase;
-        font-size: 0.85rem;
-        color: white;
-    }
-    .modern-table::ad th:first-child { border-radius: 15px 0 0 0; }
-    .modern-table::ad th:last-child { border-radius: 0 15px 0 0; }
 
-    .modern-table tbody tr {
-        background: rgba(255,255,255,0.7);
-        border-bottom: 1px solid rgba(0,0,0,0.05);
-        transition: all 0.2s ease;
+    .search-wrapper {
+        display: flex; gap: 10px; margin-bottom: 20px; background: #f8f9fa; padding: 10px; border-radius: 15px; border: 1px solid #eee;
     }
-    .modern-table tbody tr:hover {
-        background: rgba(102, 126, 234, 0.05);
-        transform: scale(1.005);
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        z-index: 2;
-        position: relative;
+    .search-input {
+        flex: 1; border: none; background: transparent; padding: 10px 15px; font-size: 0.95rem; outline: none; font-family: 'Poppins', sans-serif; color: #555;
     }
-    .modern-table td {
-        padding: 18px;
-        color: #555;
-        font-size: 0.95rem;
-    }
-    .modern-table td:first-child { font-weight: 700; color: var(--secondary); }
+    .search-input::placeholder { color: #aaa; }
+    .btn-icon { border: none; background: transparent; cursor: pointer; font-size: 1.2rem; transition: transform 0.2s; }
+    .btn-icon:hover { transform: scale(1.1); }
 
-    /* Format Uang Monospace */
+    table.modern-table { width: 100%; border-collapse: separate; border-spacing: 0; }
+    table.modern-table thead tr { background: linear-gradient(90deg, var(--secondary), var(--primary)); color: white; }
+    table.modern-table thead th { padding: 18px; text-align: left; font-weight: 600; text-transform: uppercase; font-size: 0.85rem; color: white; }
+    table.modern-table thead th:first-child { border-radius: 15px 0 0 0; }
+    table.modern-table thead th:last-child { border-radius: 0 15px 0 0; }
+
+    table.modern-table tbody tr { background: rgba(255,255,255,0.6); border-bottom: 1px solid rgba(0,0,0,0.05); transition: all 0.2s ease; }
+    table.modern-table tbody tr:hover { background: rgba(102, 126, 234, 0.05); transform: scale(1.005); box-shadow: 0 4px 15px rgba(0,0,0,0.05); z-index: 2; position: relative; }
+    table.modern-table td { padding: 18px; color: #555; font-size: 0.95rem; }
+    table.modern-table td:first-child { font-weight: 700; color: var(--secondary); }
+
     .currency-text {
         font-family: 'Courier New', monospace;
         font-weight: 700;
         color: var(--text-dark);
     }
 
-    /* TOMBOL AKSI KECIL */
-    .btn-action-sm {
-        padding: 8px 15px;
-        border-radius: 10px;
-        font-size: 0.85rem;
-        font-weight: 600;
-        cursor: pointer;
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center; gap: 5px;
-        transition: all 0.2s;
-    }
-    .btn-edit { background: linear-gradient(to right, #f6d365, #fda085); color: white; }
+    .btn-action-sm { padding: 8px 15px; border-radius: 10px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; }
+    .btn-edit { background: linear-gradient(to right, #f6d365, #fda085); color: white; border: none; }
     .btn-edit:hover { filter: brightness(1.1); transform: translateY(-2px); }
-
     .btn-delete { background: #fee2e2; color: #ef4444; border: none; }
     .btn-delete:hover { background: #fecaca; transform: translateY(-2px); }
 
-    /* ALERT */
-    .alert-modern {
-        background: #fee2e2; color: #991b1b;
-        padding: 15px; border-radius: 12px; margin-bottom: 20px;
-        font-weight: 500; border: 1px solid #fecaca;
-    }
-    .empty-state { text-align: center; padding: 30px; color: #888; font-style: italic; }
+    .alert-modern { background: #d1fae5; color: #065f46; padding: 15px; border-radius: 12px; margin-bottom: 25px; font-weight: 500; text-align: center; border: 1px solid #a7f3d0; }
 
-    /* WAVE ANIMATION */
+
+    .modal {
+        display: none; position: fixed; z-index: 200; left: 0; top: 0; width: 100%; height: 100%;
+        background-color: rgba(0,0,0,0.6); backdrop-filter: blur(8px);
+        align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease;
+    }
+    .modal.show { display: flex; opacity: 1; }
+
+    .modal-box {
+        background-color: #fff; padding: 0; border-radius: 24px; width: 90%; max-width: 450px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.2); transform: scale(0.8);
+        transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        position: relative; overflow: hidden;
+        border: 1px solid rgba(255,255,255,0.6);
+        background-image: radial-gradient(#e0e0e0 1px, transparent 1px); background-size: 20px 20px;
+    }
+    .modal.show .modal-box { transform: scale(1); }
+
+    .modal-header {
+        background: linear-gradient(135deg, var(--secondary), var(--primary));
+        padding: 30px 20px; text-align: center; position: relative;
+    }
+    .modal-icon {
+        width: 60px; height: 60px; background: rgba(255,255,255,0.2); border: 2px solid rgba(255,255,255,0.4);
+        border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: white;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    .modal-header h3 { margin: 0; color: white; font-size: 1.5rem; font-weight: 700; }
+
+    .modal-body { padding: 30px; }
+
+    .form-group { margin-bottom: 20px; text-align: left; }
+    .form-group label { display: block; margin-bottom: 10px; font-weight: 600; font-size: 0.9rem; color: #555; margin-left: 5px; }
+    .form-control {
+        width: 100%; padding: 14px 20px; border: 2px solid #eee; border-radius: 12px;
+        box-sizing: border-box; font-family: inherit; font-size: 1rem; transition: all 0.3s;
+        background: #f9fafb; color: #333;
+    }
+    .form-control:focus { border-color: var(--primary); outline: none; background: #fff; box-shadow: 0 0 0 4px rgba(79, 172, 254, 0.1); }
+
+    .modal-buttons { display: flex; gap: 15px; margin-top: 30px; }
+    .btn-submit { flex: 1; background: var(--bg-gradient); color: white; padding: 14px; border-radius: 12px; border:none; font-weight: 700; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+    .btn-submit:hover { opacity: 0.9; transform: scale(0.98); }
+    .btn-cancel { flex: 1; background: #f3f4f6; color: #666; padding: 14px; border-radius: 12px; border:none; font-weight: 600; cursor: pointer; transition: 0.2s; }
+    .btn-cancel:hover { background: #e5e7eb; color: #333; }
+
+
     .waves { position: fixed; bottom: 0; left: 0; width: 100%; height: 15vh; margin-bottom: -7px; min-height: 100px; max-height: 150px; z-index: 1; pointer-events: none; }
     .parallax > use { animation: move-forever 25s cubic-bezier(.55,.5,.45,.5) infinite; }
     .parallax > use:nth-child(1) { animation-delay: -2s; animation-duration: 7s; fill: rgba(255,255,255,0.7); }
@@ -209,46 +193,56 @@
     @keyframes move-forever { 0% { transform: translate3d(-90px,0,0); } 100% { transform: translate3d(85px,0,0); } }
 </style>
 
-<div class="container-custom">
+<div class="website-layout">
 
-    <!-- GLASS CARD CONTAINER -->
+
     <div class="glass-card">
 
-        <!-- HEADER & TOMBOL TAMBAH -->
+
         <div class="page-header">
             <h4 class="page-title">Data Tunjangan</h4>
-            <a href="{{ route('tunjangan.create') }}" class="btn-modern btn-add">
-                ➕ Tambah
-            </a>
+            <button class="btn-modern btn-add" onclick="openModal('create')">
+                ➕ Tambah Tunjangan
+            </button>
         </div>
 
-        <!-- ALERT ERROR -->
-        @if ($errors->any())
+
+        <form action="{{ route('tunjangan.index') }}" method="GET" class="search-wrapper">
+            <input type="text"
+                   name="search"
+                   class="search-input"
+                   placeholder="🔍 Cari nama tunjangan..."
+                   value="{{ request('search') }}">
+            @if(request('search'))
+                <a href="{{ route('tunjangan.index') }}" class="btn-icon" title="Reset">❌</a>
+                <button type="submit" class="btn-icon" title="Cari">🔍</button>
+            @else
+                <button type="submit" class="btn-icon" title="Cari">🔍</button>
+            @endif
+        </form>
+
+
+        @if(session('success'))
             <div class="alert-modern">
-                <i class="fa fa-exclamation-circle"></i>
-                <ul style="margin: 0; padding-left: 20px;">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
+                ✅ {{ session('success') }}
             </div>
         @endif
 
-        <!-- TABEL MODERN -->
+
         <div style="overflow-x: auto;">
             <table class="modern-table">
                 <thead>
                     <tr>
-                        <th>No</th>
-                        <th>Nama Tunjangan</th>
-                        <th>Nominal</th>
-                        <th>Aksi</th>
+                        <th width="10%">No</th>
+                        <th width="45%">Nama Tunjangan</th>
+                        <th width="30%">Nominal</th>
+                        <th width="15%" style="text-align: center;">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     @if($tunjangan->count() == 0)
                         <tr>
-                            <td colspan="4" class="empty-state">
+                            <td colspan="4" style="text-align: center; padding: 30px; color: #999;">
                                 Data tunjangan tidak ditemukan
                             </td>
                         </tr>
@@ -258,26 +252,21 @@
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td><strong>{{ $t->nama_tunjangan }}</strong></td>
-                            <!-- Nominal ditampilkan dengan format uang rapi -->
-                            <td><span class="currency-text">Rp {{ number_format($t->nominal,0,',','.') }}</span></td>
-                            <td>
-                                <div style="display: flex; gap: 8px;">
-                                    <a href="{{ route('tunjangan.edit',$t->id_tunjangan) }}"
-                                       class="btn-action-sm btn-edit">
-                                        ✏️ Edit
-                                    </a>
+                            <td><span class="currency-text">Rp {{ number_format($t->nominal, 0, ',', '.') }}</span></td>
+                            <td style="text-align: center;">
 
-                                    <form action="{{ route('tunjangan.destroy',$t->id_tunjangan) }}"
-                                          method="POST"
-                                          style="display: inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button class="btn-action-sm btn-delete"
-                                                onclick="return confirm('Yakin hapus data?')">
-                                            🗑️ Hapus
-                                        </button>
-                                    </form>
-                                </div>
+                                <button class="btn-action-sm btn-edit"
+                                    onclick="openModal('edit', {{ $t->id_tunjangan }}, '{{ $t->nama_tunjangan }}', {{ $t->nominal }})">
+                                    ✏️ Edit
+                                </button>
+
+                                <form action="{{ route('tunjangan.destroy',$t->id_tunjangan) }}" method="POST" style="display: inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="btn-action-sm btn-delete" onclick="return confirm('Yakin ingin menghapus tunjangan ini?')">
+                                        🗑️ Hapus
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                     @endforeach
@@ -289,7 +278,55 @@
 
 </div>
 
-<!-- WAVE ANIMATION SVG -->
+
+<div class="modal" id="tunjanganModal">
+    <div class="modal-box">
+
+
+        <div class="modal-header">
+            <div class="modal-icon">💰</div>
+            <h3 id="modalTitle">Tambah Tunjangan</h3>
+        </div>
+
+        <div class="modal-body">
+            <form id="tunjanganForm" action="{{ route('tunjangan.store') }}" method="POST">
+                @csrf
+
+                <input type="hidden" name="id_tunjangan" id="tunjanganId">
+
+
+                <input type="hidden" name="_method" value="POST" id="methodInput">
+
+                <div class="form-group">
+                    <label>Nama Tunjangan</label>
+                    <input type="text"
+                           name="nama_tunjangan"
+                           id="nama_tunjangan"
+                           class="form-control"
+                           placeholder="Masukkan nama tunjangan..."
+                           required>
+                </div>
+
+                <div class="form-group">
+                    <label>Nominal (Rp)</label>
+                    <input type="number"
+                           name="nominal"
+                           id="nominal"
+                           class="form-control"
+                           placeholder="Contoh: 500000"
+                           required>
+                </div>
+
+                <div class="modal-buttons">
+                    <button type="submit" class="btn-submit">💾 Simpan Data</button>
+                    <button type="button" class="btn-cancel" onclick="closeModal()">❌ Batal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
 <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
     viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
     <defs>
@@ -302,5 +339,62 @@
         <use xlink:href="#gentle-wave" x="48" y="7" />
     </g>
 </svg>
+
+
+<script>
+
+    function openModal(mode, id = null, nama_tunjangan = '', nominal = '') {
+        const modal = document.getElementById('tunjanganModal');
+        const form = document.getElementById('tunjanganForm');
+        const title = document.getElementById('modalTitle');
+
+
+        modal.style.display = "flex";
+        setTimeout(() => { modal.classList.add('show'); }, 10);
+
+        if (mode === 'create') {
+
+            form.action = "{{ route('tunjangan.store') }}";
+            form.method = "POST";
+
+
+            document.getElementById('methodInput').value = "POST";
+
+
+            title.innerText = "Tambah Tunjangan Baru";
+            document.getElementById('tunjanganId').value = "";
+            document.getElementById('nama_tunjangan').value = "";
+            document.getElementById('nominal').value = "";
+
+        } else {
+
+            form.action = "{{ route('tunjangan.update', ':id') }}".replace(':id', id);
+            form.method = "POST";
+
+
+            document.getElementById('methodInput').value = "PUT";
+
+
+            title.innerText = "Edit Data Tunjangan";
+            document.getElementById('tunjanganId').value = id;
+            document.getElementById('nama_tunjangan').value = nama_tunjangan;
+            document.getElementById('nominal').value = nominal;
+        }
+    }
+
+    function closeModal() {
+        const modal = document.getElementById('tunjanganModal');
+        modal.classList.remove('show');
+        setTimeout(() => { modal.style.display = "none"; }, 300);
+    }
+
+    // Klik di luar modal untuk menutup
+    window.onclick = function(event) {
+        const modal = document.getElementById('tunjanganModal');
+        if (event.target == modal) {
+            closeModal();
+        }
+    }
+</script>
 
 @endsection

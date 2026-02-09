@@ -241,3 +241,32 @@ Route::post('/login', [UserController::class, 'login'])
 // Route::get('/karyawan/dashboard', [KaryawanDashboardController::class, 'index'])
 //     ->name('karyawan.dashboard');
 
+
+
+use App\Http\Controllers\OvertimeController;
+
+Route::prefix('admin')->middleware(['web','role:admin'])->group(function () {
+
+    Route::get('/overtime', [OvertimeController::class, 'index'])
+        ->name('overtime.index');
+
+    Route::post('/overtime/store', [OvertimeController::class, 'store'])
+        ->name('overtime.store');
+
+    Route::put('/overtime/{id}/approve', [OvertimeController::class, 'approve'])
+        ->name('overtime.approve');
+
+});
+use Illuminate\Support\Facades\Auth;
+
+Route::post('/logout', function () {
+    Auth::logout();
+    request()->session()->invalidate();
+    request()->session()->regenerateToken();
+    return redirect()->route('login');
+})->name('logout');
+
+
+Route::get('/admin/overtime', [OvertimeController::class,'index'])->name('overtime.index');
+Route::post('/admin/overtime', [OvertimeController::class,'store'])->name('overtime.store');
+Route::put('/admin/overtime/approve/{id}', [OvertimeController::class,'approve'])->name('overtime.approve');

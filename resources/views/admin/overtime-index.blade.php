@@ -1,15 +1,15 @@
 @extends('admin.template')
 
-@section('title', 'Data Jabatan')
+@section('title', 'Data Overtime')
 
 @section('topbar')
     <!-- Topbar Style Website (Header) -->
     <div class="website-header animate-header">
         <div class="header-content">
-            <h1>Manajemen Jabatan</h1>
+            <h1>Manajemen Lembur</h1>
             <div class="user-profile">
                 <span>Admin 👋</span>
-                <div class="avatar-small">🛡️</div>
+                <div class="avatar-small">⏰</div>
             </div>
         </div>
     </div>
@@ -17,7 +17,7 @@
 
 @section('content')
 
-<!-- CSS STYLING (Sama persis seperti Divisi) -->
+<!-- CSS STYLING (Sama dengan style User + Tambahan untuk Overtime) -->
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
@@ -29,6 +29,11 @@
         --glass: rgba(255, 255, 255, 0.95);
         --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         --bg-gradient: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+
+        /* Warna Status Overtime */
+        --color-pending: #f59e0b;
+        --color-approved: #10b981;
+        --color-rejected: #ef4444;
     }
 
     /* RESET & UTAMA */
@@ -49,7 +54,7 @@
         padding: 40px 20px;
         position: relative;
         z-index: 10;
-        padding-top: 100px;
+        padding-top: 100px; /* Space untuk fixed header */
     }
 
     /* --- ANIMASI CSS --- */
@@ -101,47 +106,33 @@
     .btn-add { background: linear-gradient(to right, #11998e, #38ef7d); color: white; }
     .btn-add:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(56, 239, 125, 0.4); }
 
-    /* Search Bar Style */
-    .search-wrapper {
-        display: flex; gap: 10px; margin-bottom: 20px; background: #f8f9fa; padding: 10px; border-radius: 15px; border: 1px solid #eee;
-    }
-    .search-input {
-        flex: 1; border: none; background: transparent; padding: 10px 15px; font-size: 0.95rem; outline: none; font-family: 'Poppins', sans-serif; color: #555;
-    }
-    .search-input::placeholder { color: #aaa; }
-    .btn-icon { border: none; background: transparent; cursor: pointer; font-size: 1.2rem; transition: transform 0.2s; }
-    .btn-icon:hover { transform: scale(1.1); }
-
+    /* Table Modern */
     table.modern-table { width: 100%; border-collapse: separate; border-spacing: 0; }
     table.modern-table thead tr { background: linear-gradient(90deg, var(--secondary), var(--primary)); color: white; }
-    table.modern-table thead th { padding: 18px; text-align: left; font-weight: 600; text-transform: uppercase; font-size: 0.85rem; color: white; }
-    table.modern-table thead th:first-child { border-radius: 15px 0 0 0; }
-    table.modern-table thead th:last-child { border-radius: 0 15px 0 0; }
+    table.modern-table th { padding: 18px; text-align: left; font-weight: 600; text-transform: uppercase; font-size: 0.85rem; color: white; }
+    table.modern-table th:first-child { border-radius: 15px 0 0 0; }
+    table.modern-table th:last-child { border-radius: 0 15px 0 0; }
 
     table.modern-table tbody tr { background: rgba(255,255,255,0.6); border-bottom: 1px solid rgba(0,0,0,0.05); transition: all 0.2s ease; }
     table.modern-table tbody tr:hover { background: rgba(102, 126, 234, 0.05); transform: scale(1.005); box-shadow: 0 4px 15px rgba(0,0,0,0.05); z-index: 2; position: relative; }
-    table.modern-table td { padding: 18px; color: #555; font-size: 0.95rem; }
-    table.modern-table td:first-child { font-weight: 700; color: var(--secondary); }
+    table.modern-table td { padding: 16px 18px; color: #555; font-size: 0.9rem; vertical-align: middle; }
+    table.modern-table td:first-child { font-weight: 700; color: var(--secondary); text-align: center; width: 50px; }
 
-    /* --- UKURAN TOMBOL AKSI (SESUAI SCREENSHOT DIVISI) --- */
-    .btn-action-sm {
-        padding: 8px 15px;      /* Ukuran standar screenshot */
-        border-radius: 10px;     /* Sudut membulat */
-        font-size: 0.8rem;       /* Font size standar screenshot */
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.2s;
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-    }
-    /* ---------------------------------------------------- */
+    /* Badge Status Custom */
+    .badge-status { padding: 6px 14px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; display: inline-block; }
 
-    .btn-edit { background: linear-gradient(to right, #f6d365, #fda085); color: white; border: none; }
-    .btn-edit:hover { filter: brightness(1.1); transform: translateY(-2px); }
-    .btn-delete { background: #fee2e2; color: #ef4444; border: none; }
-    .btn-delete:hover { background: #fecaca; transform: translateY(-2px); }
+    /* Warna Overtime */
+    .badge-pending { background: #fef3c7; color: #d97706; border: 1px solid #fcd34d; }
+    .badge-approved { background: #d1fae5; color: #059669; border: 1px solid #6ee7b7; }
+    .badge-rejected { background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; }
+
+    /* Button Action */
+    .btn-action-sm { padding: 8px 15px; border-radius: 10px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s; border: none; display: inline-flex; align-items: center; gap: 5px; color: white;}
+    .btn-approve { background: linear-gradient(to right, #11998e, #38ef7d); box-shadow: 0 4px 10px rgba(17, 153, 142, 0.3); }
+    .btn-approve:hover { filter: brightness(1.1); transform: translateY(-2px); }
+
+    /* Currency Styling */
+    .text-currency { font-weight: 600; color: #333; font-family: 'Consolas', monospace; }
 
     .alert-modern { background: #d1fae5; color: #065f46; padding: 15px; border-radius: 12px; margin-bottom: 25px; font-weight: 500; text-align: center; border: 1px solid #a7f3d0; }
 
@@ -154,7 +145,7 @@
     .modal.show { display: flex; opacity: 1; }
 
     .modal-box {
-        background-color: #fff; padding: 0; border-radius: 24px; width: 90%; max-width: 500px;
+        background-color: #fff; padding: 0; border-radius: 24px; width: 90%; max-width: 550px;
         box-shadow: 0 20px 60px rgba(0,0,0,0.2); transform: scale(0.8);
         transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         position: relative; overflow: hidden;
@@ -208,26 +199,11 @@
 
         <!-- HEADER & TOMBOL ADD -->
         <div class="page-header">
-            <h4 class="page-title">Data Jabatan</h4>
-            <button class="btn-modern btn-add" onclick="openModal('create')">
-                ➕ Tambah Jabatan
+            <h4 class="page-title">Data Overtime</h4>
+            <button class="btn-modern btn-add" onclick="openModal()">
+                ➕ Tambah Overtime
             </button>
         </div>
-
-        <!-- SEARCH BAR (Disesuaikan dengan Style) -->
-        <form action="{{ route('jabatan.index') }}" method="GET" class="search-wrapper">
-            <input type="text"
-                   name="search"
-                   class="search-input"
-                   placeholder="🔍 Cari nama jabatan..."
-                   value="{{ request('search') }}">
-            @if(request('search'))
-                <a href="{{ route('jabatan.index') }}" class="btn-icon" title="Reset">❌</a>
-                <button type="submit" class="btn-icon" title="Cari">🔍</button>
-            @else
-                <button type="submit" class="btn-icon" title="Cari">🔍</button>
-            @endif
-        </form>
 
         <!-- ALERT SUKSES -->
         @if(session('success'))
@@ -241,47 +217,78 @@
             <table class="modern-table">
                 <thead>
                     <tr>
-                        <th width="5%">No</th>
-                        <th width="35%">Nama Jabatan</th>
-                        <th width="25%">Gaji Pokok</th>
-                        <th width="25%">Divisi</th>
-                        <th width="10%" style="text-align: center;">Aksi</th>
+                        <th style="text-align: center;">No</th>
+                        <th>Karyawan</th>
+                        <th style="text-align: center;">Tanggal</th>
+                        <th style="text-align: center;">Jam Kerja</th>
+                        <th style="text-align: center;">Total Jam</th>
+                        <th>Total Upah</th>
+                        <th style="text-align: center;">Status</th>
+                        <th style="text-align: center;">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @if($jabatan->count() == 0)
+                    @forelse($overtimes as $overtime)
                         <tr>
-                            <td colspan="5" style="text-align: center; padding: 30px; color: #999;">
-                                Data jabatan tidak ditemukan
-                            </td>
-                        </tr>
-                    @endif
+                            <td style="text-align: center;">{{ $loop->iteration }}</td>
 
-                    @foreach($jabatan as $j)
-                        <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td><strong>{{ $j->nama_jabatan }}</strong></td>
-                            <td style="font-family: 'Courier New', monospace; font-weight: 600;">
-                                Rp {{ number_format($j->gaji_pokok,0,',','.') }}
+                            <td>
+                                <div style="font-weight: 600; color: #333;">{{ $overtime->karyawan->nama_karyawan }}</div>
                             </td>
-                            <td>{{ $j->divisi->nama_divisi ?? '-' }}</td>
+
                             <td style="text-align: center;">
-                                <!-- Tombol Edit Membuka Modal Edit -->
-                                <button class="btn-action-sm btn-edit"
-                                    onclick="openModal('edit', {{ $j->id_jabatan }}, '{{ $j->nama_jabatan }}', {{ $j->gaji_pokok }}, {{ $j->id_divisi }})">
-                                    ✏️ Edit
-                                </button>
+                                <span style="background: #f3f4f6; padding: 4px 10px; border-radius: 8px; font-size: 0.85rem;">
+                                    {{ $overtime->tanggal }}
+                                </span>
+                            </td>
 
-                                <form action="{{ route('jabatan.destroy',$j->id_jabatan) }}" method="POST" style="display: inline;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="btn-action-sm btn-delete" onclick="return confirm('Yakin ingin menghapus data jabatan ini?')">
-                                        🗑️ Hapus
-                                    </button>
-                                </form>
+                            <td style="text-align: center;">
+                                <span style="font-weight: 600;">{{ $overtime->jam_mulai }}</span>
+                                <span style="color: #999;">-</span>
+                                <span style="font-weight: 600;">{{ $overtime->jam_selesai }}</span>
+                            </td>
+
+                            <td style="text-align: center;">{{ $overtime->total_jam }} Jam</td>
+
+                            <td class="text-currency">
+                                Rp {{ number_format($overtime->total_upah, 0, ',', '.') }}
+                            </td>
+
+                            {{-- STATUS --}}
+                            <td style="text-align: center;">
+                                <span class="badge-status
+                                    @if($overtime->status == 'approved') badge-approved
+                                    @elseif($overtime->status == 'rejected') badge-rejected
+                                    @else badge-pending
+                                    @endif">
+                                    {{ ucfirst($overtime->status) }}
+                                </span>
+                            </td>
+
+                            {{-- AKSI --}}
+                            <td style="text-align: center;">
+                                @if($overtime->status == 'pending')
+                                    {{-- Form Approve Menggunakan Style Modern --}}
+                                    <form action="{{ route('overtime.approve', $overtime->id) }}" method="POST" style="display: inline-block;">
+                                        @csrf
+                                        @method('PUT')
+                                        <button type="submit" class="btn-action-sm btn-approve" title="Setujui Lembur">
+                                            <i class="fa-solid fa-check"></i> Approve
+                                        </button>
+                                    </form>
+                                @else
+                                    <span style="color: #aaa; font-size: 1.2rem;">✔</span>
+                                @endif
                             </td>
                         </tr>
-                    @endforeach
+                    @empty
+                        <tr>
+                            <td colspan="8" style="text-align: center; padding: 40px; color: #888;">
+                                <div style="font-size: 3rem; margin-bottom: 10px;">🍃</div>
+                                Belum ada data overtime
+                            </td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
@@ -290,59 +297,74 @@
 
 </div>
 
-<!-- MODAL JABATAN (Create / Edit) -->
-<div class="modal" id="jabatanModal">
+<!-- MODAL TAMBAH OVERTIME (Custom Modal, Bukan Bootstrap) -->
+<div class="modal" id="overtimeModal">
     <div class="modal-box">
 
         <!-- HEADER GRADASI -->
         <div class="modal-header">
-            <div class="modal-icon">💼</div>
-            <h3 id="modalTitle">Tambah Jabatan</h3>
+            <div class="modal-icon">⏰</div>
+            <h3>Tambah Overtime</h3>
         </div>
 
         <div class="modal-body">
-            <form id="jabatanForm" action="{{ route('jabatan.store') }}" method="POST">
+            <form action="{{ route('overtime.store') }}" method="POST">
                 @csrf
-                <!-- Hidden ID untuk Edit -->
-                <input type="hidden" name="id_jabatan" id="jabatanId">
 
-                <!-- Hidden Method (SOLUSI ERROR 405) -->
-                <input type="hidden" name="_method" value="POST" id="methodInput">
+                <div class="row g-3" style="display: flex; flex-wrap: wrap; margin: 0 -10px;">
 
-                <div class="form-group">
-                    <label>Nama Jabatan</label>
-                    <input type="text"
-                           name="nama_jabatan"
-                           id="nama_jabatan"
-                           class="form-control"
-                           placeholder="Contoh: Manager IT"
-                           required>
-                </div>
+                    {{-- KARYAWAN --}}
+                    <div class="col-md-12" style="padding: 0 10px; flex: 0 0 100%; max-width: 100%;">
+                        <div class="form-group">
+                            <label>Nama Karyawan</label>
+                            <select name="karyawan_id" class="form-control" required>
+                                <option value="">-- Pilih Karyawan --</option>
+                                @foreach($karyawans as $karyawan)
+                                    <option value="{{ $karyawan->id_karyawan }}">
+                                        {{ $karyawan->nama_karyawan }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
 
-                <div class="form-group">
-                    <label>Gaji Pokok</label>
-                    <input type="number"
-                           name="gaji_pokok"
-                           id="gaji_pokok"
-                           class="form-control"
-                           placeholder="Masukkan nominal gaji..."
-                           required>
-                </div>
+                    {{-- TANGGAL --}}
+                    <div class="col-md-6" style="padding: 0 10px; flex: 0 0 50%; max-width: 50%;">
+                        <div class="form-group">
+                            <label>Tanggal</label>
+                            <input type="date" name="tanggal" class="form-control" required>
+                        </div>
+                    </div>
 
-                <div class="form-group">
-                    <label>Divisi</label>
-                    <select name="id_divisi" id="id_divisi" class="form-control" required>
-                        <option value="">-- Pilih Divisi --</option>
-                        <!-- Pastikan Controller mengirim variable $divisis ke view ini -->
-                        @foreach($divisis ?? [] as $d)
-                            <option value="{{ $d->id_divisi }}">{{ $d->nama_divisi }}</option>
-                        @endforeach
-                    </select>
+                    {{-- TARIF (Dipindah ke sini agar layout seimbang) --}}
+                    <div class="col-md-6" style="padding: 0 10px; flex: 0 0 50%; max-width: 50%;">
+                        <div class="form-group">
+                            <label>Tarif per Jam (Rp)</label>
+                            <input type="number" name="tarif_per_jam" class="form-control" placeholder="0" required>
+                        </div>
+                    </div>
+
+                    {{-- JAM MULAI --}}
+                    <div class="col-md-6" style="padding: 0 10px; flex: 0 0 50%; max-width: 50%;">
+                        <div class="form-group">
+                            <label>Jam Mulai</label>
+                            <input type="time" name="jam_mulai" class="form-control" required>
+                        </div>
+                    </div>
+
+                    {{-- JAM SELESAI --}}
+                    <div class="col-md-6" style="padding: 0 10px; flex: 0 0 50%; max-width: 50%;">
+                        <div class="form-group">
+                            <label>Jam Selesai</label>
+                            <input type="time" name="jam_selesai" class="form-control" required>
+                        </div>
+                    </div>
+
                 </div>
 
                 <div class="modal-buttons">
-                    <button type="submit" class="btn-submit">💾 Simpan Data</button>
-                    <button type="button" class="btn-cancel" onclick="closeModal()">❌ Batal</button>
+                    <button type="button" class="btn-cancel" onclick="closeModal()">Batal</button>
+                    <button type="submit" class="btn-submit">Simpan Data</button>
                 </div>
             </form>
         </div>
@@ -363,60 +385,25 @@
     </g>
 </svg>
 
-<!-- JAVASCRIPT LOGIC -->
+<!-- JAVASCRIPT LOGIC (Modal Sederhana untuk Add) -->
 <script>
-    // --- FUNGSI MODAL ---
-    function openModal(mode, id = null, nama_jabatan = '', gaji_pokok = '', id_divisi = '') {
-        const modal = document.getElementById('jabatanModal');
-        const form = document.getElementById('jabatanForm');
-        const title = document.getElementById('modalTitle');
-
-        // Tampilkan Modal
+    function openModal() {
+        const modal = document.getElementById('overtimeModal');
         modal.style.display = "flex";
+        // Sedikit delay agar transisi CSS opacity berjalan
         setTimeout(() => { modal.classList.add('show'); }, 10);
-
-        if (mode === 'create') {
-            // --- MODE CREATE ---
-            form.action = "{{ route('jabatan.store') }}";
-            form.method = "POST";
-
-            // Set Method Hidden menjadi POST (Default)
-            document.getElementById('methodInput').value = "POST";
-
-            // UI Update
-            title.innerText = "Tambah Jabatan Baru";
-            document.getElementById('jabatanId').value = "";
-            document.getElementById('nama_jabatan').value = "";
-            document.getElementById('gaji_pokok').value = "";
-            document.getElementById('id_divisi').value = "";
-
-        } else {
-            // --- MODE EDIT ---
-            // Ganti route dengan ID dinamis
-            form.action = "{{ route('jabatan.update', ':id') }}".replace(':id', id);
-            form.method = "POST";
-
-            // Set Method Hidden menjadi PUT (SOLUSI ERROR 405)
-            document.getElementById('methodInput').value = "PUT";
-
-            // UI Update & Isi Data
-            title.innerText = "Edit Data Jabatan";
-            document.getElementById('jabatanId').value = id;
-            document.getElementById('nama_jabatan').value = nama_jabatan;
-            document.getElementById('gaji_pokok').value = gaji_pokok;
-            document.getElementById('id_divisi').value = id_divisi;
-        }
     }
 
     function closeModal() {
-        const modal = document.getElementById('jabatanModal');
+        const modal = document.getElementById('overtimeModal');
         modal.classList.remove('show');
+        // Tunggu transisi selesai sebelum display none
         setTimeout(() => { modal.style.display = "none"; }, 300);
     }
 
-    // Klik di luar modal untuk menutup
+    // Klik di luar modal (area gelap) untuk menutup
     window.onclick = function(event) {
-        const modal = document.getElementById('jabatanModal');
+        const modal = document.getElementById('overtimeModal');
         if (event.target == modal) {
             closeModal();
         }
@@ -424,6 +411,3 @@
 </script>
 
 @endsection
-
-
-

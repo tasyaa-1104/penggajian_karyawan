@@ -65,6 +65,36 @@
         backdrop-filter: blur(2px);
         z-index: 2;
     }
+    /* --- LOGOUT BUBBLE BUTTON --- */
+.btn-logout-bubble {
+    background: linear-gradient(135deg, #ff6b6b, #e53935);
+    color: #fff;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 50px; /* 🔵 bubble */
+    font-size: 13px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 8px 20px rgba(229,57,53,0.3);
+    transition: all 0.3s ease;
+}
+
+.btn-logout-bubble i {
+    font-size: 14px;
+}
+
+.btn-logout-bubble:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 25px rgba(229,57,53,0.4);
+    opacity: 0.95;
+}
+
+.btn-logout-bubble:active {
+    transform: scale(0.97);
+}
+
 
     .bg-gaji .icon-circle { background: rgba(0,0,0,0.05); }
 
@@ -149,7 +179,18 @@
 
 <div class="container-fluid dashboard-wrapper">
 
+    <div class="d-flex justify-content-between align-items-center mb-4">
     <h4>Dashboard</h4>
+
+    <form action="{{ route('logout') }}" method="POST">
+        @csrf
+        <button type="submit" class="btn btn-logout-bubble">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            Logout
+        </button>
+    </form>
+</div>
+
 
     <!-- INFO BOX -->
     <div class="row">
