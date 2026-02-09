@@ -7,6 +7,8 @@
 @endsection
 
 @section('content')
+{{-- <pre>{{ json_encode($liburList, JSON_PRETTY_PRINT) }}</pre> --}}
+
 
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
@@ -205,6 +207,53 @@
         .right-card { min-height: 350px; }
         .big-time { font-size: 5rem; }
     }
+
+    .kalender {
+    background:#f8fafc;
+    border-radius:16px;
+    padding:15px;
+    font-size:0.85rem;
+}
+
+.kalender-header {
+    text-align:center;
+    font-weight:800;
+    margin-bottom:10px;
+}
+
+.kalender-grid {
+    display:grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap:6px;
+    text-align:center;
+}
+
+.kalender-day {
+    font-weight:700;
+    color:#64748b;
+}
+
+.kalender-date {
+    padding:8px 0;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:600;
+}
+
+.kalender-date:hover {
+    background:#e0f2fe;
+}
+
+.libur {
+    background:#fee2e2;
+    color:#991b1b;
+}
+
+.today {
+    background:#2563eb;
+    color:white;
+}
+
 </style>
 
 <!-- SPLIT LAYOUT -->
@@ -241,8 +290,40 @@
                 </div>
             @endif
 
+                        @if($isLibur)
+                <div style="
+                    background:#fee2e2;
+                    color:#991b1b;
+                    padding:16px;
+                    border-radius:14px;
+                    text-align:center;
+                    font-weight:800;
+                    margin-bottom:25px;
+                    position:relative;
+                    z-index:2;
+                ">
+                    🎌 LIBUR NASIONAL <br>
+                    <span style="font-size:0.95rem; font-weight:600;">
+                        {{ $namaLibur }}
+                    </span>
+                </div>
+            @endif
+            {{-- KALENDER LIBUR --}}
+<div style="margin-bottom:25px; position:relative; z-index:2;">
+    <div id="kalender"></div>
+</div>
+
+
             {{-- LOGIKA --}}
-            @if(!$absensiHariIni)
+             @if($isLibur)
+
+            <div style="text-align:center; color:#991b1b; font-weight:700;">
+                🎉 Hari ini libur nasional<br>
+                <small>Absensi dinonaktifkan</small>
+            </div>
+
+        @elseif(!$absensiHariIni)
+
 
                 <form action="{{ route('karyawan.absen.masuk') }}" method="POST">
                     @csrf
@@ -295,9 +376,20 @@
 
             <div class="content-clock">
                 <div class="big-time" id="clock">00:00</div>
-                <div class="date-box" style="margin-top:10px; background: white; color: var(--primary); padding: 8px 24px; border-radius: 15px; font-weight: 700; font-size: 1.1rem; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
-                    📅 {{ now()->format('l, d F Y') }}
-                </div>
+            <div class="date-box"
+        style="
+            margin-top:10px;
+            background: {{ $isLibur ? '#fee2e2' : 'white' }};
+            color: {{ $isLibur ? '#991b1b' : 'var(--primary)' }};
+        ">
+        📅 {{ now()->format('l, d F Y') }}
+        @if($isLibur)
+            <div style="font-size:0.8rem; font-weight:700;">
+                {{ $namaLibur }}
+            </div>
+        @endif
+    </div>
+
             </div>
         </div>
 
@@ -339,6 +431,57 @@
     function openModal() { document.getElementById('izinModal').style.display = 'flex'; }
     function closeModal() { document.getElementById('izinModal').style.display = 'none'; }
     window.onclick = (e) => { if(e.target == document.getElementById('izinModal')) closeModal(); };
+    const liburData = @json($liburList);
+
+function renderCalendar() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth();
+
+    const firstDay = new Date(year, month, 1).getDay();
+    const totalDays = new Date(year, month + 1, 0).getDate();
+
+    let html = `<div class="kalender">
+        <div class="kalender-header">
+            ${now.toLocaleDateString('id-ID', { month: 'long', year: 'numeric' })}
+        </div>
+        <div class="kalender-grid">
+            <div class="kalender-day">M</div>
+            <div class="kalender-day">S</div>
+            <div class="kalender-day">S</div>
+            <div class="kalender-day">R</div>
+            <div class="kalender-day">K</div>
+            <div class="kalender-day">J</div>
+            <div class="kalender-day">S</div>
+    `;
+
+    for (let i = 1; i < (firstDay === 0 ? 7 : firstDay); i++) {
+        html += `<div></div>`;
+    }
+
+    for (let d = 1; d <= totalDays; d++) {
+        const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+        const libur = liburData.find(l => l.tanggal === dateStr);
+
+        let cls = 'kalender-date';
+        if (libur) cls += ' libur';
+        if (d === now.getDate()) cls += ' today';
+
+        html += `
+            <div class="${cls}" 
+                 onclick="${libur ? `alert('Libur Nasional: ${libur.keterangan}')` : ''}">
+                ${d}
+            </div>`;
+    }
+
+    html += `</div></div>`;
+    document.getElementById('kalender').innerHTML = html;
+}
+
+renderCalendar();
+
 </script>
 
 @endsection
+
+
