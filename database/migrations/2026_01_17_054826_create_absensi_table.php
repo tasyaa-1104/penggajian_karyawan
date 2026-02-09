@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id('id_absensi');
             $table->unsignedBigInteger('id_karyawan');
             $table->date('tanggal');
-            $table->enum('status_kehadiran', ['Hadir', 'Izin', 'Alpha']);
+            $table->enum('status_kehadiran', ['Hadir', 'Izin', 'Alpha', 'Sakit'])->default('Hadir');
             $table->string('keterangan')->nullable();
             $table->timestamps();
 

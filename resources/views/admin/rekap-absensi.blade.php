@@ -288,6 +288,7 @@
                         <th>Bulan</th>
                         <th>Hadir</th>
                         <th>Izin</th>
+                        <th>Sakit</th>
                         <th>Alpha</th>
                         <th>Aksi</th>
                     </tr>
@@ -308,6 +309,7 @@
                             <td>{{ $r->bulan }}</td>
                             <td><span class="badge-stat stat-h">{{ $r->jumlah_hadir }}</span></td>
                             <td><span class="badge-stat stat-i">{{ $r->jumlah_izin }}</span></td>
+                            <td><span class="badge-stat stat-i">{{ $r->jumlah_sakit }}</span></td>
                             <td><span class="badge-stat stat-a">{{ $r->jumlah_alpha }}</span></td>
                             <td>
                                 <form action="{{ route('rekap-absensi.delete', $r->id_rekap) }}"

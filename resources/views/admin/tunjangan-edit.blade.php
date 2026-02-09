@@ -1,9 +1,9 @@
-@extends('admin.template')
+{{-- @extends('admin.template')
 
 @section('content')
 <div class="container mt-4">
     <h4>edit tunjangan</h4>
-    
+
        @if ($errors->any())
     <div class="alert alert-danger">
         <ul>
@@ -40,4 +40,4 @@
         <a href="{{ route('tunjangan.index') }}" class="btn btn-secondary">kembali</a>
     </form>
 </div>
-@endsection
+@endsection --}}

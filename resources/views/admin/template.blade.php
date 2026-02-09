@@ -79,6 +79,13 @@
             opacity: 0;
             animation: slideInLeft 0.5s ease forwards;
         }
+        .sidebar-logout {
+    position: absolute;
+    bottom: 120px; /* di atas gelombang */
+    width: 100%;
+    padding: 0 12px;
+}
+
 
         /* Delay animasi menu */
         .sidebar .nav-item:nth-child(1) { animation-delay: 0.1s; }
@@ -166,6 +173,7 @@
 
         /* ================= WAVE ANIMATION ================= */
         .wave-container {
+             pointer-events: none;
             position: absolute;
             bottom: 0;
             left: 0;
@@ -326,13 +334,24 @@
             </a>
         </li>
 
-        <li class="nav-item mt-3">
-            <a href="{{ route('login') }}" class="nav-link text-danger">
-                <i class="fa-solid fa-right-from-bracket"></i> Logout
+        <li class="nav-item">
+            <a href="{{ route('overtime.index') }}"
+               class="nav-link {{ request()->routeIs('overtime*') ? 'active' : '' }}">
+                <i class="fa-solid fa-clock"></i> Overtime
             </a>
         </li>
 
-    </ul>
+    </ul> <!-- ✅ WAJIB ADA -->
+
+    <!-- 🌊 GELOMBANG -->
+    <div class="wave-container">
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+    </div>
+</nav>
+
+
 
     <!-- EFEK GELOMBANG BARU -->
     <div class="wave-container">
