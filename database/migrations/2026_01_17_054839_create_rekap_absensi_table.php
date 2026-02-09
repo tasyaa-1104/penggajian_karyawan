@@ -18,6 +18,7 @@ return new class extends Migration
             $table->integer('jumlah_hadir')->default(0);
             $table->integer('jumlah_izin')->default(0);
             $table->integer('jumlah_alpha')->default(0);
+            $table->integer('jumlah_sakit')->default(0);
             $table->timestamps();
 
             $table->foreign('id_karyawan')

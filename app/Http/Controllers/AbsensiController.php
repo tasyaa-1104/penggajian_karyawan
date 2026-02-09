@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Absensi;
 use App\Models\Karyawan;
 use Carbon\Carbon;
+use App\Models\Libur;
 use Illuminate\Support\Facades\Auth;
 
 class AbsensiController extends Controller
@@ -97,29 +98,52 @@ class AbsensiController extends Controller
             ->with('success', 'Data absensi berhasil dihapus');
     }
 
-
 public function createKaryawan()
 {
     $userId = session('user.id');
 
     if (!$userId) {
-        return redirect()->route('login')->with('error', 'Silakan login dulu');
+        return redirect()->route('login')
+            ->with('error', 'Silakan login dulu');
     }
 
     $karyawan = Karyawan::where('id_user', $userId)->first();
 
     if (!$karyawan) {
-        return back()->with('error', 'Akun belum terhubung dengan data karyawan');
+        return back()
+            ->with('error', 'Akun belum terhubung dengan data karyawan');
     }
 
-    $absensiHariIni = Absensi::where('id_karyawan', $karyawan->id_karyawan)
-        ->where('tanggal', Carbon::now('Asia/Jakarta')->toDateString())
-        ->first();
+    // 📅 TANGGAL HARI INI (WIB)
+    $hariIni = Carbon::now('Asia/Jakarta')->toDateString();
 
-    return view('karyawan-absensi-create', compact(
-        'karyawan',
-        'absensiHariIni'
-    ));
+    // 🔍 CEK ABSENSI HARI INI
+    $absensiHariIni = Absensi::where('id_karyawan', $karyawan->id_karyawan)
+        ->where('tanggal', $hariIni)
+        ->first();
+// 🔴 CEK APAKAH HARI INI LIBUR NASIONAL
+$liburHariIni = Libur::whereDate('tanggal', $hariIni)->first();
+
+$isLibur   = $liburHariIni ? true : false;
+$namaLibur = $liburHariIni?->keterangan;
+
+// ⬇️ LIST LIBUR UNTUK KALENDER
+$liburList = Libur::get()->map(function ($l) {
+    return [
+        'tanggal' => $l->tanggal->format('Y-m-d'),
+        'keterangan' => $l->keterangan
+    ];
+});
+
+
+return view('karyawan-absensi-create', compact(
+    'karyawan',
+    'absensiHariIni',
+    'isLibur',
+    'namaLibur',
+    'liburList'
+));
+
 }
 
 
@@ -128,7 +152,7 @@ public function storeKaryawan(Request $request)
     $request->validate([
         'id_karyawan' => 'required',
         'tanggal' => 'required|date',
-        'status_kehadiran' => 'required|in:Hadir,Izin,Alpha',
+        'status_kehadiran' => 'required|in:Hadir,Izin,Sakit,Alpha',
         'keterangan' => 'nullable'
     ]);
 

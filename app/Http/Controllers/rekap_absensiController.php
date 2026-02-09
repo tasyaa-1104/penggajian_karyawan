@@ -57,7 +57,7 @@ class rekap_absensiController extends Controller
         $batasHari = $carbon->isSameMonth($hariIni)
             ? $hariIni->addDays(2)->day
             : $carbon->daysInMonth;
-            
+
             $day = $carbon->isSameMonth($hariIni)
             ? 2
             : 0;
@@ -67,7 +67,7 @@ class rekap_absensiController extends Controller
         // 🔥 hitung hari kerja yang sudah lewat
         $totalHariKerja = 0;
         for ($i = 1; $i <= $batasHari; $i++) {
-            
+
             $tgl = Carbon::create($tahunAngka, $bulanAngka, $i)->addDays($day);
             if (!$tgl->isWeekend()) {
                 $totalHariKerja++;
@@ -79,32 +79,42 @@ class rekap_absensiController extends Controller
         foreach ($karyawan as $k) {
 
             // ✅ HADIR (FIX TOTAL)
+          // 🔹 HADIR
             $hadir = Absensi::where('id_karyawan', $k->id_karyawan)
                 ->whereMonth('tanggal', $bulanAngka)
                 ->whereYear('tanggal', $tahunAngka)
                 ->whereRaw('LOWER(status_kehadiran) = ?', ['hadir'])
                 ->count();
 
-            // ✅ IZIN
+            // 🔹 IZIN
             $izin = Absensi::where('id_karyawan', $k->id_karyawan)
                 ->whereMonth('tanggal', $bulanAngka)
                 ->whereYear('tanggal', $tahunAngka)
                 ->whereRaw('LOWER(status_kehadiran) = ?', ['izin'])
                 ->count();
 
-            // 🔥 ALPHA
-            $alpha = $totalHariKerja - ($hadir + $izin);
+            // 🔹 SAKIT
+            $sakit = Absensi::where('id_karyawan', $k->id_karyawan)
+                ->whereMonth('tanggal', $bulanAngka)
+                ->whereYear('tanggal', $tahunAngka)
+                ->whereRaw('LOWER(status_kehadiran) = ?', ['sakit'])
+                ->count();
+
+            // 🔹 ALPHA
+            $alpha = $totalHariKerja - ($hadir + $izin + $sakit);
             if ($alpha < 0) $alpha = 0;
 
+            // Simpan ke rekap_absensi
             rekap_absensi::updateOrCreate(
                 [
                     'id_karyawan' => $k->id_karyawan,
-                    'bulan' => $bulan
+                    'bulan'       => $bulan
                 ],
                 [
-                    'jumlah_hadir' => $hadir,
-                    'jumlah_izin'  => $izin,
-                    'jumlah_alpha' => $alpha
+                    'jumlah_hadir'  => $hadir,
+                    'jumlah_izin'   => $izin,
+                    'jumlah_sakit'  => $sakit,   // <--- baru
+                    'jumlah_alpha'  => $alpha
                 ]
             );
         }
