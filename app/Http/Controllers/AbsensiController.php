@@ -242,12 +242,23 @@ public function absenPulang()
         return back()->with('error', 'Kamu sudah absen pulang');
     }
 
+    // ⏰ BATAS WAKTU ABSEN PULANG: hanya mulai jam 17:00
+    $now = Carbon::now('Asia/Jakarta');
+    $awalPulang = Carbon::today('Asia/Jakarta')->setHour(17)->setMinute(0)->setSecond(0);
+
+    if ($now->lessThan($awalPulang)) {
+        return back()->with('error', 'Absen pulang hanya bisa mulai jam 17:00');
+    }
+
+    // ✅ Update jam pulang
     $absensi->update([
-        'jam_pulang' => Carbon::now('Asia/Jakarta')->format('H:i:s')
+        'jam_pulang' => $now->format('H:i:s')
     ]);
 
     return back()->with('success', 'Absen pulang berhasil');
 }
+
+
 public function absenIzin(Request $request)
 {
     $now = Carbon::now('Asia/Jakarta');
