@@ -633,7 +633,7 @@
                     @foreach($absensi as $a)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
-                               {{ $absensi->id_karyawan == $item->id_karyawan ? 'selected' : '' }}>
+                            <td><strong>{{ $a->karyawan->nama_karyawan ?? '-' }}</strong></td>
                             <td>{{ $a->tanggal }}</td>
                             <td>
                                 @if($a->status_kehadiran == 'Hadir')
