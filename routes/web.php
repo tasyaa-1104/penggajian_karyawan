@@ -270,3 +270,20 @@ Route::post('/logout', function () {
 Route::get('/admin/overtime', [OvertimeController::class,'index'])->name('overtime.index');
 Route::post('/admin/overtime', [OvertimeController::class,'store'])->name('overtime.store');
 Route::put('/admin/overtime/approve/{id}', [OvertimeController::class,'approve'])->name('overtime.approve');
+
+
+
+
+
+
+Route::post('/overtime/generate-absensi',
+    [OvertimeController::class, 'generateFromAbsensi']
+)->name('overtime.generate.absensi');
+
+Route::post('/admin/overtime/generate',
+    [OvertimeController::class, 'generateFromAbsensi']
+)->name('overtime.generate');
+Route::get('/admin/overtime/{id}/approve', [OvertimeController::class, 'approve'])
+    ->name('overtime.approve')
+    ->middleware('role:admin');
+

@@ -48,4 +48,10 @@ class Karyawan extends Model
     return $this->hasMany(Overtime::class, 'karyawan_id', 'id_karyawan');
 }
 
+ public function overtime()
+    {
+        return $this->hasMany(Overtime::class, 'karyawan_id', 'id_karyawan');
+    }
 }
+
+
