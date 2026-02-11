@@ -10,6 +10,9 @@ use Carbon\Carbon;
 
 class rekap_absensiController extends Controller
 {
+    /* ===============================
+       HALAMAN INDEX
+    =============================== */
     public function index(Request $request)
     {
         $search = $request->search;
@@ -32,97 +35,106 @@ class rekap_absensiController extends Controller
         return view('admin.rekap-absensi-create');
     }
 
+    /* ===============================
+       WEB GENERATE
+    =============================== */
     public function generate(Request $request)
     {
         $request->validate([
             'bulan' => 'required|date_format:Y-m'
         ]);
 
-        $bulan = $request->bulan;
-        $carbon = Carbon::createFromFormat('Y-m', $bulan);
-
-        $bulanAngka = $carbon->month; // 2
-        $tahunAngka = $carbon->year;  // 2026
-
-        $hariIni = Carbon::today();
-
-        // ❌ blok bulan depan
-        if ($carbon->startOfMonth()->gt($hariIni->startOfMonth())) {
-            return back()->withErrors([
-                'bulan' => 'Bulan belum berjalan'
-            ]);
-        }
-
-        // 🔥 batas hari untuk alpha
-        $batasHari = $carbon->isSameMonth($hariIni)
-            ? $hariIni->addDays(7)->day
-            : $carbon->daysInMonth;
-
-            $day = $carbon->isSameMonth($hariIni)
-            ? 2
-            : 0;
-
-
-
-        // 🔥 hitung hari kerja yang sudah lewat
-        $totalHariKerja = 0;
-        for ($i = 1; $i <= $batasHari; $i++) {
-
-            $tgl = Carbon::create($tahunAngka, $bulanAngka, $i)->addDays($day);
-            if (!$tgl->isWeekend()) {
-                $totalHariKerja++;
-            }
-        }
-
-        $karyawan = Karyawan::all();
-
-        foreach ($karyawan as $k) {
-
-            // ✅ HADIR (FIX TOTAL)
-          // 🔹 HADIR
-            $hadir = Absensi::where('id_karyawan', $k->id_karyawan)
-                ->whereMonth('tanggal', $bulanAngka)
-                ->whereYear('tanggal', $tahunAngka)
-                ->whereRaw('LOWER(status_kehadiran) = ?', ['hadir'])
-                ->count();
-
-            // 🔹 IZIN
-            $izin = Absensi::where('id_karyawan', $k->id_karyawan)
-                ->whereMonth('tanggal', $bulanAngka)
-                ->whereYear('tanggal', $tahunAngka)
-                ->whereRaw('LOWER(status_kehadiran) = ?', ['izin'])
-                ->count();
-
-            // 🔹 SAKIT
-            $sakit = Absensi::where('id_karyawan', $k->id_karyawan)
-                ->whereMonth('tanggal', $bulanAngka)
-                ->whereYear('tanggal', $tahunAngka)
-                ->whereRaw('LOWER(status_kehadiran) = ?', ['sakit'])
-                ->count();
-
-            // 🔹 ALPHA
-            $alpha = $totalHariKerja - ($hadir + $izin + $sakit);
-            if ($alpha < 0) $alpha = 0;
-
-            // Simpan ke rekap_absensi
-            rekap_absensi::updateOrCreate(
-                [
-                    'id_karyawan' => $k->id_karyawan,
-                    'bulan'       => $bulan
-                ],
-                [
-                    'jumlah_hadir'  => $hadir,
-                    'jumlah_izin'   => $izin,
-                    'jumlah_sakit'  => $sakit,   // <--- baru
-                    'jumlah_alpha'  => $alpha
-                ]
-            );
-        }
+        $this->generateRekap($request->bulan);
 
         return redirect()
             ->route('rekap-absensi.index')
-            ->with('success', 'Rekap bulan '.$bulan.' berhasil digenerate');
+            ->with('success', 'Rekap bulan '.$request->bulan.' berhasil digenerate');
     }
+
+    /* ===============================
+       LOGIKA INTI (WEB + SCHEDULER)
+    =============================== */
+public function generateRekap(string $bulan)
+{
+    $carbon = Carbon::createFromFormat('Y-m', $bulan);
+
+    $bulanAngka = $carbon->month;
+    $tahunAngka = $carbon->year;
+
+    $hariIni = Carbon::today();
+
+    // ❌ Blok bulan depan
+    if ($carbon->copy()->startOfMonth()->gt($hariIni->copy()->startOfMonth())) {
+        return;
+    }
+
+    // 🔥 Range hari dari config (REKOMENDASI = 0)
+    $rangeHari = config('absensi.range_hari', 0);
+
+    // 🔥 Tentukan batas hari
+    if ($carbon->isSameMonth($hariIni)) {
+        $batasHari = $hariIni->copy()->addDays($rangeHari)->day;
+    } else {
+        $batasHari = $carbon->daysInMonth;
+    }
+
+    /* ===============================
+       HITUNG HARI KERJA
+    =============================== */
+    $totalHariKerja = 0;
+
+    for ($i = 1; $i <= $batasHari; $i++) {
+
+        $tgl = Carbon::create($tahunAngka, $bulanAngka, $i);
+
+        if (!$tgl->isWeekend()) {
+            $totalHariKerja++;
+        }
+    }
+
+    /* ===============================
+       HITUNG PER KARYAWAN
+    =============================== */
+    $karyawan = Karyawan::all();
+
+    foreach ($karyawan as $k) {
+
+        $hadir = Absensi::where('id_karyawan', $k->id_karyawan)
+            ->whereMonth('tanggal', $bulanAngka)
+            ->whereYear('tanggal', $tahunAngka)
+            ->whereRaw('LOWER(status_kehadiran) = ?', ['hadir'])
+            ->count();
+
+        $izin = Absensi::where('id_karyawan', $k->id_karyawan)
+            ->whereMonth('tanggal', $bulanAngka)
+            ->whereYear('tanggal', $tahunAngka)
+            ->whereRaw('LOWER(status_kehadiran) = ?', ['izin'])
+            ->count();
+
+        $sakit = Absensi::where('id_karyawan', $k->id_karyawan)
+            ->whereMonth('tanggal', $bulanAngka)
+            ->whereYear('tanggal', $tahunAngka)
+            ->whereRaw('LOWER(status_kehadiran) = ?', ['sakit'])
+            ->count();
+
+        // 🔥 ALPHA OTOMATIS
+        $alpha = $totalHariKerja - ($hadir + $izin + $sakit);
+        if ($alpha < 0) $alpha = 0;
+
+        rekap_absensi::updateOrCreate(
+            [
+                'id_karyawan' => $k->id_karyawan,
+                'bulan'       => $bulan
+            ],
+            [
+                'jumlah_hadir' => $hadir,
+                'jumlah_izin'  => $izin,
+                'jumlah_sakit' => $sakit,
+                'jumlah_alpha' => $alpha
+            ]
+        );
+    }
+}
 
     public function destroy($id)
     {
