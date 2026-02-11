@@ -55,7 +55,7 @@ class rekap_absensiController extends Controller
 
         // 🔥 batas hari untuk alpha
         $batasHari = $carbon->isSameMonth($hariIni)
-            ? $hariIni->addDays(2)->day
+            ? $hariIni->addDays(7)->day
             : $carbon->daysInMonth;
 
             $day = $carbon->isSameMonth($hariIni)
