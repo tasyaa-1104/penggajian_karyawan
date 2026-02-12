@@ -19,14 +19,22 @@ class Overtime extends Model
         'total_jam',
         'tarif_per_jam',
         'total_upah',
+        'sumber',
         'status'
     ];
 
+    protected $casts = [
+        'tanggal'       => 'date',
+        'total_jam'     => 'decimal:2',
+        'tarif_per_jam' => 'decimal:2',
+        'total_upah'    => 'decimal:2',
+    ];
+
     /**
-     * Relasi ke karyawan
+     * 🔥 Relasi ke karyawan
      */
-   public function karyawan()
-{
-    return $this->belongsTo(Karyawan::class, 'karyawan_id', 'id_karyawan');
-}
+    public function karyawan()
+    {
+        return $this->belongsTo(Karyawan::class, 'karyawan_id', 'id_karyawan');
+    }
 }
