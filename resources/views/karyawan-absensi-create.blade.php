@@ -235,8 +235,10 @@
                 </div>
 
             @elseif(!$absensiHariIni)
-                <form action="{{ route('karyawan.absen.masuk') }}" method="POST">
-                    @csrf
+                <form id="formMasuk" action="{{ route('karyawan.absen.masuk') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="latitude" id="latitude_masuk">
+                        <input type="hidden" name="longitude" id="longitude_masuk">
                     <button type="submit" class="btn-action btn-main">
                         <span>📍</span> Absen Masuk
                     </button>
@@ -250,8 +252,10 @@
                 <div class="status-working">
                     <span>⏳</span> Sedang Bekerja
                 </div>
-                <form action="{{ route('karyawan.absen.pulang') }}" method="POST">
+               <form id="formPulang" action="{{ route('karyawan.absen.pulang') }}" method="POST">
                     @csrf
+                    <input type="hidden" name="latitude" id="latitude_pulang">
+                    <input type="hidden" name="longitude" id="longitude_pulang">
                     <button type="submit" class="btn-action btn-danger">
                         <span>🏠</span> Absen Pulang
                     </button>
@@ -401,6 +405,54 @@ function renderCalendar() {
 }
 
 renderCalendar();
+
+
+function ambilLokasi(callback) {
+    if (!navigator.geolocation) {
+        alert("Browser tidak mendukung GPS");
+        return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+        function(position) {
+            callback(position.coords.latitude, position.coords.longitude);
+        },
+        function(error) {
+            alert("Gagal mengambil lokasi. Aktifkan GPS terlebih dahulu.");
+        },
+        {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 0
+        }
+    );
+}
+
+// ===============================
+// 📍 HANDLE ABSEN MASUK
+// ===============================
+document.getElementById("formMasuk")?.addEventListener("submit", function(e){
+    e.preventDefault();
+
+    ambilLokasi(function(lat, lng){
+        document.getElementById("latitude_masuk").value = lat;
+        document.getElementById("longitude_masuk").value = lng;
+        e.target.submit();
+    });
+});
+
+// ===============================
+// 📍 HANDLE ABSEN PULANG
+// ===============================
+document.getElementById("formPulang")?.addEventListener("submit", function(e){
+    e.preventDefault();
+
+    ambilLokasi(function(lat, lng){
+        document.getElementById("latitude_pulang").value = lat;
+        document.getElementById("longitude_pulang").value = lng;
+        e.target.submit();
+    });
+});
 
 </script>
 

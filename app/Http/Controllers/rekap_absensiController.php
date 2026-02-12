@@ -99,43 +99,62 @@ public function generateRekap(string $bulan)
 
     foreach ($karyawan as $k) {
 
-        $hadir = Absensi::where('id_karyawan', $k->id_karyawan)
-            ->whereMonth('tanggal', $bulanAngka)
-            ->whereYear('tanggal', $tahunAngka)
-            ->whereRaw('LOWER(status_kehadiran) = ?', ['hadir'])
-            ->count();
+    // 🔥 Tentukan tanggal mulai kerja dihitung
+    $tanggalMasuk = Carbon::parse($k->created_at);
 
-        $izin = Absensi::where('id_karyawan', $k->id_karyawan)
-            ->whereMonth('tanggal', $bulanAngka)
-            ->whereYear('tanggal', $tahunAngka)
-            ->whereRaw('LOWER(status_kehadiran) = ?', ['izin'])
-            ->count();
+    $tanggalAwalHitung = $carbon->copy()->startOfMonth();
 
-        $sakit = Absensi::where('id_karyawan', $k->id_karyawan)
-            ->whereMonth('tanggal', $bulanAngka)
-            ->whereYear('tanggal', $tahunAngka)
-            ->whereRaw('LOWER(status_kehadiran) = ?', ['sakit'])
-            ->count();
+    // Jika karyawan dibuat di bulan yang sama
+    if ($tanggalMasuk->isSameMonth($carbon)) {
+        $tanggalAwalHitung = $tanggalMasuk->copy();
+    }
 
-        // 🔥 ALPHA OTOMATIS
-        $alpha = $totalHariKerja - ($hadir + $izin + $sakit);
-        if ($alpha < 0) $alpha = 0;
+    $totalHariKerja = 0;
 
-        rekap_absensi::updateOrCreate(
-            [
-                'id_karyawan' => $k->id_karyawan,
-                'bulan'       => $bulan
-            ],
-            [
-                'jumlah_hadir' => $hadir,
-                'jumlah_izin'  => $izin,
-                'jumlah_sakit' => $sakit,
-                'jumlah_alpha' => $alpha
-            ]
-        );
+    for ($i = $tanggalAwalHitung->day; $i <= $batasHari; $i++) {
+
+        $tgl = Carbon::create($tahunAngka, $bulanAngka, $i);
+
+        if (!$tgl->isWeekend()) {
+            $totalHariKerja++;
+        }
+    }
+
+    $hadir = Absensi::where('id_karyawan', $k->id_karyawan)
+        ->whereMonth('tanggal', $bulanAngka)
+        ->whereYear('tanggal', $tahunAngka)
+        ->whereRaw('LOWER(status_kehadiran) = ?', ['hadir'])
+        ->count();
+
+    $izin = Absensi::where('id_karyawan', $k->id_karyawan)
+        ->whereMonth('tanggal', $bulanAngka)
+        ->whereYear('tanggal', $tahunAngka)
+        ->whereRaw('LOWER(status_kehadiran) = ?', ['izin'])
+        ->count();
+
+    $sakit = Absensi::where('id_karyawan', $k->id_karyawan)
+        ->whereMonth('tanggal', $bulanAngka)
+        ->whereYear('tanggal', $tahunAngka)
+        ->whereRaw('LOWER(status_kehadiran) = ?', ['sakit'])
+        ->count();
+
+    $alpha = $totalHariKerja - ($hadir + $izin + $sakit);
+    if ($alpha < 0) $alpha = 0;
+
+    rekap_absensi::updateOrCreate(
+        [
+            'id_karyawan' => $k->id_karyawan,
+            'bulan'       => $bulan
+        ],
+        [
+            'jumlah_hadir' => $hadir,
+            'jumlah_izin'  => $izin,
+            'jumlah_sakit' => $sakit,
+            'jumlah_alpha' => $alpha
+        ]
+    );
     }
 }
-
     public function destroy($id)
     {
         rekap_absensi::where('id_rekap', $id)->delete();
