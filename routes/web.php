@@ -287,3 +287,8 @@ Route::get('/admin/overtime/{id}/approve', [OvertimeController::class, 'approve'
     ->name('overtime.approve')
     ->middleware('role:admin');
 
+
+
+    Route::delete('/admin/overtime/{id}', [OvertimeController::class, 'destroy'])
+    ->name('overtime.destroy');
+    

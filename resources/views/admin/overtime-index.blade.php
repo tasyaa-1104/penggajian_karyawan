@@ -265,17 +265,34 @@
     </td>
 
     {{-- AKSI --}}
-    <td>
+    <td style="text-align:center;">
+    <div style="display:flex; gap:6px; justify-content:center;">
+
+        {{-- APPROVE (HANYA JIKA PENDING) --}}
         @if($overtime->status == 'pending')
             <form action="{{ route('overtime.approve', $overtime->id) }}" method="POST">
                 @csrf
                 @method('PUT')
-                <button class="btn btn-sm btn-success">Approve</button>
+                <button class="btn-action-sm btn-approve">
+                    ✔ Approve
+                </button>
             </form>
-        @else
-            ✔
         @endif
-    </td>
+
+        {{-- HAPUS (SELALU BISA) --}}
+        <form action="{{ route('overtime.destroy', $overtime->id) }}" method="POST"
+              onsubmit="return confirm('Yakin hapus overtime ini?')">
+            @csrf
+            @method('DELETE')
+            <button class="btn-action-sm" style="background:#ef4444;">
+                🗑 Hapus
+            </button>
+        </form>
+
+    </div>
+</td>
+
+
 </tr>
 @empty
 <tr>

@@ -9,13 +9,15 @@ class Gaji extends Model
 {
     use HasFactory;
 
-    protected $table = 'gaji'; // 🔥 INI YANG PENTING
-
-    protected $primaryKey = 'id_gaji'; // jika PK bukan id
+    protected $table = 'gaji';
+    protected $primaryKey = 'id_gaji';
 
     protected $fillable = [
         'id_karyawan',
         'bulan',
+        'tahun',
+        'gaji_pokok',
+        'total_overtime',
         'total_tunjangan',
         'total_potongan',
         'gaji_bersih',
@@ -23,12 +25,11 @@ class Gaji extends Model
 
     public function karyawan()
     {
-        return $this->belongsTo(Karyawan::class, 'id_karyawan');
+        return $this->belongsTo(Karyawan::class, 'id_karyawan', 'id_karyawan');
     }
 
-        public function slipGaji()
+    public function slipGaji()
     {
-        return $this->hasOne(slip_gaji::class, 'id_gaji');
+        return $this->hasOne(slip_gaji::class, 'id_gaji', 'id_gaji');
     }
-
 }
