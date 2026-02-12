@@ -127,25 +127,37 @@
     .btn-add:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(56, 239, 125, 0.4); }
 
     /* TABEL MODERN */
-    .modern-table {
-        width: 100%;
-        border-collapse: separate;
-        border-spacing: 0;
-    }
-    .modern-table::ad tr {
-        background: linear-gradient(90deg, var(--secondary), var(--primary));
-        color: white;
-    }
-    .modern-table::ad th {
-        padding: 15px;
-        text-align: left;
-        font-weight: 600;
-        text-transform: uppercase;
-        font-size: 0.75rem;
-        color: white;
-    }
-    .modern-table::ad th:first-child { border-radius: 15px 0 0 0; }
-    .modern-table::ad th:last-child { border-radius: 0 15px 0 0; }
+   /* TABEL MODERN */
+.modern-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+/* ❌ SALAH: ::ad */
+/* ✅ BENAR: thead */
+.modern-table thead tr {
+    background: linear-gradient(90deg, var(--secondary), var(--primary));
+    color: white;
+}
+
+.modern-table thead th {
+    padding: 15px;
+    text-align: left;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    color: white;
+    white-space: nowrap; /* 🔥 Biar teks gak nempel */
+}
+
+.modern-table thead th:first-child {
+    border-radius: 15px 0 0 0;
+}
+
+.modern-table thead th:last-child {
+    border-radius: 0 15px 0 0;
+}
 
     .modern-table tbody tr {
         background: rgba(255,255,255,0.7);
@@ -242,22 +254,25 @@
         <!-- TABEL MODERN -->
         <div style="overflow-x: auto;">
             <table class="modern-table">
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Nama</th>
-                        <th>Jabatan</th>
-                        <th>Bulan</th>
-                        <th>Tunjangan</th>
-                        <th>Potongan</th>
-                        <th>Gaji Bersih</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
+               <thead>
+    <tr>
+        <th>No</th>
+        <th>Nama</th>
+        <th>Jabatan</th>
+        <th>Bulan</th>
+        <th>Tunjangan</th>
+        <th>Lembur</th>
+        <th>Potongan</th>
+        <th>Gaji Bersih</th>
+        <th>Aksi</th>
+    </tr>
+</thead>
+
                 <tbody>
                     @if($gaji->count() == 0)
                         <tr>
-                            <td colspan="8" class="empty-state">
+                            <td colspan="9" class="empty-state">
+
                                 Data gaji tidak ditemukan
                             </td>
                         </tr>
@@ -269,8 +284,25 @@
                             <td><strong>{{ $g->karyawan->nama_karyawan }}</strong></td>
                             <td><small>{{ $g->karyawan->jabatan->nama_jabatan }}</small></td>
                             <td>{{ $g->bulan }}</td>
-                            <td><span class="currency-text">Rp {{ number_format($g->total_tunjangan,0,',','.') }}</span></td>
-                            <td><span class="currency-text">Rp {{ number_format($g->total_potongan,0,',','.') }}</span></td>
+                           <td>
+    <span class="currency-text">
+        Rp {{ number_format($g->total_tunjangan,0,',','.') }}
+    </span>
+</td>
+
+{{-- 🔥 TOTAL LEMBUR --}}
+<td>
+    <span class="currency-text">
+        Rp {{ number_format($g->total_overtime ?? 0,0,',','.') }}
+    </span>
+</td>
+
+<td>
+    <span class="currency-text">
+        Rp {{ number_format($g->total_potongan,0,',','.') }}
+    </span>
+</td>
+
                             <td>
                                 <strong class="currency-text currency-bold">
                                     Rp {{ number_format($g->gaji_bersih,0,',','.') }}
