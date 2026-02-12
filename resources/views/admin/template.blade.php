@@ -341,6 +341,13 @@
             </a>
         </li>
 
+        <li class="nav-item">
+            <a href="{{ route('admin.cuti') }}"
+               class="nav-link {{ request()->routeIs('admin.cuti*') ? 'active' : '' }}">
+                <i class="fa-solid fa-clock"></i> Pengajuan Cuti
+            </a>
+        </li>
+
     </ul> <!-- ✅ WAJIB ADA -->
 
     <!-- 🌊 GELOMBANG -->

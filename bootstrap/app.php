@@ -11,6 +11,8 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
    ->withMiddleware(function (Middleware $middleware) {
+        // Apply web middleware to all web routes
+        $middleware->web();
 
         $middleware->alias([
             'role' => \App\Http\Middleware\RoleMiddleware::class,

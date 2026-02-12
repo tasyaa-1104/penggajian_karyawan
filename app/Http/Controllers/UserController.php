@@ -204,27 +204,14 @@ public function index()
         return back()->with('error', 'Username atau password salah');
     }
 
-    // SIMPAN SESSION
-    session([
-        'user' => [
-            'id'   => $user->id,
-            'nama' => $user->nama,
-            'role' => $user->role,
-        ]
-    ]);
+    // 🔥 INI YANG PENTING
+    Auth::login($user);
 
-    // REDIRECT BERDASARKAN ROLE
     if ($user->role === 'admin') {
         return redirect()->route('admin.dashboard');
     }
 
-   if ($user->role === 'karyawan') {
-        return redirect()->route('karyawan.dashboard');
-    }
-
-    abort(403);
+    return redirect()->route('karyawan.dashboard');
 }
-
-
 
 }
