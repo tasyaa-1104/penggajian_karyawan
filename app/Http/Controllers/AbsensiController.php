@@ -7,8 +7,6 @@ use App\Models\Absensi;
 use App\Models\Karyawan;
 use Carbon\Carbon;
 use App\Models\Libur;
-use App\Models\Overtime;
-
 use Illuminate\Support\Facades\Auth;
 
 class AbsensiController extends Controller
@@ -170,7 +168,7 @@ public function storeKaryawan(Request $request)
     return redirect()->route('karyawan.dashboard')
         ->with('success', 'Absensi berhasil');
 }
-public function absenMasuk()
+public function absenMasuk(Request $request)
 {
     $userId = session('user.id');
 
@@ -184,27 +182,58 @@ public function absenMasuk()
         return back()->with('error', 'Akun belum terhubung dengan data karyawan');
     }
 
-    // ⏰ WAKTU SEKARANG
+    // ✅ VALIDASI GPS
+    $request->validate([
+        'latitude'  => 'required|numeric',
+        'longitude' => 'required|numeric',
+    ]);
+
+    // ===============================
+    // 📍 VALIDASI RADIUS
+    // ===============================
+    $officeLat = config('absensi.office_lat');
+    $officeLng = config('absensi.office_lng');
+    $radius    = config('absensi.radius', 100); // meter
+
+    $earthRadius = 6371000;
+
+    $dLat = deg2rad($request->latitude - $officeLat);
+    $dLng = deg2rad($request->longitude - $officeLng);
+
+    $a = sin($dLat/2) * sin($dLat/2) +
+         cos(deg2rad($officeLat)) *
+         cos(deg2rad($request->latitude)) *
+         sin($dLng/2) * sin($dLng/2);
+
+    $c = 2 * atan2(sqrt($a), sqrt(1-$a));
+    $distance = $earthRadius * $c;
+
+    if ($distance > $radius) {
+        return back()->with('error', 'Kamu berada di luar radius kantor!');
+    }
+
+    // ===============================
+    // ⏰ VALIDASI WAKTU
+    // ===============================
     $now = Carbon::now('Asia/Jakarta');
     $tanggal = $now->toDateString();
 
-    // ⛔ BATAS ABSEN MASUK JAM 10:00
     // $batasMasuk = Carbon::createFromTime(10, 0, 0, 'Asia/Jakarta');
 
     // if ($now->greaterThan($batasMasuk)) {
     //     return back()->with('error', 'Absen masuk hanya bisa sampai jam 10:00');
     // }
 
-    // 🔍 CEK SUDAH ABSEN ATAU BELUM
+    // ❌ CEK DOUBLE ABSEN
     $cek = Absensi::where('id_karyawan', $karyawan->id_karyawan)
         ->where('tanggal', $tanggal)
         ->first();
 
     if ($cek) {
-        return back()->with('error', 'Kamu sudah absen masuk hari ini');
+        return back()->with('error', 'Kamu sudah absen hari ini');
     }
 
-    // ✅ SIMPAN ABSEN MASUK
+    // ✅ SIMPAN
     Absensi::create([
         'id_karyawan'      => $karyawan->id_karyawan,
         'tanggal'          => $tanggal,
@@ -214,9 +243,7 @@ public function absenMasuk()
 
     return back()->with('success', 'Absen masuk berhasil');
 }
-
-
-public function absenPulang()
+public function absenPulang(Request $request)
 {
     $userId = session('user.id');
 
@@ -230,6 +257,36 @@ public function absenPulang()
         return back()->with('error', 'Akun belum terhubung dengan data karyawan');
     }
 
+    // ✅ VALIDASI GPS
+    $request->validate([
+        'latitude'  => 'required|numeric',
+        'longitude' => 'required|numeric',
+    ]);
+
+    //  VALIDASI RADIUS
+    $officeLat = config('absensi.office_lat');
+    $officeLng = config('absensi.office_lng');
+    $radius    = config('absensi.radius', 100); // meter
+
+    $earthRadius = 6371000;
+
+    $dLat = deg2rad($request->latitude - $officeLat);
+    $dLng = deg2rad($request->longitude - $officeLng);
+
+    $a = sin($dLat/2) * sin($dLat/2) +
+         cos(deg2rad($officeLat)) *
+         cos(deg2rad($request->latitude)) *
+         sin($dLng/2) * sin($dLng/2);
+
+    $c = 2 * atan2(sqrt($a), sqrt(1-$a));
+    $distance = $earthRadius * $c;
+
+    if ($distance > $radius) {
+        return back()->with('error', 'Kamu berada di luar radius kantor!');
+    }
+
+ 
+    //  VALIDASI ABSEN
     $now = Carbon::now('Asia/Jakarta');
     $tanggal = $now->toDateString();
 
@@ -245,46 +302,78 @@ public function absenPulang()
         return back()->with('error', 'Kamu sudah absen pulang');
     }
 
-    // ⏰ JAM KERJA NORMAL (17:00)
-    $jamKerjaSelesai = Carbon::createFromTime(17, 0, 0, 'Asia/Jakarta');
+    // Batas mulai jam 17:00
+    // $awalPulang = Carbon::today('Asia/Jakarta')->setHour(17);
 
-    // ✅ SIMPAN JAM PULANG
+    // if ($now->lessThan($awalPulang)) {
+    //     return back()->with('error', 'Absen pulang hanya bisa mulai jam 17:00');
+    // }
+
+    //  UPDATE JAM PULANG
     $absensi->update([
         'jam_pulang' => $now->format('H:i:s')
     ]);
 
-    // 🔥 HITUNG LEMBUR JIKA PULANG LEBIH DARI JAM KERJA
-    if ($now->greaterThan($jamKerjaSelesai)) {
-
-        $menitLembur = $jamKerjaSelesai->diffInMinutes($now);
-        $totalJam   = round($menitLembur / 60, 2);
-
-        $tarifPerJam = $karyawan->tarif_lembur ?? 15000; // default aman
-        $totalUpah   = $totalJam * $tarifPerJam;
-
-        // ⛔ CEGAH DUPLIKASI LEMBUR
-        $sudahAda = Overtime::where('karyawan_id', $karyawan->id_karyawan)
-            ->where('tanggal', $tanggal)
-            ->where('sumber', 'absensi')
-            ->exists();
-
-        if (!$sudahAda) {
-            Overtime::create([
-                'karyawan_id'   => $karyawan->id_karyawan,
-                'tanggal'       => $tanggal,
-                'jam_mulai'     => $jamKerjaSelesai->format('H:i:s'),
-                'jam_selesai'   => $now->format('H:i:s'),
-                'total_jam'     => $totalJam,
-                'tarif_per_jam' => $tarifPerJam,
-                'total_upah'    => $totalUpah,
-                'sumber'        => 'absensi',
-                'status'        => 'pending',
-            ]);
-        }
-    }
-
     return back()->with('success', 'Absen pulang berhasil');
 }
+
+
+public function absenIzin(Request $request)
+{
+    $now = Carbon::now('Asia/Jakarta');
+    $tanggal = $now->toDateString();
+
+    // ⛔ BATAS ABSEN MASUK JAM 10:00
+    // $batasMasuk = Carbon::createFromTime(10, 0, 0, 'Asia/Jakarta');
+
+    // if ($now->greaterThan($batasMasuk)) {
+    //     return back()->with('error', 'Absen izin hanya bisa sampai jam 10:00');
+    // }
+    $request->validate([
+        'status_kehadiran' => 'required|in:Izin,Sakit',
+        'keterangan'       => 'required|min:5'
+    ]);
+
+    // ambil user dari session (sesuai sistem login kamu)
+    $userId = session('user.id');
+
+    if (!$userId) {
+        return redirect()->route('login')
+            ->with('error', 'Silakan login dulu');
+    }
+
+    // ambil karyawan
+    $karyawan = Karyawan::where('id_user', $userId)->first();
+
+    if (!$karyawan) {
+        return back()->with('error', 'Akun belum terhubung dengan data karyawan');
+    }
+
+    $tanggal = Carbon::now('Asia/Jakarta')->toDateString();
+
+    // cegah dobel absensi hari yang sama
+    $sudahAbsen = Absensi::where('id_karyawan', $karyawan->id_karyawan)
+        ->where('tanggal', $tanggal)
+        ->exists();
+
+    if ($sudahAbsen) {
+        return back()->with('error', 'Kamu sudah melakukan absensi hari ini');
+    }
+
+    // simpan izin / sakit (TANPA jam masuk & pulang)
+    Absensi::create([
+        'id_karyawan'      => $karyawan->id_karyawan,
+        'tanggal'          => $tanggal,
+        'status_kehadiran' => $request->status_kehadiran,
+        'keterangan'       => $request->keterangan,
+        'jam_masuk'        => null,
+        'jam_pulang'       => null,
+    ]);
+
+    return back()->with('success', 'Izin berhasil dikirim');
+}
+
+
 
 
     // public function halamanAbsensi()
