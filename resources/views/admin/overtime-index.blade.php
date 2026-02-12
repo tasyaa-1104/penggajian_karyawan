@@ -223,73 +223,68 @@
                         <th style="text-align: center;">Jam Kerja</th>
                         <th style="text-align: center;">Total Jam</th>
                         <th>Total Upah</th>
+                        <th style="text-align: center;">Sumber</th>
                         <th style="text-align: center;">Status</th>
                         <th style="text-align: center;">Aksi</th>
+
                     </tr>
                 </thead>
+               <td style="text-align: center;">
                 <tbody>
-                    @forelse($overtimes as $overtime)
-                        <tr>
-                            <td style="text-align: center;">{{ $loop->iteration }}</td>
+@forelse($overtimes as $overtime)
+<tr>
+    <td>{{ $loop->iteration }}</td>
+    <td>{{ $overtime->karyawan->nama_karyawan }}</td>
+   <td>{{ \Carbon\Carbon::parse($overtime->tanggal)->format('d-m-Y') }}</td>
 
-                            <td>
-                                <div style="font-weight: 600; color: #333;">{{ $overtime->karyawan->nama_karyawan }}</div>
-                            </td>
+    <td>{{ $overtime->jam_mulai }} - {{ $overtime->jam_selesai }}</td>
+    <td>{{ $overtime->total_jam }} Jam</td>
+    <td>Rp {{ number_format($overtime->total_upah,0,',','.') }}</td>
 
-                            <td style="text-align: center;">
-                                <span style="background: #f3f4f6; padding: 4px 10px; border-radius: 8px; font-size: 0.85rem;">
-                                    {{ $overtime->tanggal }}
-                                </span>
-                            </td>
+    {{-- SUMBER (TIDAK DIUBAH) --}}
+    <td>
+        <span style="
+            padding:5px 12px;
+            border-radius:14px;
+            font-size:0.75rem;
+            font-weight:700;
+            background: {{ $overtime->sumber == 'absensi' ? '#dcfce7' : '#e0e7ff' }};
+            color: {{ $overtime->sumber == 'absensi' ? '#166534' : '#3730a3' }};
+        ">
+            {{ strtoupper($overtime->sumber) }}
+        </span>
+    </td>
 
-                            <td style="text-align: center;">
-                                <span style="font-weight: 600;">{{ $overtime->jam_mulai }}</span>
-                                <span style="color: #999;">-</span>
-                                <span style="font-weight: 600;">{{ $overtime->jam_selesai }}</span>
-                            </td>
+    {{-- STATUS --}}
+    <td>
+        <span class="badge
+            {{ $overtime->status == 'approved' ? 'bg-success' :
+               ($overtime->status == 'rejected' ? 'bg-danger' : 'bg-warning') }}">
+            {{ ucfirst($overtime->status) }}
+        </span>
+    </td>
 
-                            <td style="text-align: center;">{{ $overtime->total_jam }} Jam</td>
+    {{-- AKSI --}}
+    <td>
+        @if($overtime->status == 'pending')
+            <form action="{{ route('overtime.approve', $overtime->id) }}" method="POST">
+                @csrf
+                @method('PUT')
+                <button class="btn btn-sm btn-success">Approve</button>
+            </form>
+        @else
+            ✔
+        @endif
+    </td>
+</tr>
+@empty
+<tr>
+    <td colspan="9" class="text-center">Data lembur kosong</td>
+</tr>
+@endforelse
+</tbody>
 
-                            <td class="text-currency">
-                                Rp {{ number_format($overtime->total_upah, 0, ',', '.') }}
-                            </td>
 
-                            {{-- STATUS --}}
-                            <td style="text-align: center;">
-                                <span class="badge-status
-                                    @if($overtime->status == 'approved') badge-approved
-                                    @elseif($overtime->status == 'rejected') badge-rejected
-                                    @else badge-pending
-                                    @endif">
-                                    {{ ucfirst($overtime->status) }}
-                                </span>
-                            </td>
-
-                            {{-- AKSI --}}
-                            <td style="text-align: center;">
-                                @if($overtime->status == 'pending')
-                                    {{-- Form Approve Menggunakan Style Modern --}}
-                                    <form action="{{ route('overtime.approve', $overtime->id) }}" method="POST" style="display: inline-block;">
-                                        @csrf
-                                        @method('PUT')
-                                        <button type="submit" class="btn-action-sm btn-approve" title="Setujui Lembur">
-                                            <i class="fa-solid fa-check"></i> Approve
-                                        </button>
-                                    </form>
-                                @else
-                                    <span style="color: #aaa; font-size: 1.2rem;">✔</span>
-                                @endif
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="8" style="text-align: center; padding: 40px; color: #888;">
-                                <div style="font-size: 3rem; margin-bottom: 10px;">🍃</div>
-                                Belum ada data overtime
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
             </table>
         </div>
 
@@ -302,74 +297,14 @@
     <div class="modal-box">
 
         <!-- HEADER GRADASI -->
-        <div class="modal-header">
-            <div class="modal-icon">⏰</div>
-            <h3>Tambah Overtime</h3>
-        </div>
+        <form action="{{ route('overtime.generate') }}" method="POST">
+    @csrf
+    <button class="btn-modern btn-add">
+        🔄 Generate dari Absensi
+    </button>
+</form>
 
-        <div class="modal-body">
-            <form action="{{ route('overtime.store') }}" method="POST">
-                @csrf
 
-                <div class="row g-3" style="display: flex; flex-wrap: wrap; margin: 0 -10px;">
-
-                    {{-- KARYAWAN --}}
-                    <div class="col-md-12" style="padding: 0 10px; flex: 0 0 100%; max-width: 100%;">
-                        <div class="form-group">
-                            <label>Nama Karyawan</label>
-                            <select name="karyawan_id" class="form-control" required>
-                                <option value="">-- Pilih Karyawan --</option>
-                                @foreach($karyawans as $karyawan)
-                                    <option value="{{ $karyawan->id_karyawan }}">
-                                        {{ $karyawan->nama_karyawan }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-
-                    {{-- TANGGAL --}}
-                    <div class="col-md-6" style="padding: 0 10px; flex: 0 0 50%; max-width: 50%;">
-                        <div class="form-group">
-                            <label>Tanggal</label>
-                            <input type="date" name="tanggal" class="form-control" required>
-                        </div>
-                    </div>
-
-                    {{-- TARIF (Dipindah ke sini agar layout seimbang) --}}
-                    <div class="col-md-6" style="padding: 0 10px; flex: 0 0 50%; max-width: 50%;">
-                        <div class="form-group">
-                            <label>Tarif per Jam (Rp)</label>
-                            <input type="number" name="tarif_per_jam" class="form-control" placeholder="0" required>
-                        </div>
-                    </div>
-
-                    {{-- JAM MULAI --}}
-                    <div class="col-md-6" style="padding: 0 10px; flex: 0 0 50%; max-width: 50%;">
-                        <div class="form-group">
-                            <label>Jam Mulai</label>
-                            <input type="time" name="jam_mulai" class="form-control" required>
-                        </div>
-                    </div>
-
-                    {{-- JAM SELESAI --}}
-                    <div class="col-md-6" style="padding: 0 10px; flex: 0 0 50%; max-width: 50%;">
-                        <div class="form-group">
-                            <label>Jam Selesai</label>
-                            <input type="time" name="jam_selesai" class="form-control" required>
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="modal-buttons">
-                    <button type="button" class="btn-cancel" onclick="closeModal()">Batal</button>
-                    <button type="submit" class="btn-submit">Simpan Data</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
 
 <!-- WAVE ANIMATION SVG -->
 <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"

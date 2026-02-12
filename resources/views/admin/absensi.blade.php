@@ -615,8 +615,6 @@
                     <tr>
                         <th width="5%">No</th>
                         <th width="25%">Karyawan</th>
-                        <th>Jam Masuk</th>
-                        <th>Jam Pulang</th>
                         <th width="15%">Tanggal</th>
                         <th width="15%">Status</th>
                         <th width="25%">Keterangan</th>
@@ -636,8 +634,6 @@
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td><strong>{{ $a->karyawan->nama_karyawan ?? '-' }}</strong></td>
-                            <td>{{ $a->jam_masuk ?? '-' }}</td>
-                            <td>{{ $a->jam_pulang ?? '-' }}</td>
                             <td>{{ $a->tanggal }}</td>
                             <td>
                                 @if($a->status_kehadiran == 'Hadir')
@@ -655,18 +651,14 @@
 
                                 <!-- TOMBOL EDIT (PERBAIKAN: MENGGUNAKAN json_encode) -->
                                 <button class="btn-action-sm btn-edit"
-                                onclick="openModal('edit', this)"
-                                data-id="{{ $a->id_absensi }}"
-                                data-karyawan="{{ $a->id_karyawan }}"
-                                data-nama-karyawan="{{ $a->karyawan->nama_karyawan }}"
-                                data-tanggal="{{ $a->tanggal }}"
-                                data-status="{{ $a->status_kehadiran }}"
-                                data-keterangan="{{ $a->keterangan }}"
-                            >
-                                Edit
-                            </button>
-
-
+                                    data-id="{{ $a->id_absensi }}"
+                                    data-karyawan="{{ $a->id_karyawan }}"
+                                    data-tanggal="{{ $a->tanggal }}"
+                                    data-status="{{ $a->status_kehadiran }}"
+                                    data-ket="{{ json_encode($a->keterangan) }}"
+                                    onclick="openModal('edit', this)">
+                                    ✏️ Edit
+                                </button>
 
                                 <form action="{{ route('absensi.destroy',$a->id_absensi) }}" method="POST" style="display: inline;">
                                     @csrf @method('DELETE')
@@ -697,19 +689,17 @@
                 <input type="hidden" name="id_absensi" id="absensiId">
                 <input type="hidden" name="_method" value="POST" id="methodInput">
 
-               <div class="form-group">
-                    <label>Karyawan</label>
-
-                    <!-- nilai dikirim -->
-                    <input type="hidden" name="id_karyawan" id="id_karyawan">
-
-                    <!-- hanya tampilan -->
-                    <input type="text"
-                        id="nama_karyawan"
-                        class="form-control"
-                        readonly>
+                <div class="form-group">
+                    <label>Nama Karyawan</label>
+                    <select name="id_karyawan" id="id_karyawan" class="form-control" required>
+                        <option value="">-- Pilih Karyawan --</option>
+                        @if(isset($karyawan))
+                            @foreach($karyawan as $k)
+                                <option value="{{ $k->id_karyawan }}">{{ $k->nama_karyawan }}</option>
+                            @endforeach
+                        @endif
+                    </select>
                 </div>
-
 
                 <div class="form-group">
                     <label>Tanggal</label>
@@ -754,72 +744,67 @@
 
 <!-- JAVASCRIPT LOGIC -->
 <script>
-document.addEventListener("DOMContentLoaded", function () {
+    function openModal(mode, element = null) {
+        const modal = document.getElementById('absensiModal');
+        const form = document.getElementById('absensiForm');
+        const title = document.getElementById('modalTitle');
 
-    const modal = document.getElementById('absensiModal');
-    const form = document.getElementById('absensiForm');
-    const title = document.getElementById('modalTitle');
-    const methodInput = document.getElementById('methodInput');
-
-    const absensiId = document.getElementById('absensiId');
-    const idKaryawan = document.getElementById('id_karyawan');
-    const namaKaryawan = document.getElementById('nama_karyawan');
-    const tanggal = document.getElementById('tanggal');
-    const status = document.getElementById('status_kehadiran');
-    const keterangan = document.getElementById('keterangan');
-
-    window.openModal = function(mode, button = null) {
-
+        // Tampilkan Modal
         modal.style.display = "flex";
-        setTimeout(() => modal.classList.add('show'), 10);
+        setTimeout(() => { modal.classList.add('show'); }, 10);
 
-        if (mode === "create") {
-
+        if (mode === 'create') {
+            // --- MODE CREATE ---
             form.action = "{{ route('absensi.store') }}";
-            methodInput.value = "POST";
+            document.getElementById('methodInput').value = "POST";
             title.innerText = "Tambah Absensi";
 
-            form.reset();
-            absensiId.value = "";
-            namaKaryawan.value = "";
+            // Reset Form
+            document.getElementById('absensiId').value = "";
+            document.getElementById('id_karyawan').value = "";
+            document.getElementById('tanggal').value = "";
+            document.getElementById('status_kehadiran').value = "Hadir";
+            document.getElementById('keterangan').value = "";
 
-        } else if (mode === "edit" && button) {
+        } else {
+            // --- MODE EDIT ---
+            // Ambil Data dari Tombol
+            const id = element.getAttribute('data-id');
+            const karyawan = element.getAttribute('data-karyawan');
+            const tanggal = element.getAttribute('data-tanggal');
+            const status = element.getAttribute('data-status');
+            const ket = element.getAttribute('data-ket');
 
-            const id = button.dataset.id;
-            const karyawan = button.dataset.karyawan;
-            const nama = button.dataset.namaKaryawan;
-            const tgl = button.dataset.tanggal;
-            const sts = button.dataset.status;
-            const ket = button.dataset.keterangan;
+            console.log("Data Edit:", id, status, ket); // Debugging
 
+            // Set Form Edit
             form.action = "{{ route('absensi.update', ':id') }}".replace(':id', id);
-            methodInput.value = "PUT";
+            document.getElementById('methodInput').value = "PUT";
             title.innerText = "Edit Data Absensi";
 
-            absensiId.value = id;
-            idKaryawan.value = karyawan ?? "";
-            namaKaryawan.value = nama ?? "";
-            tanggal.value = tgl ?? "";
-            status.value = sts ?? "Hadir";
-            keterangan.value = ket ?? "";
+            // Isi Data
+            document.getElementById('absensiId').value = id;
+            document.getElementById('id_karyawan').value = karyawan;
+            document.getElementById('tanggal').value = tanggal;
+            document.getElementById('status_kehadiran').value = status;
+            document.getElementById('keterangan').value = ket;
         }
-    };
+    }
 
-    window.closeModal = function() {
+    function closeModal() {
+        const modal = document.getElementById('absensiModal');
         modal.classList.remove('show');
-        setTimeout(() => modal.style.display = "none", 300);
-    };
+        setTimeout(() => { modal.style.display = "none"; }, 300);
+    }
 
-    window.addEventListener("click", function(event) {
-        if (event.target === modal) {
+    // Klik di luar modal untuk menutup
+    window.onclick = function(event) {
+        const modal = document.getElementById('absensiModal');
+        if (event.target == modal) {
             closeModal();
         }
-    });
-
-});
+    }
 </script>
-
-
 
 @endsection
 

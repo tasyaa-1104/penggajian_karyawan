@@ -7,6 +7,8 @@ use App\Models\Absensi;
 use App\Models\Karyawan;
 use Carbon\Carbon;
 use App\Models\Libur;
+use App\Models\Overtime;
+
 use Illuminate\Support\Facades\Auth;
 
 class AbsensiController extends Controller
@@ -228,7 +230,8 @@ public function absenPulang()
         return back()->with('error', 'Akun belum terhubung dengan data karyawan');
     }
 
-    $tanggal = Carbon::now('Asia/Jakarta')->toDateString();
+    $now = Carbon::now('Asia/Jakarta');
+    $tanggal = $now->toDateString();
 
     $absensi = Absensi::where('id_karyawan', $karyawan->id_karyawan)
         ->where('tanggal', $tanggal)
@@ -242,78 +245,46 @@ public function absenPulang()
         return back()->with('error', 'Kamu sudah absen pulang');
     }
 
-    // ⏰ BATAS WAKTU ABSEN PULANG: hanya mulai jam 17:00
-    $now = Carbon::now('Asia/Jakarta');
-    $awalPulang = Carbon::today('Asia/Jakarta')->setHour(17)->setMinute(0)->setSecond(0);
+    // ⏰ JAM KERJA NORMAL (17:00)
+    $jamKerjaSelesai = Carbon::createFromTime(17, 0, 0, 'Asia/Jakarta');
 
-    if ($now->lessThan($awalPulang)) {
-        return back()->with('error', 'Absen pulang hanya bisa mulai jam 17:00');
-    }
-
-    // ✅ Update jam pulang
+    // ✅ SIMPAN JAM PULANG
     $absensi->update([
         'jam_pulang' => $now->format('H:i:s')
     ]);
 
+    // 🔥 HITUNG LEMBUR JIKA PULANG LEBIH DARI JAM KERJA
+    if ($now->greaterThan($jamKerjaSelesai)) {
+
+        $menitLembur = $jamKerjaSelesai->diffInMinutes($now);
+        $totalJam   = round($menitLembur / 60, 2);
+
+        $tarifPerJam = $karyawan->tarif_lembur ?? 15000; // default aman
+        $totalUpah   = $totalJam * $tarifPerJam;
+
+        // ⛔ CEGAH DUPLIKASI LEMBUR
+        $sudahAda = Overtime::where('karyawan_id', $karyawan->id_karyawan)
+            ->where('tanggal', $tanggal)
+            ->where('sumber', 'absensi')
+            ->exists();
+
+        if (!$sudahAda) {
+            Overtime::create([
+                'karyawan_id'   => $karyawan->id_karyawan,
+                'tanggal'       => $tanggal,
+                'jam_mulai'     => $jamKerjaSelesai->format('H:i:s'),
+                'jam_selesai'   => $now->format('H:i:s'),
+                'total_jam'     => $totalJam,
+                'tarif_per_jam' => $tarifPerJam,
+                'total_upah'    => $totalUpah,
+                'sumber'        => 'absensi',
+                'status'        => 'pending',
+            ]);
+        }
+    }
+
     return back()->with('success', 'Absen pulang berhasil');
 }
-
-
-public function absenIzin(Request $request)
-{
-    $now = Carbon::now('Asia/Jakarta');
-    $tanggal = $now->toDateString();
-
-    // ⛔ BATAS ABSEN MASUK JAM 10:00
-    // $batasMasuk = Carbon::createFromTime(10, 0, 0, 'Asia/Jakarta');
-
-    // if ($now->greaterThan($batasMasuk)) {
-    //     return back()->with('error', 'Absen izin hanya bisa sampai jam 10:00');
-    // }
-    $request->validate([
-        'status_kehadiran' => 'required|in:Izin,Sakit',
-        'keterangan'       => 'required|min:5'
-    ]);
-
-    // ambil user dari session (sesuai sistem login kamu)
-    $userId = session('user.id');
-
-    if (!$userId) {
-        return redirect()->route('login')
-            ->with('error', 'Silakan login dulu');
-    }
-
-    // ambil karyawan
-    $karyawan = Karyawan::where('id_user', $userId)->first();
-
-    if (!$karyawan) {
-        return back()->with('error', 'Akun belum terhubung dengan data karyawan');
-    }
-
-    $tanggal = Carbon::now('Asia/Jakarta')->toDateString();
-
-    // cegah dobel absensi hari yang sama
-    $sudahAbsen = Absensi::where('id_karyawan', $karyawan->id_karyawan)
-        ->where('tanggal', $tanggal)
-        ->exists();
-
-    if ($sudahAbsen) {
-        return back()->with('error', 'Kamu sudah melakukan absensi hari ini');
-    }
-
-    // simpan izin / sakit (TANPA jam masuk & pulang)
-    Absensi::create([
-        'id_karyawan'      => $karyawan->id_karyawan,
-        'tanggal'          => $tanggal,
-        'status_kehadiran' => $request->status_kehadiran,
-        'keterangan'       => $request->keterangan,
-        'jam_masuk'        => null,
-        'jam_pulang'       => null,
-    ]);
-
-    return back()->with('success', 'Izin berhasil dikirim');
-}
-
 
 
     // public function halamanAbsensi()
