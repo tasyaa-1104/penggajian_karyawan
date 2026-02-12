@@ -247,44 +247,6 @@
                             </td>
                         </tr>
                     @endforeach
-
-                    <hr style="margin:50px 0;">
-
-                    <h3 style="margin-bottom:20px;">📋 Pengajuan Cuti Karyawan</h3>
-
-                    <table class="modern-table">
-                        <thead>
-                            <tr>
-                                <th>No</th>
-                                <th>Nama</th>
-                                <th>Tanggal</th>
-                                <th>Status</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($cutis as $c)
-                            <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{ $c->karyawan->nama_karyawan }}</td>
-                                <td>{{ $c->tanggal_mulai }} s/d {{ $c->tanggal_selesai }}</td>
-                                <td>
-                                    <span class="badge-status">
-                                        {{ strtoupper($c->status) }}
-                                    </span>
-                                </td>
-                                <td>
-                                    <button class="btn-action-sm btn-edit"
-                                            onclick="openDetailCuti({{ $c->id_cuti }})">
-                                        🔍 Detail
-                                    </button>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-
-
                 </tbody>
             </table>
         </div>
@@ -385,35 +347,6 @@
     </g>
 </svg>
 
-@foreach($cutis as $c)
-<div class="modal" id="cutiDetail{{ $c->id_cuti }}">
-    <div class="modal-box">
-
-        <div class="modal-header">
-            <div class="modal-icon">📄</div>
-            <h3>Detail Cuti</h3>
-        </div>
-
-        <div class="modal-body">
-            <p><b>Nama:</b> {{ $c->karyawan->nama_karyawan }}</p>
-            <p><b>Tanggal:</b> {{ $c->tanggal_mulai }} s/d {{ $c->tanggal_selesai }}</p>
-            <p><b>Alasan:</b><br>{{ $c->alasan }}</p>
-
-            <div class="modal-buttons">
-                @if($c->status == 'pending')
-                    <a href="{{ route('cuti.approve',$c->id_cuti) }}" class="btn-submit">
-                        ✅ ACC
-                    </a>
-                    <a href="{{ route('cuti.reject',$c->id_cuti) }}" class="btn-cancel">
-                        ❌ Tolak
-                    </a>
-                @endif
-            </div>
-        </div>
-
-    </div>
-</div>
-@endforeach
 
 
 <!-- JAVASCRIPT LOGIC -->
@@ -493,11 +426,7 @@
         }
     }
 
-    function openDetailCuti(id){
-        const modal = document.getElementById('cutiDetail'+id);
-        modal.style.display='flex';
-        setTimeout(()=> modal.classList.add('show'),10);
-    }
+   
 </script>
 
 @endsection
