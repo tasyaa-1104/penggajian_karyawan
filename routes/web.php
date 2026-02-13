@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AbsensiController;
+use App\Http\Controllers\CutiController;
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\PotonganController;
 use App\Http\Controllers\slip_gajiController;
@@ -150,6 +151,12 @@ Route::get('/divisi/create', [DivisiController::class, 'create'])->name('divisi.
     Route::delete('/jabatan/{id}', [JabatanController::class, 'destroy'])->name('jabatan.destroy');
 
 
+    Route::get('/admin/cuti', [CutiController::class, 'indexAdmin'])->name('admin.cuti');
+    Route::post('/admin/cuti/{id}/approve', [CutiController::class, 'approve'])->name('cuti.approve');
+    Route::post('/admin/cuti/{id}/reject', [CutiController::class, 'reject'])->name('cuti.reject');
+
+
+
 
 // ================== GAJI ==================
 
@@ -181,16 +188,8 @@ Route::delete('/user/delete/{id}', [UserController::class, 'destroy'])->name('us
 
 Route::middleware(['role:karyawan'])->group(function () {
 
-//slip gaji
-// Route::get('/slip-gaji', [slip_gajiController::class, 'index'])->name('slip-gaji.index');
-
-// Route::get('/slip-gaji/create', [slip_gajiController::class, 'create'])->name('slipgaji.create');
-// Route::post('/slip-gaji/{id_gaji}', [slip_gajiController::class, 'store'])->name('slip-gaji.store');
-// Route::get('/slip-gaji/{id}', [slip_gajiController::class, 'show'])->name('slip-gaji.show');
-// Route::get('/slip-gaji/edit/{id}', [slip_gajiController::class, 'edit'])->name('slipgaji.edit');
-// Route::put('/slip-gaji/update/{id}', [slip_gajiController::class, 'update'])->name('slipgaji.update');
-
-// Route::delete('/slip-gaji/delete/{id}', [slip_gajiController::class, 'destroy'])->name('slipgaji.destroy');
+Route::get('/karyawan/cuti', [CutiController::class, 'indexKaryawan'])->name('karyawan.cuti');
+Route::post('/karyawan/cuti', [CutiController::class, 'store'])->name('cuti.store');
 
 // ================= SLIP GAJI (KARYAWAN) =================
 Route::get('/karyawan/slip-gaji',
@@ -208,6 +207,8 @@ Route::get('/karyawan/dashboard',
 
 
 });
+
+// ================= ABSENSI (KARYAWAN) =================
 Route::get('/absensi', [AbsensiController::class, 'index'])
     ->name('absensi');
 
@@ -224,11 +225,10 @@ Route::post('/karyawan/absen-pulang', [AbsensiController::class, 'absenPulang'])
     ->name('karyawan.absen.pulang');
 
 Route::get('/karyawan/absensi', [AbsensiController::class, 'halamanAbsensi'])
-        ->name('karyawan.absensi');
+    ->name('karyawan.absensi');
 
- Route::post('/karyawan/absen-izin', [AbsensiController::class, 'absenIzin'])
+Route::post('/karyawan/absen-izin', [AbsensiController::class, 'absenIzin'])
     ->name('karyawan.absen.izin');
-
 
 
 Route::get('/login', function () {
@@ -287,3 +287,8 @@ Route::get('/admin/overtime/{id}/approve', [OvertimeController::class, 'approve'
     ->name('overtime.approve')
     ->middleware('role:admin');
 
+
+
+    Route::delete('/admin/overtime/{id}', [OvertimeController::class, 'destroy'])
+    ->name('overtime.destroy');
+    

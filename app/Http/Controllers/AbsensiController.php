@@ -100,14 +100,8 @@ class AbsensiController extends Controller
 
 public function createKaryawan()
 {
-    $userId = session('user.id');
 
-    if (!$userId) {
-        return redirect()->route('login')
-            ->with('error', 'Silakan login dulu');
-    }
-
-    $karyawan = Karyawan::where('id_user', $userId)->first();
+    $karyawan = Karyawan::where('id_user', Auth::user()->id)->first();
 
     if (!$karyawan) {
         return back()
@@ -170,13 +164,8 @@ public function storeKaryawan(Request $request)
 }
 public function absenMasuk(Request $request)
 {
-    $userId = session('user.id');
 
-    if (!$userId) {
-        return redirect()->route('login')->with('error', 'Silakan login dulu');
-    }
-
-    $karyawan = Karyawan::where('id_user', $userId)->first();
+    $karyawan = Karyawan::where('id_user', Auth::user()->id)->first();
 
     if (!$karyawan) {
         return back()->with('error', 'Akun belum terhubung dengan data karyawan');
@@ -245,13 +234,8 @@ public function absenMasuk(Request $request)
 }
 public function absenPulang(Request $request)
 {
-    $userId = session('user.id');
 
-    if (!$userId) {
-        return redirect()->route('login')->with('error', 'Silakan login dulu');
-    }
-
-    $karyawan = Karyawan::where('id_user', $userId)->first();
+    $karyawan = Karyawan::where('id_user', Auth::user()->id)->first();
 
     if (!$karyawan) {
         return back()->with('error', 'Akun belum terhubung dengan data karyawan');
@@ -285,7 +269,7 @@ public function absenPulang(Request $request)
         return back()->with('error', 'Kamu berada di luar radius kantor!');
     }
 
- 
+
     //  VALIDASI ABSEN
     $now = Carbon::now('Asia/Jakarta');
     $tanggal = $now->toDateString();
@@ -334,16 +318,9 @@ public function absenIzin(Request $request)
         'keterangan'       => 'required|min:5'
     ]);
 
-    // ambil user dari session (sesuai sistem login kamu)
-    $userId = session('user.id');
-
-    if (!$userId) {
-        return redirect()->route('login')
-            ->with('error', 'Silakan login dulu');
-    }
 
     // ambil karyawan
-    $karyawan = Karyawan::where('id_user', $userId)->first();
+    $karyawan = Karyawan::where('id_user', Auth::user()->id)->first();
 
     if (!$karyawan) {
         return back()->with('error', 'Akun belum terhubung dengan data karyawan');
@@ -372,96 +349,4 @@ public function absenIzin(Request $request)
 
     return back()->with('success', 'Izin berhasil dikirim');
 }
-
-
-
-
-    // public function halamanAbsensi()
-    // {
-    //     // 1. Ambil user login
-    //     $user = Auth::user();
-
-    //     if (!$user) {
-    //         abort(403, 'Belum login');
-    //     }
-
-    //     // 2. Ambil data karyawan berdasarkan user
-    //     $karyawan = Karyawan::where('id_user', $user->id)->first();
-
-    //     if (!$karyawan) {
-    //         abort(403, 'Akun belum terhubung dengan karyawan');
-    //     }
-
-    //     // 3. Ambil absensi hari ini
-    //     $absensiHariIni = Absensi::where('id_karyawan', $karyawan->id_karyawan)
-    //         ->where('tanggal', Carbon::now('Asia/Jakarta')->toDateString())
-    //         ->first();
-
-    //     // 4. KIRIM KE BLADE (INI YANG KAMU TANYA)
-    //     return view('karyawan.absensi', [
-    //         'karyawan' => $karyawan,
-    //         'absensiHariIni' => $absensiHariIni
-    //     ]);
-    // }
-
-
-// public function absenMasuk()
-// {
-//     $user = auth()->user();
-
-//     if (!$user || !$user->karyawan) {
-//         return back()->with('error', 'Akun belum terhubung dengan data karyawan');
-//     }
-
-//     $id_karyawan = $user->karyawan->id_karyawan;
-//     $tanggal = now()->toDateString();
-
-//     $cek = Absensi::where('id_karyawan', $id_karyawan)
-//         ->where('tanggal', $tanggal)
-//         ->first();
-
-//     if ($cek) {
-//         return back()->with('error', 'Kamu sudah absen masuk hari ini');
-//     }
-
-//     Absensi::create([
-//         'id_karyawan' => $id_karyawan,
-//         'tanggal' => $tanggal,
-//         'jam_masuk' => now()->timezone('Asia/Jakarta')->format('H:i:s'),
-//         'status_kehadiran' => 'Hadir',
-//     ]);
-
-//     return back()->with('success', 'Absen masuk berhasil');
-// }
-
-// public function absenPulang()
-// {
-//     $user = auth()->user();
-
-//     if (!$user || !$user->karyawan) {
-//         return back()->with('error', 'Akun belum terhubung dengan data karyawan');
-//     }
-
-//     $id_karyawan = $user->karyawan->id_karyawan;
-//     $tanggal = now()->toDateString();
-
-//     $absensi = Absensi::where('id_karyawan', $id_karyawan)
-//         ->where('tanggal', $tanggal)
-//         ->first();
-
-//     if (!$absensi) {
-//         return back()->with('error', 'Belum absen masuk');
-//     }
-
-//     if ($absensi->jam_pulang) {
-//         return back()->with('error', 'Kamu sudah absen pulang');
-//     }
-
-//     $absensi->update([
-//         'jam_pulang' => now()->timezone('Asia/Jakarta')->format('H:i:s')
-//     ]);
-
-//     return back()->with('success', 'Absen pulang berhasil');
-// }
-
 }

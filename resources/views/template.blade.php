@@ -304,6 +304,14 @@
             </a>
         </li>
 
+        <li class="nav-item">
+            <a href="{{ route('karyawan.cuti') }}"
+               class="nav-link {{ request()->routeIs('karyawan.cuti') ? 'active' : '' }}">
+                <i class="fa-solid fa-fingerprint"></i>
+                <span>Pengajuan Cuti</span>
+            </a>
+        </li>
+
         <li class="nav-item" style="margin-top: auto;"></li>
 
         <li class="nav-item mt-3">

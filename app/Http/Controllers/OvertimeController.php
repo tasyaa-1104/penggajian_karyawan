@@ -116,7 +116,7 @@ public function approve($id)
 public function generateFromAbsensi()
 {
     $jamNormal = Carbon::createFromTime(17, 0);
-    $tarif     = 20000;
+    $tarif     = 50000;
 
     $testMode = true; // 🔥 UBAH false kalau sudah production
     $generated = 0;
@@ -176,6 +176,20 @@ public function generateFromAbsensi()
         'success',
         "$generated data overtime berhasil digenerate"
     );
+}
+    public function destroy($id)
+{
+    $overtime = Overtime::find($id);
+
+    if (!$overtime) {
+        return back()->with('error', 'Data overtime tidak ditemukan');
+    }
+
+    $overtime->delete();
+
+    return back()->with('success', 'Data overtime berhasil dihapus');
+}
+
 
 }
-}
+

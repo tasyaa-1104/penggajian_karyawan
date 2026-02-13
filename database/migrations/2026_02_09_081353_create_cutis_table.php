@@ -11,19 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('gaji', function (Blueprint $table) {
-            $table->id('id_gaji');
+        Schema::create('cutis', function (Blueprint $table) {
+            $table->id('id_cuti');
             $table->unsignedBigInteger('id_karyawan');
-            $table->string('bulan'); // contoh: 2026-01
-             $table->decimal('total_overtime', 15, 2)->default(0);
-            $table->decimal('total_tunjangan', 15, 2)->default(0);
-            $table->decimal('total_potongan', 15, 2)->default(0);
-            $table->decimal('gaji_bersih', 15, 2);
+            $table->date('tanggal_mulai');
+            $table->date('tanggal_selesai');
+            $table->text('alasan');
+            $table->enum('status', ['pending','disetujui','ditolak'])->default('pending');
             $table->timestamps();
 
             $table->foreign('id_karyawan')
-                ->references('id_karyawan')
-                ->on('karyawan')
+                ->references('id_karyawan')->on('karyawan')
                 ->onDelete('cascade');
         });
     }
@@ -33,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('gaji');
+        Schema::dropIfExists('cutis');
     }
 };

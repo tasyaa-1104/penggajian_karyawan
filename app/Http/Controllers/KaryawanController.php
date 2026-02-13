@@ -8,6 +8,7 @@ use App\Models\Jabatan;
 use App\Models\Karyawan;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class KaryawanController extends Controller
 {
@@ -109,7 +110,7 @@ class KaryawanController extends Controller
 
      public function dashboardKaryawan()
     {
-        $userId = session('user.id');
+        $userId = Auth::id();
 
         $karyawan = Karyawan::with(['jabatan','divisi'])
             ->where('id_user', $userId)

@@ -37,4 +37,9 @@ class Overtime extends Model
     {
         return $this->belongsTo(Karyawan::class, 'karyawan_id', 'id_karyawan');
     }
+    public function absensi()
+{
+    return $this->belongsTo(Absensi::class, 'id_absensi');
+}
+
 }

@@ -3,13 +3,17 @@
 @section('title', 'Rekap Absensi')
 
 @section('topbar')
-
-    <div class="website-header animate-header">
+    <!-- Header Style Website (Fixed Topbar) -->
+    <div class="website-header">
         <div class="header-content">
-            <h1>Rekap Absensi</h1>
+            <div class="welcome-text">
+                <span>Selamat Datang, Admin 👋</span>
+            </div>
             <div class="user-profile">
-                <span>Admin 👋</span>
-                <div class="avatar-small">🛡️</div>
+                <span>SmartGaji</span>
+                <div class="avatar-small">
+                    <i class="fas fa-user-shield"></i>
+                </div>
             </div>
         </div>
     </div>
@@ -17,286 +21,321 @@
 
 @section('content')
 
+<!-- FontAwesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
     :root {
-        --primary: #4facfe;
-        --primary-dark: #00f2fe;
-        --secondary: #667eea;
-        --text-dark: #333;
-        --glass: rgba(255, 255, 255, 0.95);
-        --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        --bg-gradient: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
-    }
+        /* WARNA TEMA (Maroon Corporate) */
+        --smart-maroon: #800000;
+        --smart-maroon-light: #A52A2A;
+        --smart-maroon-hover: #600000;
+        --bg-page: #F3F4F6;
+        --bg-white: #FFFFFF;
+        --text-dark: #2c3e50;
+        --text-grey: #7f8c8d;
 
+        /* Warna Aksi */
+        --btn-del: #EF5350;   /* Soft Red - Hapus */
+        --btn-del-hover: #E53935;
+    }
 
     body {
         font-family: 'Poppins', sans-serif;
-        background: var(--bg-gradient);
-        min-height: 100vh;
+        background-color: var(--bg-page);
         margin: 0;
         color: var(--text-dark);
+        min-height: 100vh;
     }
 
-
-    .container-custom {
+    .website-layout {
         width: 100%;
         max-width: 1200px;
-        margin: 40px auto;
-        padding: 20px;
+        margin: 0 auto;
+        padding: 30px;
         position: relative;
         z-index: 10;
-        padding-top: 100px;
+        padding-top: 90px;
     }
 
-
-    @keyframes slideDown {
-        from { transform: translateY(-100%); }
-        to { transform: translateY(0); }
-    }
-    .animate-header { animation: slideDown 0.8s ease-out; }
-
-
+    /* --- HEADER STYLE --- */
     .website-header {
-        position: fixed; top: 0; left: 0; width: 100%; height: 80px;
-        background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px);
-        z-index: 100; border-bottom: 1px solid rgba(0,0,0,0.05);
-        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        position: fixed; top: 0; left: 0; width: 100%; height: 70px;
+        background: var(--bg-white);
+        z-index: 100; border-bottom: 1px solid #e0e0e0;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     }
     .header-content {
         max-width: 1200px; margin: 0 auto; padding: 0 20px; height: 100%;
         display: flex; justify-content: space-between; align-items: center;
     }
-    .website-header h1 { font-size: 1.4rem; color: var(--secondary); margin: 0; font-weight: 700; }
-    .user-profile { display: flex; align-items: center; gap: 15px; font-weight: 600; color: var(--text-dark); }
+    .welcome-text span {
+        font-size: 1.1rem; font-weight: 600; color: var(--text-dark);
+    }
+    .user-profile { display: flex; align-items: center; gap: 15px; font-weight: 500; color: var(--text-grey); }
     .avatar-small {
-        width: 40px; height: 40px; background: var(--bg-gradient); color: white; border-radius: 50%;
-        display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        width: 35px; height: 35px; background: var(--smart-maroon); color: white;
+        border-radius: 50%; display: flex; align-items: center; justify-content: center;
+        font-size: 0.9rem;
     }
 
-
-    .glass-card {
-        background: var(--glass);
-        border-radius: 24px;
-        box-shadow: var(--shadow);
-        border: 1px solid rgba(255,255,255,0.6);
+    /* --- CARD UTAMA --- */
+    .card-box {
+        background: var(--bg-white);
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.04);
+        border: 1px solid #e0e0e0;
         padding: 30px;
-        position: relative;
-        overflow: hidden;
-        background-image: radial-gradient(#e0e0e0 1px, transparent 1px);
-        background-size: 20px 20px;
-    }
-    .glass-card::after {
-        content: '';
-        position: absolute;
-        top: 0; left: 0; width: 100%; height: 5px;
-        background: linear-gradient(90deg, var(--secondary), var(--primary));
+        animation: slideUp 0.5s ease;
     }
 
-    .page-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 25px;
-        flex-wrap: wrap;
-        gap: 15px;
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
     }
-    .page-title {
-        font-size: 1.8rem;
-        color: var(--text-dark);
-        margin: 0;
+
+    /* --- WELCOME BANNER --- */
+    .welcome-card {
+        background: linear-gradient(90deg, #fff5f5, #ffffff);
+        border: 1px solid #fecaca;
+        border-left: 5px solid var(--smart-maroon);
+        border-radius: 8px;
+        padding: 20px 25px;
+        margin-bottom: 30px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+    }
+    .welcome-icon {
+        width: 50px; height: 50px;
+        background: var(--smart-maroon);
+        color: white;
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.5rem;
+        flex-shrink: 0;
+    }
+    .welcome-text-content h3 {
+        margin: 0 0 5px 0;
+        color: var(--smart-maroon);
+        font-size: 1.4rem;
         font-weight: 700;
     }
-
-
-    .btn-modern {
-        padding: 12px 25px;
-        border-radius: 50px;
-        border: none;
-        text-decoration: none;
-        font-weight: 600;
+    .welcome-text-content p {
+        margin: 0;
+        color: var(--text-grey);
         font-size: 0.95rem;
-        transition: all 0.3s ease;
-        display: inline-flex; align-items: center; gap: 8px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
-    .btn-add { background: linear-gradient(to right, #11998e, #38ef7d); color: white; }
-    .btn-add:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(56, 239, 125, 0.4); }
 
+    .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .page-title { font-size: 1.3rem; margin: 0; color: var(--text-dark); font-weight: 700; border-left: 5px solid var(--smart-maroon); padding-left: 15px; }
 
-    .search-container {
-        background: #fff;
-        padding: 15px;
-        border-radius: 15px;
+    /* --- INFO CARD (PANDUAN) --- */
+    .info-card {
+        background: #f0f9ff;
+        border-left: 5px solid #0ea5e9;
+        border-radius: 8px;
+        padding: 15px 20px;
         margin-bottom: 25px;
         display: flex;
         gap: 15px;
-        flex-wrap: wrap;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.02);
-        border: 1px solid rgba(0,0,0,0.05);
+        align-items: center;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.03);
     }
-    .search-input {
-        flex: 1;
-        padding: 12px 20px;
-        border: 2px solid #f0f0f0;
-        border-radius: 12px;
-        font-size: 0.95rem;
-        transition: border-color 0.3s;
+    .info-icon {
+        width: 40px; height: 40px;
+        background: white;
+        color: #0ea5e9;
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.2rem;
     }
-    .search-input:focus { border-color: var(--primary); outline: none; }
-    .btn-search { background: var(--bg-gradient); color: white; border-radius: 12px; border:none; padding: 10px 25px; font-weight: 600; cursor: pointer; transition: opacity 0.3s; }
-    .btn-search:hover { opacity: 0.9; }
-    .btn-reset { background: transparent; color: #dc3545; border: 2px solid #dc3545; border-radius: 12px; padding: 10px 20px; font-weight: 600; text-decoration: none; transition: all 0.3s; }
-    .btn-reset:hover { background: #dc3545; color: white; }
+    .info-text h4 { margin: 0 0 3px 0; color: #0369a1; font-size: 1rem; font-weight: 700; }
+    .info-text p { margin: 0; color: #64748b; font-size: 0.85rem; line-height: 1.4; }
 
-
-    .modern-table {
-        width: 100%;
-        border-collapse: separate;
-        border-spacing: 0;
+    /* --- BUTTONS --- */
+    .btn {
+        padding: 10px 20px; border: none; border-radius: 6px; font-family: 'Poppins', sans-serif;
+        font-size: 0.9rem; font-weight: 500; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.3s ease;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05); text-decoration: none; color: white;
     }
-    .modern-table::ad tr {
-        background: linear-gradient(90deg, var(--secondary), var(--primary));
+    .btn-add {
+        background-color: var(--smart-maroon);
         color: white;
     }
-    .modern-table::ad th {
-        padding: 18px;
-        text-align: left;
-        font-weight: 600;
-        text-transform: uppercase;
-        font-size: 0.85rem;
-        color: white;
-    }
-    .modern-table::ad th:first-child { border-radius: 15px 0 0 0; }
-    .modern-table::ad th:last-child { border-radius: 0 15px 0 0; }
+    .btn-add:hover { background-color: var(--smart-maroon-hover); transform: translateY(-2px); box-shadow: 0 4px 10px rgba(128, 0, 0, 0.3); }
 
-    .modern-table tbody tr {
-        background: rgba(255,255,255,0.7);
-        border-bottom: 1px solid rgba(0,0,0,0.05);
-        transition: all 0.2s ease;
+    /* Action Buttons */
+    .btn-action {
+        padding: 6px 12px; font-size: 0.8rem; font-weight: 700; border-radius: 6px;
+        border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+        transition: all 0.2s; text-decoration: none; color: white;
     }
-    .modern-table tbody tr:hover {
-        background: rgba(102, 126, 234, 0.05);
-        transform: scale(1.005);
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        z-index: 2;
-        position: relative;
+    .btn-delete { background-color: var(--btn-del); }
+    .btn-delete:hover { background-color: var(--btn-del-hover); transform: translateY(-1px); }
+
+    /* --- SEARCH --- */
+    .search-box {
+        display: flex; align-items: center; background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 30px; padding: 5px 20px; margin-bottom: 20px; max-width: 400px; transition: all 0.3s;
     }
-    .modern-table td {
-        padding: 18px;
-        color: #555;
+    .search-box:focus-within { border-color: var(--smart-maroon); box-shadow: 0 0 0 3px rgba(128, 0, 0, 0.1); }
+    .search-box input { border: none; background: transparent; outline: none; width: 100%; padding: 5px; font-family: 'Poppins'; color: #333; }
+    .search-icon { color: #adb5bd; }
+
+    /* --- TABLE (MAROON HEADER) --- */
+    table.modern-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    table.modern-table thead { background-color: var(--smart-maroon); }
+    table.modern-table thead th {
+        padding: 15px; text-align: left; color: white; font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    /* Header Alignment for Stats */
+    table.modern-table thead th:nth-child(3),
+    table.modern-table thead th:nth-child(4),
+    table.modern-table thead th:nth-child(5),
+    table.modern-table thead th:nth-child(6),
+    table.modern-table thead th:nth-child(7) {
+        text-align: center; /* Center Header juga */
+    }
+
+    table.modern-table tbody tr { border-bottom: 1px solid #f0f0f0; transition: 0.2s; }
+    table.modern-table tbody tr:last-child { border-bottom: none; }
+    table.modern-table tbody tr:hover { background-color: #fafafa; }
+
+    table.modern-table td {
+        padding: 15px;
+        color: #64748b;
         font-size: 0.95rem;
         vertical-align: middle;
     }
-    .modern-table td:first-child { font-weight: 700; color: var(--secondary); }
 
-
-    .btn-action-sm {
-        padding: 8px 15px;
-        border-radius: 10px;
-        font-size: 0.8rem;
-        font-weight: 600;
-        cursor: pointer;
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center; gap: 5px;
-        transition: all 0.2s;
+    /* --- PERBAIKAN ALIGNMENT (SEJAJAR PUSAT) --- */
+    /* Kolom: Bulan(3), Hadir(4), Izin(5), Sakit(6), Alpha(7) */
+    table.modern-table td:nth-child(3),
+    table.modern-table td:nth-child(4),
+    table.modern-table td:nth-child(5),
+    table.modern-table td:nth-child(6),
+    table.modern-table td:nth-child(7) {
+        text-align: center !important; /* Paksa Center */
+        vertical-align: middle;
     }
-    .btn-delete { background: #fee2e2; color: #ef4444; border: none; }
-    .btn-delete:hover { background: #fecaca; transform: translateY(-2px); }
 
-
-    .badge-stat {
-        padding: 5px 12px;
-        border-radius: 10px;
-        font-weight: 700;
-        font-size: 0.9rem;
-        display: inline-block;
-        min-width: 40px;
+    /* Kolom No & Nama */
+    table.modern-table td:nth-child(1) {
+        color: var(--smart-maroon);
+        font-weight: 800;
         text-align: center;
+        width: 50px;
     }
-    .stat-h { background: #d1fae5; color: #065f46; }
-    .stat-i { background: #fef3c7; color: #92400e; }
-    .stat-a { background: #fee2e2; color: #991b1b; }
-
-
-    .alert-modern {
-        background: #d1fae5; color: #065f46;
-        padding: 15px; border-radius: 12px; margin-bottom: 25px;
-        font-weight: 500; border: 1px solid #a7f3d0; display: flex; align-items: center; gap: 10px;
+    table.modern-table td:nth-child(2) {
+        color: #1e293b;
+        font-weight: 700;
     }
-    .empty-state { text-align: center; padding: 30px; color: #888; font-style: italic; }
 
+    /* --- BADGE STATUS (ROUNDED) --- */
+    .badge-sharp { padding: 5px 12px; border-radius: 14px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; display: inline-block; min-width: 60px; text-align: center;}
+    .badge-h { background: #d1fae5; color: #059669; border: 1px solid #6ee7b7; } /* Hadir */
+    .badge-i { background: #ffedd5; color: #92400e; border: 1px solid #fde68a; } /* Izin */
+    .badge-s { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; } /* Sakit */
+    .badge-a { background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; } /* Alpha */
 
-    .waves { position: fixed; bottom: 0; left: 0; width: 100%; height: 15vh; margin-bottom: -7px; min-height: 100px; max-height: 150px; z-index: 1; pointer-events: none; }
-    .parallax > use { animation: move-forever 25s cubic-bezier(.55,.5,.45,.5) infinite; }
-    .parallax > use:nth-child(1) { animation-delay: -2s; animation-duration: 7s; fill: rgba(255,255,255,0.7); }
-    .parallax > use:nth-child(2) { animation-delay: -3s; animation-duration: 10s; fill: rgba(255,255,255,0.5); }
-    .parallax > use:nth-child(3) { animation-delay: -4s; animation-duration: 13s; fill: rgba(255,255,255,0.3); }
-    .parallax > use:nth-child(4) { animation-delay: -5s; animation-duration: 20s; fill: #fff; }
-    @keyframes move-forever { 0% { transform: translate3d(-90px,0,0); } 100% { transform: translate3d(85px,0,0); } }
+    /* --- ALERT --- */
+    .alert { background-color: #E8F5E9; color: #2E7D32; padding: 12px 20px; border-radius: 8px; margin-bottom: 20px; border-left: 5px solid #43A047; font-size: 0.9rem; display: flex; align-items: center; gap: 10px; font-weight: 600; }
+    .empty-state { text-align: center; padding: 40px; color: #999; font-style: italic; }
+
+    /* --- MODAL --- */
+    .modal {
+        display: none; position: fixed; z-index: 200; left: 0; top: 0; width: 100%; height: 100%;
+        background-color: rgba(0,0,0,0.5); align-items: center; justify-content: center;
+        backdrop-filter: blur(4px);
+    }
+    .modal.show { display: flex; animation: fadeIn 0.3s; }
+    .modal-content {
+        background-color: white; width: 90%; max-width: 450px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); overflow: hidden;
+    }
+    .modal-header { background-color: var(--smart-maroon); padding: 20px; display: flex; justify-content: space-between; align-items: center; }
+    .modal-header h3 { margin: 0; color: white; font-size: 1.2rem; font-weight: 600; }
+    .modal-body { padding: 30px; }
+
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
 </style>
 
-<div class="container-custom">
+<div class="website-layout">
 
+    <div class="card-box">
 
-    <div class="glass-card">
-
+        <!-- 👋 BANNER SELAMAT DATANG -->
+        <div class="welcome-card">
+            <div class="welcome-icon">
+                <i class="fas fa-chart-bar"></i>
+            </div>
+            <div class="welcome-text-content">
+                <h3>Rekap Absensi</h3>
+                <p>Lihat ringkasan kehadiran karyawan bulanan.</p>
+            </div>
+        </div>
 
         <div class="page-header">
-            <h3 class="page-title">Rekap Absensi</h3>
-            <a href="{{ route('rekap-absensi.create') }}" class="btn-modern btn-add">
-                📊 Generate Rekap
+            <h4 class="page-title">Daftar Rekapitulasi</h4>
+
+            <a href="{{ route('rekap-absensi.create') }}" class="btn btn-add">
+                <i class="fas fa-calculator"></i> Generate Rekap
             </a>
         </div>
 
+        <!-- INFO CARD (PANDUAN) -->
+        <div class="info-card">
+            <div class="info-icon">
+                <i class="fas fa-lightbulb"></i>
+            </div>
+            <div class="info-text">
+                <h4>Panduan</h4>
+                <p>Pastikan data absensi bulanan sudah lengkap sebelum melakukan Generate Rekap.</p>
+            </div>
+        </div>
 
-        <form action="{{ route('rekap-absensi.index') }}" method="GET" class="search-container">
+        <form action="{{ route('rekap-absensi.index') }}" method="GET" class="search-box">
             <input type="text"
                    name="search"
-                   class="search-input"
-                   placeholder="Cari nama karyawan / bulan (YYYY-MM)..."
+                   placeholder="Cari nama karyawan..."
                    value="{{ request('search') }}">
-            <button class="btn-search" type="submit">
-                🔍 Cari
+            <button type="submit" style="background:none; border:none; cursor:pointer; color:var(--smart-maroon);">
+                <i class="fas fa-search"></i>
             </button>
-
             @if(request('search'))
-                <a href="{{ route('rekap-absensi.index') }}" class="btn-reset">
-                    🔄 Reset
+                <a href="{{ route('rekap-absensi.index') }}" style="text-decoration:none; color:#adb5bd; margin-left:10px; font-size:1.1rem;">
+                    <i class="fas fa-times"></i>
                 </a>
             @endif
         </form>
 
-        <!-- ALERT SUKSES -->
         @if(session('success'))
-            <div class="alert-modern">
-                <span style="font-size: 1.2rem;">✅</span> {{ session('success') }}
+            <div class="alert">
+                <i class="fas fa-check-circle"></i> {{ session('success') }}
             </div>
         @endif
 
-        <!-- TABEL MODERN -->
         <div style="overflow-x: auto;">
             <table class="modern-table">
                 <thead>
                     <tr>
-                        <th>No</th>
-                        <th>Nama Karyawan</th>
-                        <th>Bulan</th>
-                        <th>Hadir</th>
-                        <th>Izin</th>
-                        <th>Sakit</th>
-                        <th>Alpha</th>
-                        <th>Aksi</th>
+                        <th width="5%">No</th>
+                        <th>Karyawan</th>
+                        <th width="10%">Bulan</th>
+                        <th width="12%">Hadir</th>
+                        <th width="12%">Izin</th>
+                        <th width="12%">Sakit</th>
+                        <th width="12%">Alpha</th>
+                        <th width="10%" style="text-align: center;">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     @if($rekap->count() == 0)
                         <tr>
-                            <td colspan="7" class="empty-state">
+                            <td colspan="8" class="empty-state">
                                 Data rekap absensi tidak ditemukan
                             </td>
                         </tr>
@@ -307,20 +346,19 @@
                             <td>{{ $loop->iteration }}</td>
                             <td><strong>{{ $r->karyawan->nama_karyawan ?? '-' }}</strong></td>
                             <td>{{ $r->bulan }}</td>
-                            <td><span class="badge-stat stat-h">{{ $r->jumlah_hadir }}</span></td>
-                            <td><span class="badge-stat stat-i">{{ $r->jumlah_izin }}</span></td>
-                            <td><span class="badge-stat stat-i">{{ $r->jumlah_sakit }}</span></td>
-                            <td><span class="badge-stat stat-a">{{ $r->jumlah_alpha }}</span></td>
-                            <td>
-                                <form action="{{ route('rekap-absensi.delete', $r->id_rekap) }}"
-                                    method="POST"
-                                    style="display:inline-block;">
+                            <td><span class="badge-sharp badge-h">{{ $r->jumlah_hadir }}</span></td>
+                            <td><span class="badge-sharp badge-i">{{ $r->jumlah_izin }}</span></td>
+                            <td><span class="badge-sharp badge-s">{{ $r->jumlah_sakit }}</span></td>
+                            <td><span class="badge-sharp badge-a">{{ $r->jumlah_alpha }}</span></td>
+                            <td style="text-align: center;">
+                                <!-- TOMBOL HAPUS -->
+                                <form action="{{ route('rekap-absensi.delete', $r->id_rekap) }}" method="POST" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit"
-                                            onclick="return confirm('Yakin hapus data ini?')"
-                                            class="btn btn-danger btn-sm">
-                                        Hapus
+                                            onclick="return confirm('Yakin hapus data rekap ini?')"
+                                            class="btn-action btn-delete">
+                                        <i class="fas fa-trash"></i> Hapus
                                     </button>
                                 </form>
                             </td>
@@ -333,19 +371,5 @@
     </div>
 
 </div>
-
-<!-- WAVE ANIMATION SVG -->
-<svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-    viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
-    <defs>
-        <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
-    </defs>
-    <g class="parallax">
-        <use xlink:href="#gentle-wave" x="48" y="0" />
-        <use xlink:href="#gentle-wave" x="48" y="3" />
-        <use xlink:href="#gentle-wave" x="48" y="5" />
-        <use xlink:href="#gentle-wave" x="48" y="7" />
-    </g>
-</svg>
 
 @endsection

@@ -215,14 +215,26 @@
 
             <!-- Rincian (Receipt Style) -->
             <div class="slip-row">
-                <span class="slip-label">Total Tunjangan</span>
-                <span class="slip-value">Rp {{ number_format($slip->gaji->total_tunjangan,0,',','.') }}</span>
-            </div>
+    <span class="slip-label">Total Tunjangan</span>
+    <span class="slip-value">
+        Rp {{ number_format($slip->gaji->total_tunjangan,0,',','.') }}
+    </span>
+</div>
 
-            <div class="slip-row">
-                <span class="slip-label">Total Potongan</span>
-                <span class="slip-value" style="color:#dc3545">- Rp {{ number_format($slip->gaji->total_potongan,0,',','.') }}</span>
-            </div>
+{{-- 🔥 TAMBAHAN OVERTIME --}}
+<div class="slip-row">
+    <span class="slip-label">Total Lembur</span>
+    <span class="slip-value" style="color:#198754">
+        + Rp {{ number_format($slip->gaji->total_overtime,0,',','.') }}
+    </span>
+</div>
+
+<div class="slip-row">
+    <span class="slip-label">Total Potongan</span>
+    <span class="slip-value" style="color:#dc3545">
+        - Rp {{ number_format($slip->gaji->total_potongan,0,',','.') }}
+    </span>
+</div>
 
             <!-- Grand Total -->
             <div class="total-row">

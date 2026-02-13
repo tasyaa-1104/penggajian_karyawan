@@ -1,6 +1,6 @@
 @extends('admin.template')
 
-@section('title', 'Data Gaji')
+@section('title', 'Data Cuti Karyawan')
 
 @section('topbar')
     <!-- Header Style Website (Fixed Topbar) -->
@@ -38,11 +38,10 @@
         --text-grey: #7f8c8d;
 
         /* Warna Aksi */
-        --btn-create: #00897B;
-        --btn-create-hover: #00695C;
-        --btn-view: #0ea5e9;
-        --btn-view-hover: #0284c7;
-        --btn-del: #EF5350;
+        --btn-approve: #00897B; /* Teal */
+        --btn-approve-hover: #00695C;
+        --btn-reject: #EF5350; /* Merah Soft */
+        --btn-reject-hover: #E53935;
     }
 
     body {
@@ -53,7 +52,7 @@
         min-height: 100vh;
     }
 
-    .container-custom {
+    .website-layout {
         width: 100%;
         max-width: 1200px;
         margin: 0 auto;
@@ -99,7 +98,7 @@
         to { opacity: 1; transform: translateY(0); }
     }
 
-    /* --- WELCOME BANNER (BARU) --- */
+    /* --- WELCOME BANNER --- */
     .welcome-card {
         background: linear-gradient(90deg, #fff5f5, #ffffff);
         border: 1px solid #fecaca;
@@ -137,49 +136,35 @@
     .page-title { font-size: 1.3rem; margin: 0; color: var(--text-dark); font-weight: 700; border-left: 5px solid var(--smart-maroon); padding-left: 15px; }
 
     /* --- BUTTONS --- */
-    .btn-modern {
-        padding: 10px 20px; border: none; border-radius: 6px; font-family: 'Poppins', sans-serif;
-        font-size: 0.9rem; font-weight: 500; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
-        transition: all 0.3s ease; text-decoration: none; color: white;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    }
-
-    .btn-add { background-color: var(--smart-maroon); color: white; }
-    .btn-add:hover { background-color: var(--smart-maroon-hover); transform: translateY(-2px); box-shadow: 0 4px 10px rgba(128, 0, 0, 0.3); }
-
     .btn-action-sm {
         padding: 6px 12px; font-size: 0.8rem; font-weight: 600; border-radius: 6px;
         border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;
         transition: all 0.2s; text-decoration: none; color: white;
     }
+    .btn-approve { background-color: var(--btn-approve); }
+    .btn-approve:hover { background-color: var(--btn-approve-hover); transform: translateY(-1px); }
 
-    .btn-slip-view { background-color: var(--btn-view); }
-    .btn-slip-view:hover { background-color: var(--btn-view-hover); transform: translateY(-1px); }
+    .btn-reject { background-color: var(--btn-reject); color: white; }
+    .btn-reject:hover { background-color: var(--btn-reject-hover); transform: translateY(-1px); }
 
-    .btn-slip-create { background-color: var(--btn-create); }
-    .btn-slip-create:hover { background-color: var(--btn-create-hover); transform: translateY(-1px); }
-
-    .btn-delete { background-color: var(--btn-del); color: white; }
-    .btn-delete:hover { background-color: #d32f2f; transform: translateY(-1px); }
-
-    /* --- TABLE --- */
+    /* --- TABLE (MAROON HEADER) --- */
     .modern-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-
     .modern-table thead { background-color: var(--smart-maroon); }
     .modern-table thead th {
         padding: 15px; text-align: left; color: white; font-weight: 600; font-size: 0.85rem;
         text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap;
     }
-
     .modern-table tbody tr { border-bottom: 1px solid #f0f0f0; transition: 0.2s; }
     .modern-table tbody tr:last-child { border-bottom: none; }
     .modern-table tbody tr:hover { background-color: #fafafa; }
-
     .modern-table td { padding: 15px; color: var(--text-grey); font-size: 0.95rem; vertical-align: middle; }
     .modern-table td:first-child { font-weight: 600; color: var(--smart-maroon); }
 
-    .currency-text { font-family: 'Roboto Mono', monospace; font-weight: 600; color: #333; }
-    .currency-bold { color: var(--smart-maroon); font-weight: 800; }
+    /* Badge Status */
+    .badge-status { padding: 5px 12px; border-radius: 14px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; display: inline-block; }
+    .badge-pending { background: #fef3c7; color: #d97706; border: 1px solid #fcd34d; }
+    .badge-approved { background: #d1fae5; color: #059669; border: 1px solid #6ee7b7; }
+    .badge-rejected { background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; }
 
     /* --- ALERT --- */
     .alert-modern {
@@ -191,28 +176,25 @@
 
 </style>
 
-<div class="container-custom">
+<div class="website-layout">
 
     <!-- GLASS CARD CONTAINER -->
     <div class="glass-card">
 
-        <!-- 👋 BANNER SELAMAT DATANG (BARU) -->
+        <!-- 👋 BANNER SELAMAT DATANG -->
         <div class="welcome-card">
             <div class="welcome-icon">
-                <i class="fas fa-hand-holding-usd"></i>
+                <i class="fas fa-calendar-check"></i>
             </div>
             <div class="welcome-text-content">
-                <h3>Selamat Datang, Admin 👋</h3>
-                <p>Berikut adalah data gaji dan rekapitulasi penggajian karyawan.</p>
+                <h3>Data Pengajuan Cuti</h3>
+                <p>Kelola persetujuan cuti dan izin karyawan.</p>
             </div>
         </div>
 
-        <!-- HEADER & TOMBOL HITUNG -->
+        <!-- HEADER HALAMAN -->
         <div class="page-header">
-            <h4 class="page-title">Daftar Gaji</h4>
-            <a href="{{ route('gaji.create') }}" class="btn-modern btn-add">
-                <i class="fas fa-calculator"></i> Hitung Gaji
-            </a>
+            <h4 class="page-title">Daftar Cuti</h4>
         </div>
 
         <!-- ALERT SUKSES -->
@@ -227,88 +209,57 @@
             <table class="modern-table">
                 <thead>
                     <tr>
-                        <th width="5%">No</th>
-                        <th width="15%">Nama</th>
-                        <th width="15%">Jabatan</th>
-                        <th width="10%">Bulan</th>
-                        <th width="12%">Tunjangan</th>
-                        <th width="12%">Lembur</th>
-                        <th width="12%">Potongan</th>
-                        <th width="14%">Gaji Bersih</th>
-                        <th width="5%" style="text-align: center;">Aksi</th>
+                        <th>Nama Karyawan</th>
+                        <th>Tanggal Cuti</th>
+                        <th>Alasan</th>
+                        <th>Status</th>
+                        <th width="150" style="text-align: center;">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @if($gaji->count() == 0)
+                    @forelse($cuti as $c)
                         <tr>
-                            <td colspan="9" class="empty-state">
-                                Data gaji tidak ditemukan
-                            </td>
-                        </tr>
-                    @endif
-
-                    @foreach($gaji as $g)
-                        <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td><strong>{{ $g->karyawan->nama_karyawan }}</strong></td>
-                            <td><small>{{ $g->karyawan->jabatan->nama_jabatan }}</small></td>
-                            <td>{{ $g->bulan }}</td>
+                            <td><strong>{{ $c->karyawan->nama_karyawan }}</strong></td>
+                            <td>{{ $c->tanggal_mulai }} <span style="color:#ccc">s/d</span> {{ $c->tanggal_selesai }}</td>
+                            <td>{{ $c->alasan }}</td>
                             <td>
-                                <span class="currency-text">
-                                    Rp {{ number_format($g->total_tunjangan,0,',','.') }}
+                                <span class="badge-status
+                                    {{ $c->status == 'approved' ? 'badge-approved' :
+                                       ($c->status == 'rejected' ? 'badge-rejected' : 'badge-pending') }}">
+                                    {{ strtoupper($c->status) }}
                                 </span>
                             </td>
-                            <td>
-                                <span class="currency-text">
-                                    Rp {{ number_format($g->total_overtime ?? 0,0,',','.') }}
-                                </span>
-                            </td>
-                            <td>
-                                <span class="currency-text">
-                                    Rp {{ number_format($g->total_potongan,0,',','.') }}
-                                </span>
-                            </td>
-                            <td>
-                                <strong class="currency-text currency-bold">
-                                    Rp {{ number_format($g->gaji_bersih,0,',','.') }}
-                                </strong>
-                            </td>
-                            <td>
-                                <div style="display: flex; gap: 6px; justify-content: center;">
-
-                                    @if ($g->slipGaji)
-                                        <a href="{{ route('admin.slip-gaji.show', $g->slipGaji->id_slip) }}"
-                                           class="btn-action-sm btn-slip-view"
-                                           title="Lihat Slip">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
-                                    @else
-                                        <form action="{{ route('admin.slip-gaji.store', $g->id_gaji) }}"
-                                              method="POST" style="display: inline;">
+                            <td style="text-align: center;">
+                                @if($c->status == 'pending')
+                                    <div style="display:flex; gap:6px; justify-content:center;">
+                                        <!-- Form Approve (Logika Tetap) -->
+                                        <form action="{{ route('cuti.approve', $c->id_cuti) }}" method="POST" style="display:inline;">
                                             @csrf
-                                            <button class="btn-action-sm btn-slip-create"
-                                                    title="Buat Slip">
-                                                <i class="fas fa-file-invoice"></i>
+                                            <button class="btn-action-sm btn-approve" title="Setujui">
+                                                <i class="fas fa-check"></i> ACC
                                             </button>
                                         </form>
-                                    @endif
 
-                                    <form action="{{ route('gaji.destroy',$g->id_gaji) }}"
-                                          method="POST"
-                                          style="display: inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button class="btn-action-sm btn-delete"
-                                                title="Hapus Data"
-                                                onclick="return confirm('Yakin ingin menghapus data gaji ini?')">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
-
-                                </div>
+                                        <!-- Form Reject (Logika Tetap) -->
+                                        <form action="{{ route('cuti.reject', $c->id_cuti) }}" method="POST" style="display:inline;">
+                                            @csrf
+                                            <button class="btn-action-sm btn-reject" title="Tolak">
+                                                <i class="fas fa-times"></i> Tolak
+                                            </button>
+                                        </form>
+                                    </div>
+                                @else
+                                    <span class="text-muted" style="font-size:0.85rem; font-weight:600; color:#94a3b8;">Selesai</span>
+                                @endif
                             </td>
                         </tr>
-                    @endforeach
+                    @empty
+                        <tr>
+                            <td colspan="5" class="empty-state">
+                                Belum ada data cuti
+                            </td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
