@@ -60,7 +60,7 @@ Route::get('/admin/dashboard', [UserController::class, 'index']) ->name('admin.d
 Route::get('/absensi/edit/{id}', [AbsensiController::class, 'edit'])->name('absensi.edit');
 
 // update (POST)
-Route::post('/absensi/update/{id}', [AbsensiController::class, 'update'])->name('absensi.update');
+Route::put('/absensi/update/{id}', [AbsensiController::class, 'update'])->name('absensi.update');
 
 // hapus (POST)
 Route::delete('/absensi/delete/{id}', [AbsensiController::class, 'destroy'])
