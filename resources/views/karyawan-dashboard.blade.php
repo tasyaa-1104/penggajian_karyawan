@@ -347,6 +347,8 @@
             <a href="{{ route('karyawan.slip-gaji.show') }}" class="btn-web">
                 📄 Lihat Slip Gaji
             </a>
+
+
         </div>
 
         <!-- KARTU PENGAJUAN CUTI -->

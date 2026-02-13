@@ -201,6 +201,8 @@ Route::get('/karyawan/slip-gaji',
 )->name('karyawan.slip-gaji.show');
 
 
+
+
 Route::get('/karyawan/dashboard',
     [KaryawanController::class, 'dashboardKaryawan']
 )->name('karyawan.dashboard');
@@ -291,4 +293,3 @@ Route::get('/admin/overtime/{id}/approve', [OvertimeController::class, 'approve'
 
     Route::delete('/admin/overtime/{id}', [OvertimeController::class, 'destroy'])
     ->name('overtime.destroy');
-    

@@ -75,30 +75,34 @@ class slip_gajiController extends Controller
 
     /* ================= KARYAWAN ================= */
 
-    public function indexKaryawan()
-    {
-        $userId = session('user.id');
+   public function indexKaryawan()
+{
+    $userId = auth()->id();
 
-        $slip = slip_gaji::whereHas('gaji.karyawan', function ($q) use ($userId) {
-                $q->where('id_user', $userId);
-            })
-            ->with('gaji')
-            ->get();
+    $slip = slip_gaji::whereHas('gaji.karyawan', function ($q) use ($userId) {
+            $q->where('id_user', $userId);
+        })
+        ->with('gaji.karyawan.jabatan')
+        ->get();
 
-        return view('slip-gaji', compact('slip'));
-    }
+    return view('slip-gaji', compact('slip'));
+}
+
 
 
 public function showKaryawan()
 {
-    $userId = session('user.id');
+    $userId = auth()->id();
 
     $slip = slip_gaji::whereHas('gaji.karyawan', function ($q) use ($userId) {
         $q->where('id_user', $userId);
-    })->latest()->first();
+    })
+    ->with('gaji.karyawan.jabatan')
+    ->latest()
+    ->first();
 
     if (!$slip) {
-        abort(404, 'Slip gaji belum tersedia');
+        return back()->with('error', 'Slip gaji belum tersedia');
     }
 
     return view('slip-gaji-show', compact('slip'));

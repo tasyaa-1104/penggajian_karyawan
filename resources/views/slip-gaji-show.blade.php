@@ -22,9 +22,10 @@
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
     :root {
-        --primary: #4facfe;
-        --primary-dark: #00f2fe;
-        --secondary: #667eea;
+        /* WARNA DIUBAH MENJADI MERAH (SESUAI SIDEBAR) */
+        --primary: #ef5350;       /* Merah Terang */
+        --primary-dark: #b71c1c;  /* Merah Gelap */
+        --secondary: #d32f2f;     /* Merah Utama (Warna Sidebar) */
         --text-dark: #333;
         --glass: rgba(255, 255, 255, 0.95);
         --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
@@ -147,7 +148,8 @@
         font-size: 1.5rem;
         font-weight: 800;
         color: var(--secondary);
-        background: linear-gradient(to right, #667eea, #764ba2);
+        /* Gradient Text disesuaikan menjadi Merah */
+        background: linear-gradient(to right, #d32f2f, #b71c1c);
         -webkit-background-clip: text;
         background-clip: text;
         color: transparent;
@@ -169,7 +171,7 @@
         transition: all 0.3s;
         box-shadow: 0 4px 10px rgba(0,0,0,0.05);
     }
-    .btn-back:hover { background: var(--secondary); color: white; transform: translateY(-2px); box-shadow: 0 8px 15px rgba(102, 126, 234, 0.3); }
+    .btn-back:hover { background: var(--secondary); color: white; transform: translateY(-2px); box-shadow: 0 8px 15px rgba(211, 47, 47, 0.3); }
 
     /* Dekorasi Background */
     .slip-card::after {
