@@ -141,15 +141,13 @@
         font-size: 0.9rem; font-weight: 500; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.3s ease;
         box-shadow: 0 2px 5px rgba(0,0,0,0.05); text-decoration: none; color: white;
     }
-    .btn-add {
-        background-color: var(--smart-maroon);
-        color: white;
-    }
+    /* Style Tombol Add tetap ada di CSS namun tidak dipanggil di HTML tombol utama */
+    .btn-add { background-color: var(--smart-maroon); color: white; }
     .btn-add:hover { background-color: var(--smart-maroon-hover); transform: translateY(-2px); box-shadow: 0 4px 10px rgba(128, 0, 0, 0.3); }
 
-    /* Action Buttons - Diperjelas Kontrasnya */
+    /* Action Buttons */
     .btn-action {
-        padding: 6px 12px; font-size: 0.85rem; font-weight: 700; border-radius: 6px; /* Font weight diperkuat */
+        padding: 6px 12px; font-size: 0.85rem; font-weight: 700; border-radius: 6px;
         border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
         transition: all 0.2s; text-decoration: none; color: white;
     }
@@ -159,10 +157,9 @@
     .btn-delete { background-color: var(--btn-del); }
     .btn-delete:hover { background-color: var(--btn-del-hover); transform: translateY(-1px); }
 
-    /* Container Tombol Aksi */
     .action-buttons {
         display: flex;
-        gap: 8px; /* Jarak dikurangi sedikit agar rapat */
+        gap: 8px;
         justify-content: center;
         align-items: center;
     }
@@ -185,17 +182,13 @@
     table.modern-table tbody tr:last-child { border-bottom: none; }
     table.modern-table tbody tr:hover { background-color: #fafafa; }
 
-    /* Default Teks Tabel */
     table.modern-table td {
         padding: 15px;
-        color: #64748b; /* Abu sedikit lebih gelap agar terbaca */
+        color: #64748b;
         font-size: 0.95rem;
         vertical-align: middle;
     }
 
-    /* --- PERBAIKAN VISIBILITAS NO, NAMA, AKSI --- */
-
-    /* Kolom No: Maroon Gelap & Tebal */
     table.modern-table td:nth-child(1) {
         color: var(--smart-maroon);
         font-weight: 800;
@@ -203,13 +196,11 @@
         font-size: 1rem;
     }
 
-    /* Kolom Nama: Hitam/Abu Gelap & Tebal (AGAR KELIHATAN) */
     table.modern-table td:nth-child(2) {
-        color: #1e293b; /* Warna sangat gelap, hampir hitam */
+        color: #1e293b;
         font-weight: 700;
     }
 
-    /* Kolom Aksi: Pastikan tombol menonjol */
     table.modern-table td:last-child {
         text-align: center;
         vertical-align: middle;
@@ -278,10 +269,7 @@
 
         <div class="page-header">
             <h4 class="page-title">Daftar Absensi</h4>
-
-            <button class="btn btn-add" onclick="openModal('create')">
-                <i class="fas fa-plus"></i> Tambah Absensi
-            </button>
+            <!-- TOMBOL TAMBAH ABSENSI DIHAPUS SESUAI PERMINTAAN -->
         </div>
 
         <form action="{{ route('absensi') }}" method="GET" class="search-box">
@@ -327,6 +315,7 @@
                         <th>Jam Pulang</th>
                         <th>Status</th>
                         <th>Keterangan</th>
+                        <!-- KOLOM AKSI TETAP ADA -->
                         <th width="15%" style="text-align: center;">Aksi</th>
                     </tr>
                 </thead>
@@ -358,11 +347,11 @@
                                 @endif
                             </td>
                             <td><small>{{ $a->keterangan ?? '-' }}</small></td>
+
+                            <!-- TOMBOL EDIT DAN HAPUS TETAP ADA -->
                             <td>
-                                <!-- TOMBOL AKSI (LOGIKA JS DIPERTAHANKAN) -->
                                 <div class="action-buttons">
 
-                                    <!-- Edit Button (Data Attributes untuk Logika JS Anda) -->
                                     <button class="btn-action btn-edit"
                                         data-id="{{ $a->id_absensi }}"
                                         data-karyawan="{{ $a->id_karyawan }}"
@@ -373,7 +362,6 @@
                                         <i class="fas fa-pen"></i> Edit
                                     </button>
 
-                                    <!-- Delete Form -->
                                     <form action="{{ route('absensi.destroy',$a->id_absensi) }}" method="POST" style="display:inline;">
                                         @csrf
                                         @method('DELETE')
@@ -393,11 +381,11 @@
 
 </div>
 
-<!-- MODAL ABSENSI (Create / Edit) -->
+<!-- MODAL ABSENSI (DIPERTAHANKAN UNTUK FUNGSI EDIT) -->
 <div class="modal" id="absensiModal">
     <div class="modal-content">
         <div class="modal-header">
-            <h3 id="modalTitle">Tambah Absensi</h3>
+            <h3 id="modalTitle">Edit Data Absensi</h3>
             <span style="cursor:pointer; color:white;" onclick="closeModal()"><i class="fas fa-times"></i></span>
         </div>
         <div class="modal-body">
@@ -447,25 +435,22 @@
     </div>
 </div>
 
-<!-- JAVASCRIPT LOGIC (TIDAK DIUBAH) -->
+<!-- JAVASCRIPT LOGIC (DIPERTAHANKAN UNTUK EDIT) -->
 <script>
     function openModal(mode, element = null) {
         const modal = document.getElementById('absensiModal');
         const form = document.getElementById('absensiForm');
         const title = document.getElementById('modalTitle');
 
-        // Tampilkan Modal
         modal.style.display = "flex";
         setTimeout(() => { modal.classList.add('show'); }, 10);
 
         if (mode === 'create') {
-            // --- MODE CREATE ---
+            // Logika Create tetap ada di sini namun tidak dipanggil oleh tombol UI
             form.action = "{{ route('absensi.store') }}";
             form.method = "POST";
             document.getElementById('methodInput').value = "POST";
             title.innerText = "Tambah Absensi";
-
-            // Reset Form
             document.getElementById('absensiId').value = "";
             document.getElementById('id_karyawan').value = "";
             document.getElementById('tanggal').value = "";
@@ -473,21 +458,18 @@
             document.getElementById('keterangan').value = "";
 
         } else {
-            // --- MODE EDIT ---
-            // Mengambil Data dari Button (Logika Asli Dipertahankan)
+            // --- MODE EDIT (FUNGSI UTAMA YANG DIGUNAKAN) ---
             const id = element.getAttribute('data-id');
             const karyawan = element.getAttribute('data-karyawan');
             const tanggal = element.getAttribute('data-tanggal');
             const status = element.getAttribute('data-status');
             const ket = element.getAttribute('data-ket');
 
-            // Update Form Action ke Route Edit
             form.action = "{{ route('absensi.update', ':id') }}".replace(':id', id);
             form.method = "POST";
             document.getElementById('methodInput').value = "PUT";
             title.innerText = "Edit Data Absensi";
 
-            // Isi Data ke Form
             document.getElementById('absensiId').value = id;
             document.getElementById('id_karyawan').value = karyawan;
             document.getElementById('tanggal').value = tanggal;
@@ -502,7 +484,6 @@
         setTimeout(() => { modal.style.display = "none"; }, 300);
     }
 
-    // Klik di luar modal untuk menutup
     window.onclick = function(event) {
         const modal = document.getElementById('absensiModal');
         if (event.target == modal) {
