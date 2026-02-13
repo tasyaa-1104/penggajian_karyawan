@@ -235,6 +235,17 @@
     .btn-submit { background: var(--smart-maroon); color: white; }
     .btn-submit:hover { background: var(--smart-maroon-hover); }
 
+    /* Loading Spinner */
+    .spinner {
+        display: none;
+        width: 16px; height: 16px;
+        border: 2px solid #ffffff;
+        border-top: 2px solid transparent;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
 </style>
@@ -269,7 +280,7 @@
         @endif
 
         <div style="overflow-x: auto;">
-            <table class="modern-table">
+            <table class="modern-table" id="userTable">
                 <thead>
                     <tr>
                         <th width="5%">No</th>
@@ -348,7 +359,7 @@
                 <div class="form-group">
                     <label id="passwordLabel">Password</label>
                     <input type="password" name="password" id="password" class="form-control" placeholder="Masukkan password..." required>
-                    <small id="passwordHint" class="text-muted" style="display:none;">Kosongkan jika tidak ingin mengubah password</small>
+                    <small id="passwordHint" class="text-muted" style="display:none; color: #64748b;">Kosongkan jika tidak ingin mengubah password</small>
                 </div>
 
                 <div class="form-group">
@@ -356,7 +367,8 @@
                     <select name="role" id="role" class="form-control" required>
                         <option value="">-- Pilih Role --</option>
                         <option value="admin">Admin</option>
-                        <option value="status">Karyawan</option>
+                        <!-- PERBAIKAN: Mengubah value menjadi 'karyawan' agar logis -->
+                        <option value="karyawan">Karyawan</option>
                     </select>
                 </div>
 
@@ -371,14 +383,17 @@
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-cancel" onclick="closeModal()">Batal</button>
-                    <button type="submit" form="userForm" class="btn btn-submit">Simpan Data</button>
+                    <button type="submit" form="userForm" class="btn btn-submit" id="btnSubmit">
+                        <span class="spinner" id="loadingSpinner"></span>
+                        <span id="btnText">Simpan Data</span>
+                    </button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
-<!-- JAVASCRIPT LOGIC (LOGIKA TETAP SESUAI SNIPPET ANDA) -->
+<!-- JAVASCRIPT LOGIC -->
 <script>
     function openModal(mode, id = null, username = '', nama = '', role = '', status = '') {
         const modal = document.getElementById('userModal');
@@ -402,6 +417,10 @@
             document.getElementById('password').value = "";
             document.getElementById('passwordLabel').innerText = "Password *";
             document.getElementById('passwordHint').style.display = "none";
+
+            // PERBAIKAN LOGIKA: Set default status menjadi 'aktif' agar backend menerima data valid
+            // meskipun dropdown disembunyikan.
+            document.getElementById('status_akun').value = "aktif";
             document.getElementById('statusGroup').style.display = "none";
         } else {
             // --- MODE EDIT ---
@@ -436,6 +455,26 @@
             closeModal();
         }
     }
+
+    // Event Listener untuk menangani submit form
+    document.getElementById('userForm').addEventListener('submit', function(e) {
+        // Anda bisa menghapus komentar di bawah ini jika ingin mencegah reload (AJAX),
+        // tapi untuk menjaga logika Blade (Laravel) standar, biarkan form submit normal.
+        // e.preventDefault();
+
+        const btn = document.getElementById('btnSubmit');
+        const spinner = document.getElementById('loadingSpinner');
+        const btnText = document.getElementById('btnText');
+
+        // Efek Loading
+        spinner.style.display = 'inline-block';
+        btnText.innerText = 'Menyimpan...';
+        btn.disabled = true;
+        btn.style.opacity = '0.7';
+
+        // Form akan submit secara normal (reload halaman) karena e.preventDefault() tidak aktif.
+        // Setelah reload, data baru akan muncul dari backend (Laravel).
+    });
 </script>
 
 @endsection
