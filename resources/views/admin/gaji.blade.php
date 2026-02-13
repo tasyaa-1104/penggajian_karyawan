@@ -148,7 +148,7 @@
     text-transform: uppercase;
     font-size: 0.75rem;
     color: white;
-    white-space: nowrap; /* 🔥 Biar teks gak nempel */
+    white-space: nowrap; 
 }
 
 .modern-table thead th:first-child {

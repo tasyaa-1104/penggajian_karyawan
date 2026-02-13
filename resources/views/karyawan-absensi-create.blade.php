@@ -10,21 +10,21 @@
 @section('content')
 {{-- <pre>{{ json_encode($liburList, JSON_PRETTY_PRINT) }}</pre> --}}
 
-
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
 
     :root {
-        --primary: #4facfe;
-        --secondary: #00f2fe;
+        /* TEMA MERAH TUA (SENADA SIDEBAR) */
+        --primary: #8B0000;       /* Merah Tua Utama */
+        --secondary: #cc0000;    /* Merah Terang */
         --text-main: #1e293b;
         --text-light: #64748b;
-        --bg-body: #f0f9ff;
-        --alert-orange: #f97316;
+        --bg-body: #fff5f5;       /* Background halaman merah muda pucat */
+        --alert-orange: #ea580c;
     }
 
     body {
-        background: #f1f5f9;
+        background: var(--bg-body);
         font-family: 'Outfit', sans-serif;
     }
 
@@ -35,7 +35,10 @@
         align-items: center;
         justify-content: center;
         padding: 40px 20px;
-        background: #e0f2fe;
+        /* Background pola halus merah */
+        background-image: radial-gradient(#8B0000 1px, transparent 1px);
+        background-size: 30px 30px;
+        background-color: #fff5f5;
     }
 
     .dashboard-grid {
@@ -44,10 +47,9 @@
         gap: 20px;
         width: 100%;
         max-width: 900px;
-        /* TIDAK ADA HEIGHT TETAP, Supaya TIDAK KEPOTONG */
         min-height: 500px;
         height: auto;
-        align-items: stretch; /* Agar kiri ikut memanjang saat kanan memanjang */
+        align-items: stretch;
         position: relative;
         z-index: 10;
     }
@@ -56,21 +58,23 @@
     .glass-card {
         border-radius: 24px;
         overflow: hidden;
-        box-shadow: 0 20px 40px -5px rgba(79, 172, 254, 0.15);
+        /* Shadow berwarna merah */
+        box-shadow: 0 20px 40px -5px rgba(139, 0, 0, 0.15);
         display: flex;
         flex-direction: column;
     }
 
     .left-card {
-        background: white;
-        border: 1px solid #e2e8f0;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border: 1px solid #ffe5e5; /* Border merah sangat muda */
         padding: 24px;
         display: flex;
         flex-direction: column;
-        justify-content: space-between; /* Agar isi tersebar rapi saat kartu memanjang */
+        justify-content: space-between;
     }
 
-    .header-action h2 { font-size: 1.35rem; font-weight: 800; color: var(--text-main); margin: 0 0 5px 0; letter-spacing: -0.5px; }
+    .header-action h2 { font-size: 1.35rem; font-weight: 800; color: var(--primary); margin: 0 0 5px 0; letter-spacing: -0.5px; }
     .header-action p { color: var(--text-light); font-size: 0.85rem; font-weight: 500; margin: 0 0 20px 0; }
 
     .deadline-badge {
@@ -89,12 +93,17 @@
     .btn-action:hover { transform: translateY(-2px); }
     .btn-action:active { transform: scale(0.98); }
 
-    .btn-main { background: linear-gradient(135deg, #2563eb, #06b6d4); color: white; box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3); }
-    .btn-danger { background: linear-gradient(135deg, #ef4444, #f87171); color: white; box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3); }
-    .btn-outline { background: #f8fafc; color: var(--text-light); border: 2px solid #e2e8f0; }
-    .btn-outline:hover { border-color: var(--primary); color: var(--primary); background: white; }
+    /* Tombol Utama (Gradasi Merah) */
+    .btn-main { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; box-shadow: 0 8px 20px rgba(139, 0, 0, 0.3); }
+    .btn-main:hover { box-shadow: 0 12px 25px rgba(139, 0, 0, 0.4); }
 
-    .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .btn-danger { background: linear-gradient(135deg, #dc2626, #ef4444); color: white; box-shadow: 0 8px 20px rgba(220, 38, 38, 0.3); }
+
+    /* Tombol Outline (Warna Border Merah) */
+    .btn-outline { background: white; color: var(--text-light); border: 2px solid #ffe5e5; }
+    .btn-outline:hover { border-color: var(--primary); color: var(--primary); background: #fff5f5; }
+
+    .btn-grid { display: grid; grid-template-columns:1fr 1fr; gap: 10px; }
 
     .status-working {
         background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0;
@@ -104,13 +113,14 @@
 
     /* --- KARTU KANAN (JAM & KALENDER) --- */
     .right-card {
-        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        /* Background Gradasi Merah Elegan */
+        background: linear-gradient(135deg, #8B0000 0%, #a00000 100%);
         color: white;
         position: relative;
         display: flex;
         flex-direction: column;
-        border: 1px solid rgba(255,255,255,0.3);
-        /* Tidak ada height fixed, biar bisa memanjang */
+        border: 1px solid rgba(255,255,255,0.2);
+        box-shadow: 0 20px 40px -5px rgba(139, 0, 0, 0.3);
     }
 
     .bg-decoration { position: absolute; width: 100%; height: 100%; top: 0; left: 0; pointer-events: none; overflow: hidden; }
@@ -120,7 +130,7 @@
     @keyframes floatCircle { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(20px); } }
 
     .clock-section {
-        flex: 0 0 auto; /* Jangan membesar secara paksa */
+        flex: 0 0 auto;
         padding: 40px 20px 10px 20px;
         text-align: center;
         position: relative; z-index: 2;
@@ -149,34 +159,42 @@
     /* Container Kalender */
     .calendar-wrapper {
         background: #ffffff;
-        margin: 0 20px 20px 20px; /* Margin bawah agar tidak nempel ke bawah */
+        margin: 0 20px 20px 20px;
         border-radius: 20px;
         padding: 20px;
         color: var(--text-main);
         box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         position: relative; z-index: 5;
-        display: none; /* Hidden by default */
+        display: none;
         animation: slideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
     /* Style Kalender */
-    .kalender-header { text-align: center; font-weight: 800; font-size: 1rem; color: var(--text-main); margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
-    .kalender-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; width: 100%; }
+    .kalender-header { text-align: center; font-weight: 800; font-size: 1rem; color: var(--primary); margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
+    .kalender-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 8px; width: 100%; }
     .kalender-day { text-align: center; font-size: 0.7rem; font-weight: 700; color: #94a3b8; padding-bottom: 8px; text-transform: uppercase; }
     .kalender-date { aspect-ratio: 1 / 1; display: grid; place-items: center; font-size: 0.85rem; font-weight: 600; border-radius: 10px; cursor: pointer; transition: all 0.2s; color: #475569; }
-    .kalender-date:hover { background-color: #f1f5f9; color: var(--primary); }
-    .kalender-date.today { background: var(--primary); color: white; box-shadow: 0 4px 10px rgba(79, 172, 254, 0.4); font-weight: 700; }
+    .kalender-date:hover { background-color: #fff5f5; color: var(--primary); }
+
+    /* Highlight Tanggal Hari Ini (Merah) */
+    .kalender-date.today {
+        background: var(--primary);
+        color: white;
+        box-shadow: 0 4px 10px rgba(139, 0, 0, 0.4);
+        font-weight: 700;
+    }
+
     .kalender-date.libur { background: #fee2e2; color: #ef4444; }
 
     /* Modal */
-    .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); align-items: center; justify-content: center; }
-    .modal-box { background: white; width: 90%; max-width: 380px; padding: 30px; border-radius: 24px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+    .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(139, 0, 0, 0.4); backdrop-filter: blur(4px); align-items: center; justify-content: center; }
+    .modal-box { background: white; width: 90%; max-width: 380px; padding: 30px; border-radius: 24px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); border-top: 5px solid var(--primary); }
     @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
     .form-group { margin-bottom: 15px; }
     .form-control { width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 12px; font-family: inherit; font-size: 0.95rem; }
-    .form-control:focus { border-color: var(--primary); outline: none; background: #f0f9ff; }
+    .form-control:focus { border-color: var(--primary); outline: none; background: #fff5f5; }
 
     /* Animations */
     @keyframes slideInLeft { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
@@ -222,7 +240,7 @@
 
                 @if($isLibur)
                     <div style="background:#fee2e2; color:#991b1b; padding:12px; border-radius:12px; text-align:center; font-weight:800; margin-bottom:15px; font-size:0.9rem; border:1px solid #fca5a5;">
-                        🎌 LIBUR NASIONAL <br>
+                         LIBUR NASIONAL <br>
                         <span style="font-weight:600; font-size:0.85rem;">{{ $namaLibur }}</span>
                     </div>
                 @endif
@@ -231,7 +249,7 @@
             {{-- LOGIKA --}}
             @if($isLibur)
                 <div style="text-align:center; color:#991b1b; font-weight:700; padding:15px; background:#fff5f5; border-radius:12px; border:1px dashed #fca5a5;">
-                    🎉 Hari ini libur<br>Absensi dinonaktifkan
+                     Hari ini libur<br>Absensi dinonaktifkan
                 </div>
 
             @elseif(!$absensiHariIni)
@@ -263,7 +281,7 @@
 
             @else
                 <div style="text-align: center; color: var(--text-light); padding: 20px;">
-                    <div style="font-size: 2.5rem; margin-bottom: 5px;">🎉</div>
+                    <div style="font-size: 2.5rem; margin-bottom: 5px;"></div>
                     <h3 style="color:var(--text-main); font-size:1.1rem;">Selesai!</h3>
                     <p style="font-size:0.85rem;">Status: <strong>{{ $absensiHariIni->status_kehadiran }}</strong></p>
                 </div>
