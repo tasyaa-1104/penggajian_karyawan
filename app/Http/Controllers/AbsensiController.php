@@ -29,7 +29,8 @@ class AbsensiController extends Controller
 
         return view('admin.absensi', [
             'absensi' => $absensi,
-            'search'  => $search
+            'search'  => $search,
+            'karyawan' => Karyawan::all() 
         ]);
     }
 
