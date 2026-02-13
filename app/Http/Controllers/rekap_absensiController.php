@@ -102,6 +102,11 @@ public function generateRekap(string $bulan)
     // 🔥 Tentukan tanggal mulai kerja dihitung
     $tanggalMasuk = Carbon::parse($k->created_at);
 
+    // 🔥 Kalau karyawan dibuat setelah bulan yang direkap → SKIP
+if ($tanggalMasuk->gt($carbon->copy()->endOfMonth())) {
+    continue;
+}
+
     $tanggalAwalHitung = $carbon->copy()->startOfMonth();
 
     // Jika karyawan dibuat di bulan yang sama
