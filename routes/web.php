@@ -247,7 +247,7 @@ Route::post('/login', [UserController::class, 'login'])
 
 use App\Http\Controllers\OvertimeController;
 
-Route::prefix('admin')->middleware(['web','role:admin'])->group(function () {
+Route::prefix('hrd')->middleware(['web','role:hrd'])->group(function () {
 
     Route::get('/overtime', [OvertimeController::class, 'index'])
         ->name('overtime.index');
