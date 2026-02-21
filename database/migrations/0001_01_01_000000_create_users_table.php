@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('username')->unique();
             $table->string('nama');
             $table->string('password');
-            $table->enum('role', ['admin', 'karyawan']);
+            $table->enum('role', ['hrd', 'karyawan','finance','manager']);
             $table->enum('status_akun', ['aktif', 'nonaktif'])->default('aktif');
             $table->rememberToken();
             $table->timestamps();

@@ -18,10 +18,10 @@ class DatabaseSeeder extends Seeder
          * ===================== */
         DB::table('users')->insert([
             [
-                'username'     => 'admin',
-                'nama'         => 'Administrator',
-                'password'     => Hash::make('admin123'),
-                'role'         => 'admin',
+                'username'     => 'hrd',
+                'nama'         => 'HRD',
+                'password'     => Hash::make('hrd123'),
+                'role'         => 'hrd',
                 'status_akun'  => 'aktif',
                 'created_at'   => now(),
                 'updated_at'   => now(),
@@ -31,6 +31,24 @@ class DatabaseSeeder extends Seeder
                 'nama'         => 'User Karyawan',
                 'password'     => Hash::make('karyawan123'),
                 'role'         => 'karyawan',
+                'status_akun'  => 'aktif',
+                'created_at'   => now(),
+                'updated_at'   => now(),
+            ],
+             [
+                'username'     => 'finance',
+                'nama'         => 'Administrator Finance',
+                'password'     => Hash::make('finance123'),
+                'role'         => 'finance',
+                'status_akun'  => 'aktif',
+                'created_at'   => now(),
+                'updated_at'   => now(),
+            ],
+            [
+                'username'     => 'manager',
+                'nama'         => 'Manager',
+                'password'     => Hash::make('manager123'),
+                'role'         => 'manager',
                 'status_akun'  => 'aktif',
                 'created_at'   => now(),
                 'updated_at'   => now(),
@@ -70,46 +88,7 @@ class DatabaseSeeder extends Seeder
             ],
         ]);
 
-        /* =====================
-         * SEEDER KARYAWAN
-         * ===================== */
-        // DB::table('karyawan')->insert([
-        //     [
-        //         'nik' => 'KRY001',
-        //         'nama_karyawan' => 'Andi Saputra',
-        //         'id_divisi' => 1,
-        //         'id_jabatan' => 1,
-        //         'gaji_pokok' => 4000000,
-        //         'id_user' => null,
-        //         'status_karyawan' => 'aktif',
-        //         'created_at' => now(),
-        //         'updated_at' => now(),
-        //     ],
-        //     [
-        //         'nik' => 'KRY002',
-        //         'nama_karyawan' => 'Budi Santoso',
-        //         'id_divisi' => 2,
-        //         'id_jabatan' => 2,
-        //         'gaji_pokok' => 4500000,
-        //         'id_user' => null,
-        //         'status_karyawan' => 'aktif',
-        //         'created_at' => now(),
-        //         'updated_at' => now(),
-        //     ],
-        //     [
-        //         'nik' => 'KRY003',
-        //         'nama_karyawan' => 'Citra Lestari',
-        //         'id_divisi' => 3,
-        //         'id_jabatan' => 3,
-        //         'gaji_pokok' => 6000000,
-        //         'id_user' => null,
-        //         'status_karyawan' => 'aktif',
-        //         'created_at' => now(),
-        //         'updated_at' => now(),
-        //     ],
-        // ]);
 
-        // Aktifkan kembali FK
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 }

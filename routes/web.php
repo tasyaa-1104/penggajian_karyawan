@@ -26,7 +26,7 @@ use App\Http\Controllers\HomeController;
 Route::get('/', [HomeController::class, 'index']);
 
 
-Route::middleware(['role:admin'])->group(function () {
+Route::middleware(['role:hrd'])->group(function () {
 
 // ================= SLIP GAJI (ADMIN) =================
 
@@ -291,4 +291,16 @@ Route::get('/admin/overtime/{id}/approve', [OvertimeController::class, 'approve'
 
     Route::delete('/admin/overtime/{id}', [OvertimeController::class, 'destroy'])
     ->name('overtime.destroy');
-    
+
+
+    Route::middleware(['role:finance'])->group(function () {
+    Route::get('/finance/dashboard', function () {
+        return "Dashboard Finance";
+    })->name('finance.dashboard');
+});
+
+Route::middleware(['role:manager'])->group(function () {
+    Route::get('/manager/dashboard', function () {
+        return "Dashboard Manager";
+    })->name('manager.dashboard');
+});

@@ -10,28 +10,23 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RoleMiddleware
 {
-    public function handle(Request $request, Closure $next, $role): Response
+    public function handle(Request $request, Closure $next, $roles): Response
     {
-        Log::info('RoleMiddleware check', [
-            'requested_role' => $role,
-            'is_authenticated' => Auth::check(),
-            'user_id' => Auth::id(),
-            'user_role' => Auth::user()?->role ?? 'null',
-        ]);
 
-        if (!Auth::check()) {
-            Log::info('User not authenticated, redirecting to login');
-            return redirect()->route('login');
-        }
+    if (!Auth::check()) {
+        return redirect()->route('login');
+    }
 
-        if (Auth::user()->role !== $role) {
-            Log::warning('User role mismatch', [
-                'user_role' => Auth::user()->role,
-                'required_role' => $role,
-            ]);
-            abort(403, 'ANDA TIDAK PUNYA AKSES');
-        }
+    // Pastikan $roles adalah array
+    if (!is_array($roles)) {
+        $roles = explode('|', $roles);
+    }
 
-        return $next($request);
+    if (!in_array(Auth::user()->role, $roles)) {
+        abort(403, 'ANDA TIDAK PUNYA AKSES');
+    }
+
+    return $next($request);
+
     }
 }

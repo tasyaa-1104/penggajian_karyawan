@@ -76,7 +76,7 @@ public function index()
             'username' => 'required|unique:users',
             'nama'     => 'required',
             'password' => 'required|min:6',
-            'role'     => 'required|in:admin,karyawan'
+            'role'     => 'required|in:hrd,karyawan,finance,manager'
         ]);
 
         User::create([
@@ -110,7 +110,7 @@ public function index()
         $request->validate([
             'username' => 'required|unique:users,username,' . $id,
             'nama'     => 'required',
-            'role'     => 'required|in:admin,karyawan',
+            'role'     => 'required|in:hrd,karyawan,finance,manager',
             'status_akun' => 'required|in:aktif,nonaktif'
         ]);
 
@@ -149,45 +149,58 @@ public function index()
     * PROSES LOGIN
     * ====================== */
     public function loginProses(Request $request)
-    {
-        $request->validate([
-            'username' => 'required',
-            'password' => 'required'
+{
+    $request->validate([
+        'username' => 'required',
+        'password' => 'required'
+    ]);
+
+    $user = User::where('username', $request->username)->first();
+
+    // USER TIDAK ADA
+    if (!$user) {
+        return back()->withErrors([
+            'username' => 'Username tidak ditemukan'
         ]);
-
-        $user = User::where('username', $request->username)->first();
-
-        // USER TIDAK ADA
-        if (!$user) {
-            return back()->withErrors([
-                'username' => 'Username tidak ditemukan'
-            ]);
-        }
-
-        // AKUN NONAKTIF
-        if ($user->status_akun !== 'aktif') {
-            return back()->withErrors([
-                'username' => 'Akun tidak aktif'
-            ]);
-        }
-
-        // PASSWORD SALAH
-        if (!Hash::check($request->password, $user->password)) {
-            return back()->withErrors([
-                'password' => 'Password salah'
-            ]);
-        }
-
-        // LOGIN SUKSES
-        Auth::login($user);
-
-        // REDIRECT BERDASARKAN ROLE
-        if ($user->role === 'admin') {
-            return redirect()->route('dashboard');
-        }
-
-        return redirect()->route('karyawan.dashboard');
     }
+
+    // AKUN NONAKTIF
+    if ($user->status_akun !== 'aktif') {
+        return back()->withErrors([
+            'username' => 'Akun tidak aktif'
+        ]);
+    }
+
+    // PASSWORD SALAH
+    if (!Hash::check($request->password, $user->password)) {
+        return back()->withErrors([
+            'password' => 'Password salah'
+        ]);
+    }
+
+    // LOGIN SUKSES
+    Auth::login($user);
+
+    // 🔥 REDIRECT BERDASARKAN ROLE BARU
+    switch ($user->role) {
+
+        case 'hrd':
+            return redirect()->route('admin.dashboard');
+
+        case 'finance':
+            return redirect()->route('admin.dashboard');
+
+        case 'manager':
+            return redirect()->route('admin.dashboard');
+
+        case 'karyawan':
+            return redirect()->route('karyawan.dashboard');
+        default:
+            Auth::logout();
+            return redirect()->route('login')
+                ->withErrors(['role' => 'Role tidak dikenali']);
+    }
+}
 
     public function login(Request $request)
 {
@@ -204,14 +217,27 @@ public function index()
         return back()->with('error', 'Username atau password salah');
     }
 
-    // 🔥 INI YANG PENTING
     Auth::login($user);
 
-    if ($user->role === 'admin') {
-        return redirect()->route('admin.dashboard');
-    }
+    // 🔥 REDIRECT BERDASARKAN ROLE BARU
+    switch ($user->role) {
 
-    return redirect()->route('karyawan.dashboard');
+        case 'hrd':
+            return redirect()->route('admin.dashboard');
+
+        case 'finance':
+            return redirect()->route('admin.dashboard');
+
+        case 'manager':
+            return redirect()->route('admin.dashboard');
+
+        case 'karyawan':
+            return redirect()->route('karyawan.dashboard');
+
+        default:
+            Auth::logout();
+            return back()->with('error', 'Role tidak dikenali');
+    }
 }
 
 }
