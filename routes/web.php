@@ -60,7 +60,7 @@ Route::get('/admin/dashboard', [UserController::class, 'index']) ->name('admin.d
 Route::get('/absensi/edit/{id}', [AbsensiController::class, 'edit'])->name('absensi.edit');
 
 // update (POST)
-Route::post('/absensi/update/{id}', [AbsensiController::class, 'update'])->name('absensi.update');
+Route::put('/absensi/update/{id}', [AbsensiController::class, 'update'])->name('absensi.update');
 
 // hapus (POST)
 Route::delete('/absensi/delete/{id}', [AbsensiController::class, 'destroy'])
@@ -201,6 +201,8 @@ Route::get('/karyawan/slip-gaji',
 )->name('karyawan.slip-gaji.show');
 
 
+
+
 Route::get('/karyawan/dashboard',
     [KaryawanController::class, 'dashboardKaryawan']
 )->name('karyawan.dashboard');
@@ -291,16 +293,3 @@ Route::get('/admin/overtime/{id}/approve', [OvertimeController::class, 'approve'
 
     Route::delete('/admin/overtime/{id}', [OvertimeController::class, 'destroy'])
     ->name('overtime.destroy');
-
-
-    Route::middleware(['role:finance'])->group(function () {
-    Route::get('/finance/dashboard', function () {
-        return "Dashboard Finance";
-    })->name('finance.dashboard');
-});
-
-Route::middleware(['role:manager'])->group(function () {
-    Route::get('/manager/dashboard', function () {
-        return "Dashboard Manager";
-    })->name('manager.dashboard');
-});

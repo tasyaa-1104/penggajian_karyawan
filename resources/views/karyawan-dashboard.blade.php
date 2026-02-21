@@ -1,4 +1,4 @@
-@extends('template')
+ @extends('template')
 
 @section('title', 'Dashboard Karyawan')
 
@@ -8,7 +8,7 @@
         <div class="header-content">
             <h1>Dashboard Karyawan</h1>
             <div class="user-profile">
-                <span>Hi, {{ $karyawan->nama_karyawan }} 👋</span>
+                <span>Hi, {{ $karyawan->nama_karyawan }} </span>
                 <div class="avatar-small">👤</div>
             </div>
         </div>
@@ -17,19 +17,22 @@
 
 @section('content')
 
-<!-- CSS STYLING WEBSITE RESPONSIVE + ANIMASI -->
+<!-- CSS STYLING WEBSITE RESPONSIVE + TEMA MERAH TUA -->
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
     :root {
-        --primary: #4facfe;
-        --primary-dark: #00f2fe;
-        --secondary: #667eea;
+        /* UBAH WARNA KE MERAH TUA (SENADA SIDEBAR) */
+        --primary: #8B0000;       /* Merah Tua Utama */
+        --primary-dark: #5c0000; /* Merah Gelap */
+        --secondary: #8B0000;
         --text-dark: #333;
-        --glass: rgba(255, 255, 255, 0.85);
-        --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        --shadow-hover: 0 15px 35px rgba(0, 0, 0, 0.15);
-        --bg-gradient: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+        --glass: rgba(255, 255, 255, 0.95);
+        --shadow: 0 10px 30px rgba(139, 0, 0, 0.1);
+        --shadow-hover: 0 15px 35px rgba(139, 0, 0, 0.2);
+
+        /* Background Halaman: Putih dengan sentuhan merah muda */
+        --bg-gradient: linear-gradient(135deg, #fff0f0 0%, #ffffff 100%);
     }
 
     /* RESET & UTAMA */
@@ -50,7 +53,7 @@
         padding: 40px 20px;
         position: relative;
         z-index: 10;
-        padding-top: 100px;
+        padding-top: 100px; /* Jarak dari topbar */
     }
 
     /* --- ANIMASI CSS --- */
@@ -72,18 +75,12 @@
     .delay-4 { animation-delay: 0.4s; }
     .delay-5 { animation-delay: 0.5s; }
 
-    @keyframes float {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-10px); }
-    }
-    .profile-avatar-lg { animation: float 4s ease-in-out infinite; }
-
     /* --- HEADER WEBSITE --- */
     .website-header {
         position: fixed;
         top: 0; left: 0; width: 100%;
         height: 80px;
-        background: rgba(255, 255, 255, 0.9);
+        background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(10px);
         z-index: 100;
         border-bottom: 1px solid rgba(0,0,0,0.05);
@@ -96,7 +93,7 @@
     .website-header h1 { font-size: 1.4rem; color: var(--secondary); margin: 0; font-weight: 700; }
     .user-profile { display: flex; align-items: center; gap: 15px; font-weight: 600; color: var(--text-dark); }
     .avatar-small {
-        width: 40px; height: 40px; background: var(--bg-gradient); color: white; border-radius: 50%;
+        width: 40px; height: 40px; background: var(--bg-gradient); color: var(--primary); border-radius: 50%;
         display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
         box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
@@ -114,32 +111,29 @@
     }
     .main-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
 
-    /* --- CARD BASE STYLE (RICH STYLE) --- */
+    /* --- CARD BASE STYLE (BERSIH TANPA TITIK) --- */
     .card {
         background: var(--glass);
         padding: 30px;
         border-radius: 24px;
         box-shadow: var(--shadow);
-        border: 1px solid rgba(255,255,255,0.6);
+        border: 1px solid rgba(255,255,255,0.8);
         display: flex;
         flex-direction: column;
         position: relative;
         overflow: hidden;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
-
-        /* Pola Titik-titik agar tidak polos */
-        background-image: radial-gradient(#e0e0e0 1px, transparent 1px);
-        background-size: 20px 20px;
+        /* Background dots DIHAPUS agar bersih */
     }
 
     .card:hover { transform: translateY(-5px); box-shadow: var(--shadow-hover); }
 
-    /* Garis Gradasi di Atas Kartu */
+    /* Garis Gradasi Merah di Atas Kartu */
     .card::after {
         content: '';
         position: absolute;
         top: 0; left: 0; width: 100%; height: 4px;
-        background: linear-gradient(90deg, var(--secondary), var(--primary));
+        background: linear-gradient(90deg, var(--primary), #cc0000);
         border-radius: 24px 24px 0 0;
         opacity: 0.8;
     }
@@ -150,7 +144,7 @@
         align-items: center;
         gap: 15px;
         padding: 25px;
-        min-height: 100px; /* Tinggi minimum seragam */
+        min-height: 100px;
     }
 
     .stat-icon-lg {
@@ -160,19 +154,19 @@
         box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         transition: transform 0.3s;
     }
-    .stat-card:hover .stat-icon-lg { transform: rotate(10deg) scale(1.1); }
+    .stat-card:hover .stat-icon-lg { transform: scale(1.1); }
 
-    .bg-hadir { background: linear-gradient(135deg, #a8edea, #fed6e3); color: #1a5c3e; }
-    .bg-izin { background: linear-gradient(135deg, #ffecd2, #fcb69f); color: #6f4e37; }
-    .bg-alpha { background: linear-gradient(135deg, #ff9a9e, #fecfef); color: #721c24; }
+    /* Warna Solid Bersih */
+    .bg-hadir { background: #E8F5E9; color: #2E7D32; }
+    .bg-izin { background: #FFF3E0; color: #F57C00; }
+    .bg-alpha { background: #FFEBEE; color: #D32F2F; }
 
     .stat-info h3 { margin: 0; font-size: 2rem; font-weight: 700; line-height: 1; }
-    .stat-info p { margin: 5px 0 0 0; font-size: 0.9rem; color: #666; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+    .stat-info p { margin: 5px 0 0 0; font-size: 0.85rem; color: #666; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
 
     /* --- PROFILE CARD --- */
     .profile-container { display: flex; align-items: center; gap: 25px; flex-wrap: wrap; position: relative; z-index: 2; }
 
-    /* Dekorasi Besar di Belakang */
     .card.profile-card::before {
         content: '👤';
         position: absolute;
@@ -185,10 +179,10 @@
 
     .profile-avatar-lg {
         width: 100px; height: 100px;
-        background: linear-gradient(135deg, #667eea, #764ba2);
+        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
         border-radius: 50%;
         display: flex; align-items: center; justify-content: center; font-size: 3rem; color: white;
-        box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        box-shadow: 0 10px 20px rgba(139, 0, 0, 0.4);
         z-index: 2;
     }
     .profile-details { flex: 1; z-index: 2; }
@@ -197,9 +191,10 @@
     .nik-badge {
         background: #fff;
         padding: 6px 15px; border-radius: 50px;
-        font-size: 0.85rem; font-weight: 600; color: #555;
+        font-size: 0.85rem; font-weight: 600; color: var(--primary-dark);
         display: inline-block; margin-bottom: 15px;
         box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        border: 1px solid rgba(0,0,0,0.05);
     }
 
     .info-grid-web { display: grid; gap: 12px; margin-top: 20px; z-index: 2; }
@@ -208,13 +203,12 @@
         padding: 12px 15px; border-radius: 12px;
         border: 1px solid rgba(0,0,0,0.03);
     }
-    .info-icon-web { font-size: 1.3rem; margin-right: 15px; width: 35px; text-align: center; }
+    .info-icon-web { font-size: 1.3rem; margin-right: 15px; width: 35px; text-align: center; color: var(--primary); }
     .info-text { display: flex; flex-direction: column; }
     .info-label-web { font-size: 0.75rem; color: #888; margin-bottom: 2px; font-weight: 600; }
     .info-value-web { font-size: 1rem; font-weight: 600; color: #333; }
 
     /* --- SALARY CARD --- */
-    /* Dekorasi Besar di Belakang Gaji */
     .card.salary-card::before {
         content: '💰';
         position: absolute;
@@ -227,42 +221,28 @@
 
     .salary-display {
         text-align: center; padding: 30px 10px; position: relative; z-index: 2;
-        background: rgba(255,255,255,0.6);
+        background: rgba(255,255,255,0.8);
         border-radius: 16px;
-        border: 1px solid rgba(255,255,255,0.5);
+        border: 1px solid rgba(0,0,0,0.05);
     }
     .salary-label { font-size: 0.9rem; color: #666; text-transform: uppercase; letter-spacing: 1px; margin: 0; }
     .salary-amount {
         font-size: 2.2rem; font-weight: 800;
-        color: var(--secondary);
+        color: var(--primary);
         margin: 10px 0;
-        background: linear-gradient(to right, #667eea, #764ba2);
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
     }
 
-    /* Tombol Gaji (Samakan dengan Absensi) */
+    /* Tombol Merah */
     .btn-web {
         display: block; width: 100%; padding: 16px;
-        background: linear-gradient(to right, #11998e, #38ef7d);
+        background: linear-gradient(to right, var(--primary), #cc0000);
         color: white; text-align: center; text-decoration: none;
         border-radius: 16px; font-weight: 600; margin-top: auto;
-        transition: transform 0.2s, opacity 0.2s; box-shadow: 0 4px 15px rgba(56, 239, 125, 0.3); z-index: 2; position: relative;
+        transition: transform 0.2s, opacity 0.2s; box-shadow: 0 4px 15px rgba(139, 0, 0, 0.3); z-index: 2; position: relative;
+        border: none;
+        cursor: pointer;
     }
-    .btn-web:hover { transform: translateY(-2px); opacity: 0.95; box-shadow: 0 6px 20px rgba(56, 239, 125, 0.4); }
-
-    /* --- WAVE ANIMATION --- */
-    .waves {
-        position: fixed; bottom: 0; left: 0; width: 100%; height: 15vh;
-        margin-bottom: -7px; min-height: 100px; max-height: 150px; z-index: 1; pointer-events: none;
-    }
-    .parallax > use { animation: move-forever 25s cubic-bezier(.55,.5,.45,.5) infinite; }
-    .parallax > use:nth-child(1) { animation-delay: -2s; animation-duration: 7s; fill: rgba(255,255,255,0.7); }
-    .parallax > use:nth-child(2) { animation-delay: -3s; animation-duration: 10s; fill: rgba(255,255,255,0.5); }
-    .parallax > use:nth-child(3) { animation-delay: -4s; animation-duration: 13s; fill: rgba(255,255,255,0.3); }
-    .parallax > use:nth-child(4) { animation-delay: -5s; animation-duration: 20s; fill: #fff; }
-    @keyframes move-forever { 0% { transform: translate3d(-90px,0,0); } 100% { transform: translate3d(85px,0,0); } }
+    .btn-web:hover { transform: translateY(-2px); opacity: 0.95; box-shadow: 0 6px 20px rgba(139, 0, 0, 0.4); }
 
     .card-header {
         display: flex; align-items: center; margin-bottom: 25px;
@@ -276,11 +256,13 @@
 @isset($karyawan)
 <div class="website-layout">
 
-    <!-- 1. STATS ROW (BARIS ATAS) -->
+    <!-- 1. STATS ROW (ICON FORMAL) -->
     <div class="dashboard-grid">
         <!-- Hadir -->
         <div class="card stat-card animate-up delay-1">
-            <div class="stat-icon-lg bg-hadir">✅</div>
+            <div class="stat-icon-lg bg-hadir">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
             <div class="stat-info">
                 <h3>{{ $totalHadir ?? 0 }}</h3>
                 <p>Hadir</p>
@@ -289,7 +271,9 @@
 
         <!-- Izin -->
         <div class="card stat-card animate-up delay-2">
-            <div class="stat-icon-lg bg-izin">📝</div>
+            <div class="stat-icon-lg bg-izin">
+                <i class="fa-solid fa-calendar-minus"></i>
+            </div>
             <div class="stat-info">
                 <h3>{{ $totalIzin ?? 0 }}</h3>
                 <p>Izin/Sakit</p>
@@ -298,7 +282,9 @@
 
         <!-- Alpha -->
         <div class="card stat-card animate-up delay-3">
-            <div class="stat-icon-lg bg-alpha">⛔</div>
+            <div class="stat-icon-lg bg-alpha">
+                <i class="fa-solid fa-circle-xmark"></i>
+            </div>
             <div class="stat-info">
                 <h3>{{ $totalAlpha ?? 0 }}</h3>
                 <p>Alpha</p>
@@ -325,7 +311,7 @@
 
                     <div class="info-grid-web">
                         <div class="info-item-web">
-                            <div class="info-icon-web">🏢</div>
+                            <div class="info-icon-web"><i class="fa-solid fa-building"></i></div>
                             <div class="info-text">
                                 <span class="info-label-web">Divisi</span>
                                 <span class="info-value-web">{{ $karyawan->divisi->nama_divisi }}</span>
@@ -333,7 +319,7 @@
                         </div>
 
                         <div class="info-item-web">
-                            <div class="info-icon-web">💼</div>
+                            <div class="info-icon-web"><i class="fa-solid fa-briefcase"></i></div>
                             <div class="info-text">
                                 <span class="info-label-web">Jabatan</span>
                                 <span class="info-value-web">{{ $karyawan->jabatan->nama_jabatan }}</span>
@@ -347,7 +333,7 @@
         <!-- KARTU GAJI -->
         <div class="card salary-card animate-up delay-5">
             <div class="card-header">
-                <div class="header-dot" style="background: var(--secondary);"></div>
+                <div class="header-dot" style="background: var(--primary);"></div>
                 <h2>Info Gaji</h2>
             </div>
 
@@ -361,16 +347,18 @@
             <a href="{{ route('karyawan.slip-gaji.show') }}" class="btn-web">
                 📄 Lihat Slip Gaji
             </a>
+
+
         </div>
 
         <!-- KARTU PENGAJUAN CUTI -->
         <div class="card animate-up delay-5">
             <div class="card-header">
-                <div class="header-dot" style="background:#38ef7d;"></div>
+                <div class="header-dot" style="background:#8B0000;"></div>
                 <h2>Pengajuan Cuti</h2>
             </div>
 
-            <p style="margin-bottom:15px;">
+            <p style="margin-bottom:15px; color: #666;">
                 Ajukan cuti langsung tanpa pindah halaman.
             </p>
 
@@ -390,7 +378,7 @@
     <div class="modal-box">
 
         <div class="modal-header">
-            <div class="modal-icon">🌴</div>
+            <div class="modal-icon"></div>
             <h3>Pengajuan Cuti</h3>
         </div>
 
@@ -422,21 +410,6 @@
     </div>
 </div>
 
-
-<!-- WAVE ANIMATION SVG -->
-<svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-    viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
-    <defs>
-        <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
-    </defs>
-    <g class="parallax">
-        <use xlink:href="#gentle-wave" x="48" y="0" />
-        <use xlink:href="#gentle-wave" x="48" y="3" />
-        <use xlink:href="#gentle-wave" x="48" y="5" />
-        <use xlink:href="#gentle-wave" x="48" y="7" />
-    </g>
-</svg>
-
 <script>
 function openCutiModal(){
     const modal = document.getElementById('cutiModal');
@@ -458,6 +431,34 @@ window.addEventListener('click', function(e){
 });
 </script>
 
-
+<style>
+/* MODAL STYLING */
+.modal {
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center;
+    backdrop-filter: blur(5px); opacity: 0; transition: opacity 0.3s;
+}
+.modal.show { opacity: 1; }
+.modal-box {
+    background: white; width: 90%; max-width: 450px; border-radius: 16px; padding: 30px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.2); position: relative; transform: scale(0.9); transition: transform 0.3s;
+    border-top: 5px solid #8B0000;
+}
+.modal.show .modal-box { transform: scale(1); }
+.modal-header { text-align: center; margin-bottom: 25px; }
+.modal-icon { font-size: 3rem; margin-bottom: 10px; display: block; }
+.modal-header h3 { margin: 0; color: #8B0000; font-size: 1.4rem; }
+.form-group { margin-bottom: 15px; }
+.form-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 5px; color: #555; }
+.form-control {
+    width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+}
+.form-control:focus { outline: none; border-color: #8B0000; }
+.modal-buttons { display: flex; gap: 10px; margin-top: 25px; }
+.btn-submit { flex: 1; background: #8B0000; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer; }
+.btn-cancel { flex: 1; background: #f5f5f5; color: #666; border: 1px solid #ddd; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer; }
+.btn-cancel:hover { background: #e0e0e0; }
+</style>
 
 @endsection
