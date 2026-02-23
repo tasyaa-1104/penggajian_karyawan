@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -19,6 +20,9 @@ return new class extends Migration
 
             // TETAP pakai id_user (tidak dikurangi)
             $table->unsignedBigInteger('id_user')->nullable();
+
+            // Kolom tanggal masuk karyawan
+            $table->date('tanggal_masuk')->default(DB::raw('CURRENT_DATE'));
 
             $table->enum('status_karyawan', ['aktif', 'nonaktif']);
             $table->timestamps();

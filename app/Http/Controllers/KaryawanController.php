@@ -58,6 +58,7 @@ class KaryawanController extends Controller
             'id_jabatan'      => $request->id_jabatan,
             'gaji_pokok'      => $jabatan->gaji_pokok,
             'status_karyawan' => $request->status_karyawan,
+            'tanggal_masuk'   => now()->toDateString(),
         ]);
 
         return redirect()->route('karyawan')

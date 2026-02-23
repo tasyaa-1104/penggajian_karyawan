@@ -318,6 +318,7 @@
                         <th width="15%">Divisi</th>
                         <th width="15%">Jabatan</th>
                         <th width="15%">Gaji Pokok</th>
+                        <th width="10%">Tanggal Masuk</th>
                         <th width="10%">Status</th>
                         <th width="10%" style="text-align: center;">Aksi</th>
                     </tr>
@@ -339,6 +340,7 @@
                             <td>{{ $k->divisi->nama_divisi ?? '-' }}</td>
                             <td>{{ $k->jabatan->nama_jabatan ?? '-' }}</td>
                             <td>Rp {{ number_format($k->gaji_pokok,0,',','.') }}</td>
+                            <td>{{ $k->tanggal_masuk ? date('d-m-Y', strtotime($k->tanggal_masuk)) : '-' }}</td>
                             <td>
                                 <span class="badge-sharp {{ $k->status_karyawan == 'aktif' ? 'badge-aktif' : 'badge-nonaktif' }}">
                                     {{ ucfirst($k->status_karyawan) }}
@@ -347,13 +349,11 @@
                             <td style="text-align: center;">
                                 <!-- TOMBOL AKSI -->
                                 <div class="action-buttons">
-
                                     <!-- Edit Link (Sesuai Logika Asli) -->
                                     <a href="{{ route('karyawan-edit',$k->id_karyawan) }}"
                                        class="btn-action btn-edit">
                                         <i class="fas fa-pen"></i> Edit
                                     </a>
-
                                     <!-- Delete Form (Sesuai Logika Asli) -->
                                     <form action="{{ route('karyawan-destroy',$k->id_karyawan) }}"
                                           method="POST"
