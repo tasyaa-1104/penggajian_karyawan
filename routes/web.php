@@ -293,3 +293,21 @@ Route::get('/admin/overtime/{id}/approve', [OvertimeController::class, 'approve'
 
     Route::delete('/admin/overtime/{id}', [OvertimeController::class, 'destroy'])
     ->name('overtime.destroy');
+
+
+
+  use App\Http\Controllers\ManagerController;
+
+Route::middleware(['role:manager'])->group(function () {
+
+    Route::get('/manager/dashboard',[ManagerController::class, 'dashboard']  )->name('manager.dashboard');
+
+});
+
+use App\Http\Controllers\FinanceController;
+
+Route::middleware(['role:finance'])->group(function () {
+
+    Route::get('/finance/dashboard', [FinanceController::class, 'dashboard'] )->name('finance.dashboard');
+
+});

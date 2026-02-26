@@ -191,7 +191,7 @@ public function index()
             return redirect()->route('admin.dashboard');
 
         case 'manager':
-            return redirect()->route('admin.dashboard');
+            return redirect()->route('manager.dashboard');
 
         case 'karyawan':
             return redirect()->route('karyawan.dashboard');
@@ -226,10 +226,10 @@ public function index()
             return redirect()->route('admin.dashboard');
 
         case 'finance':
-            return redirect()->route('admin.dashboard');
+            return redirect()->route('finance.dashboard');
 
         case 'manager':
-            return redirect()->route('admin.dashboard');
+            return redirect()->route('manager.dashboard');
 
         case 'karyawan':
             return redirect()->route('karyawan.dashboard');
