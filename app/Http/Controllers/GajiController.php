@@ -18,7 +18,7 @@ class GajiController extends Controller
             ->orderBy('bulan', 'desc')
             ->get();
 
-        return view('admin.gaji', compact('gaji'));
+        return view('finance.gaji', compact('gaji'));
     }
 
     /* =========================
@@ -26,7 +26,7 @@ class GajiController extends Controller
      * ========================= */
     public function create()
     {
-        return view('admin.gaji-create', [
+        return view('finance.gaji-create', [
             'karyawan' => Karyawan::where('status_karyawan', 'aktif')->get()
         ]);
     }

@@ -107,16 +107,7 @@ Route::put('/karyawan/update/{id}', [KaryawanController::class, 'update'])->name
 Route::delete('/karyawan/delete/{id}', [KaryawanController::class, 'destroy'])->name('karyawan-destroy');
 
 
-//tunjangan
-Route::get('/tunjangan', [TunjanganController::class, 'index'])->name('tunjangan.index');
 
-Route::get('/tunjangan/create', [TunjanganController::class, 'create'])->name('tunjangan.create');
-Route::post('/tunjangan/store', [TunjanganController::class, 'store'])->name('tunjangan.store');
-
-Route::get('/tunjangan/edit/{id}', [TunjanganController::class, 'edit'])->name('tunjangan.edit');
-Route::put('/tunjangan/update/{id}', [TunjanganController::class, 'update'])->name('tunjangan.update');
-
-Route::delete('/tunjangan/delete/{id}', [TunjanganController::class, 'destroy'])->name('tunjangan.destroy');
 
 
 //potongan
@@ -158,23 +149,7 @@ Route::get('/divisi/create', [DivisiController::class, 'create'])->name('divisi.
 
 
 
-// ================== GAJI ==================
 
-// READ
-Route::get('/gaji', [GajiController::class, 'index'])->name('gaji.index');
-
-// CREATE
-Route::get('/gaji/create', [GajiController::class, 'create'])->name('gaji.create');
-
-Route::post('/gaji/store', [GajiController::class, 'store'])->name('gaji.store');
-
-// UPDATE
-Route::get('/gaji/edit/{id}', [GajiController::class, 'edit'])->name('gaji.edit');
-
-Route::put('/gaji/update/{id}', [GajiController::class, 'update'])->name('gaji.update');
-
-// DELETE
-Route::delete('/gaji/delete/{id}', [GajiController::class, 'destroy'])->name('gaji.destroy');
 
 Route::get('/user', [UserController::class, 'list'])->name('user.list');
 Route::get('/user/create', [UserController::class, 'create'])->name('user.create');
@@ -309,5 +284,33 @@ use App\Http\Controllers\FinanceController;
 Route::middleware(['role:finance'])->group(function () {
 
     Route::get('/finance/dashboard', [FinanceController::class, 'dashboard'] )->name('finance.dashboard');
+// ================= TUNJANGAN (FINANCE) =================
+Route::get('/tunjangan', [TunjanganController::class, 'index'])->name('tunjangan.index');
+
+Route::get('/tunjangan/create', [TunjanganController::class, 'create'])->name('tunjangan.create');
+Route::post('/tunjangan/store', [TunjanganController::class, 'store'])->name('tunjangan.store');
+
+Route::get('/tunjangan/edit/{id}', [TunjanganController::class, 'edit'])->name('tunjangan.edit');
+Route::put('/tunjangan/update/{id}', [TunjanganController::class, 'update'])->name('tunjangan.update');
+
+Route::delete('/tunjangan/delete/{id}', [TunjanganController::class, 'destroy'])->name('tunjangan.destroy');
+
+// ================== GAJI ==================
+
+// READ
+Route::get('/gaji', [GajiController::class, 'index'])->name('gaji.index');
+
+// CREATE
+Route::get('/gaji/create', [GajiController::class, 'create'])->name('gaji.create');
+
+Route::post('/gaji/store', [GajiController::class, 'store'])->name('gaji.store');
+
+// UPDATE
+Route::get('/gaji/edit/{id}', [GajiController::class, 'edit'])->name('gaji.edit');
+
+Route::put('/gaji/update/{id}', [GajiController::class, 'update'])->name('gaji.update');
+
+// DELETE
+Route::delete('/gaji/delete/{id}', [GajiController::class, 'destroy'])->name('gaji.destroy');
 
 });

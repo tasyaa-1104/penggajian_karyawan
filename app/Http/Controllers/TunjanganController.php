@@ -10,12 +10,12 @@ class TunjanganController extends Controller
     public function index()
     {
         $tunjangan = Tunjangan::all();
-        return view('admin.tunjangan', compact('tunjangan'));
+        return view('finance.tunjangan', compact('tunjangan'));
     }
 
     public function create()
     {
-        return view('admin.tunjangan-create');
+        return view('finance.tunjangan-create');
     }
 
     public function store(Request $request)
@@ -27,7 +27,7 @@ class TunjanganController extends Controller
     public function edit($id)
     {
         $tunjangan = Tunjangan::findOrFail($id);
-        return view('admin.tunjangan-edit', compact('tunjangan'));
+        return view('finance.tunjangan-edit', compact('tunjangan'));
     }
 
     public function update(Request $request, $id)

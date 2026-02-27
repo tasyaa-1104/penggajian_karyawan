@@ -1,4 +1,4 @@
-@extends('admin.template')
+@extends('finance.template')
 
 @section('content')
 <div class="container mt-4">

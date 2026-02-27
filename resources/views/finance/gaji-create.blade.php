@@ -1,4 +1,4 @@
-@extends('admin.template')
+@extends('finance.template')
 
 @section('title', 'Hitung Gaji Massal')
 

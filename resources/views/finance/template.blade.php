@@ -40,14 +40,14 @@
                 </li>
 
                 <li class="nav-item mb-2">
-                    <a href="#" class="nav-link">
-                        Data Penggajian
+                    <a href="{{route('tunjangan.index')}}" class="nav-link">
+                        Tunjangan
                     </a>
                 </li>
 
                 <li class="nav-item mb-2">
-                    <a href="#" class="nav-link">
-                        Data Karyawan
+                    <a href="{{route('gaji.index')}}" class="nav-link">
+                        Gaji
                     </a>
                 </li>
 
