@@ -54,6 +54,21 @@ class Karyawan extends Model
     {
         return $this->hasMany(Cuti::class, 'id_karyawan');
     }
+
+    public function rekapAbsensi()
+    {
+        return $this->hasMany(rekap_absensi::class, 'id_karyawan');
+    }
+
+     public function slipGaji()
+    {
+        return $this->hasManyThrough(
+            slip_gaji::class,
+            Gaji::class,
+            'id_karyawan', // Foreign key on Gaji table
+            'id_gaji', // Foreign key on slip_gaji table
+            'id_karyawan', // Local key on Karyawan table
+            'id_gaji' // Local key on Gaji table
+        );
+    }
 }
-
-

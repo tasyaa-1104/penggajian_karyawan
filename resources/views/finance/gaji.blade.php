@@ -277,10 +277,10 @@
                                 <div style="display: flex; gap: 6px; justify-content: center;">
 
                                     @if ($g->slipGaji)
-                                        <a href="{{ route('admin.slip-gaji.show', $g->slipGaji->id_slip) }}"
-                                           class="btn-action-sm btn-slip-view"
-                                           title="Lihat Slip">
-                                            <i class="fas fa-eye"></i>
+                                        <a href="{{ route('admin.slip-gaji.download', $g->slipGaji->id_slip) }}"
+                                        class="btn-action-sm btn-slip-view"
+                                        title="Unduh Slip PDF">
+                                            <i class="fas fa-file-pdf"></i>
                                         </a>
                                     @else
                                         <form action="{{ route('admin.slip-gaji.store', $g->id_gaji) }}"

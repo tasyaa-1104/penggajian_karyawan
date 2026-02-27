@@ -19,4 +19,9 @@ class slip_gaji extends Model
     {
         return $this->belongsTo(Gaji::class, 'id_gaji');
     }
+
+    public function karyawan()
+    {
+        return $this->belongsTo(Karyawan::class, 'id_karyawan');
+    }
 }

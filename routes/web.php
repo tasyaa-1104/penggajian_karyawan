@@ -28,22 +28,6 @@ Route::get('/', [HomeController::class, 'index']);
 
 Route::middleware(['role:hrd'])->group(function () {
 
-// ================= SLIP GAJI (ADMIN) =================
-
-// list semua slip
-Route::get('/admin/slip-gaji',
-    [slip_gajiController::class, 'indexAdmin']
-)->name('admin.slip-gaji.index');
-
-// generate slip
-Route::post('/admin/slip-gaji/{id_gaji}',
-    [slip_gajiController::class, 'store']
-)->name('admin.slip-gaji.store');
-
-// detail slip
-Route::get('/admin/slip-gaji/{id}',
-    [slip_gajiController::class, 'showAdmin']
-)->name('admin.slip-gaji.show');
 
 
 Route::get('/admin/dashboard', function () {return view('admin.dashboard');})->name('admin.dashboard');
@@ -171,9 +155,9 @@ Route::get('/karyawan/slip-gaji',
     [slip_gajiController::class, 'indexKaryawan']
 )->name('karyawan.slip-gaji.index');
 
-Route::get('/karyawan/slip-gaji',
-    [slip_gajiController::class, 'showKaryawan']
-)->name('karyawan.slip-gaji.show');
+Route::get('/karyawan/slip-gaji/download',
+    [slip_gajiController::class, 'downloadKaryawan'])
+    ->name('karyawan.slip-gaji.download');
 
 
 
@@ -313,4 +297,22 @@ Route::put('/gaji/update/{id}', [GajiController::class, 'update'])->name('gaji.u
 // DELETE
 Route::delete('/gaji/delete/{id}', [GajiController::class, 'destroy'])->name('gaji.destroy');
 
+
+// ================= SLIP GAJI (ADMIN) =================
+
+// list semua slip
+Route::get('/admin/slip-gaji',
+    [slip_gajiController::class, 'indexAdmin']
+)->name('admin.slip-gaji.index');
+
+// generate slip
+Route::post('/admin/slip-gaji/{id_gaji}',
+    [slip_gajiController::class, 'store']
+)->name('admin.slip-gaji.store');
+
+
+// Admin / Finance download slip
+Route::get('/admin/slip-gaji/{id}/download',
+    [slip_gajiController::class, 'downloadAdmin'])
+    ->name('admin.slip-gaji.download');
 });

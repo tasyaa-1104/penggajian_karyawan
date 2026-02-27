@@ -53,38 +53,36 @@
 
 <h2>SLIP GAJI KARYAWAN</h2>
 
-<p>Nama: {{ $slip->gaji->karyawan->nama_karyawan }}</p>
-<p>NIK: {{ $slip->gaji->karyawan->nik }}</p>
-<p>Jabatan: {{ $slip->gaji->karyawan->jabatan->nama_jabatan }}</p>
+<p><strong>Nama:</strong> {{ $slip->karyawan?->nama_karyawan ?? '-' }}</p>
+<p><strong>NIK:</strong> {{ $slip->karyawan?->nik ?? '-' }}</p>
+<p><strong>Jabatan:</strong> {{ $slip->karyawan?->jabatan?->nama_jabatan ?? '-' }}</p>
+<p><strong>Bulan:</strong> {{ $slip->bulan }}</p>
 
-<p>Bulan:
-{{ $slip->gaji->bulan }} / {{ $slip->gaji->tahun }}
-</p>
+<div class="line"></div>
 
-<hr>
+<table>
+    <tr>
+        <td>Gaji Pokok</td>
+        <td>Rp {{ number_format($slip->gaji_pokok,0,',','.') }}</td>
+    </tr>
+    <tr>
+        <td>Tunjangan</td>
+        <td>Rp {{ number_format($slip->total_tunjangan,0,',','.') }}</td>
+    </tr>
+    <tr>
+        <td>Lembur</td>
+        <td>Rp {{ number_format($slip->total_overtime ?? 0,0,',','.') }}</td>
+    </tr>
+    <tr>
+        <td>Potongan</td>
+        <td>Rp {{ number_format($slip->total_potongan,0,',','.') }}</td>
+    </tr>
+</table>
 
-<p>Gaji Pokok:
-Rp {{ number_format($slip->gaji->gaji_pokok) }}
-</p>
+<div class="line"></div>
 
-<p>Overtime:
-Rp {{ number_format($slip->gaji->total_overtime) }}
-</p>
-
-<p>Tunjangan:
-Rp {{ number_format($slip->gaji->total_tunjangan) }}
-</p>
-
-<p>Potongan:
-Rp {{ number_format($slip->gaji->total_potongan) }}
-</p>
-
-<hr>
-
-<h3>
-Total Gaji Bersih:
-Rp {{ number_format($slip->gaji->gaji_bersih) }}
-</h3>
+<h3>Total Gaji Bersih:
+Rp {{ number_format($slip->gaji_bersih,0,',','.') }}</h3>
 
 </body>
 </html>

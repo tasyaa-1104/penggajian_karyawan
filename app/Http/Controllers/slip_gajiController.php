@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\slip_gaji;
 use App\Models\Gaji;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class slip_gajiController extends Controller
 {
@@ -106,6 +108,43 @@ public function showKaryawan()
     }
 
     return view('slip-gaji-show', compact('slip'));
+}
+
+public function downloadKaryawan()
+{
+    $user = Auth::user();
+
+    // Ambil gaji terakhir milik karyawan
+    $gaji = Gaji::where('id_karyawan', $user->karyawan->id_karyawan)
+                ->latest()
+                ->first();
+
+    if (!$gaji) {
+        return back()->with('error', 'Gaji belum tersedia');
+    }
+
+    // Ambil slip gaji berdasarkan id_gaji
+    $slip = slip_gaji::where('id_gaji', $gaji->id_gaji)
+                    ->latest()
+                    ->first();
+
+    if (!$slip) {
+        return back()->with('error', 'Slip gaji belum tersedia');
+    }
+
+    $pdf = Pdf::loadView('slip-gaji', compact('slip'));
+
+    return $pdf->download('slip-gaji-'.$slip->gaji->karyawan->nama_karyawan.'.pdf');
+}
+
+public function downloadAdmin($id)
+{
+    $slip = slip_gaji::with(['karyawan'])->findOrFail($id);
+
+    $pdf = Pdf::loadView('finance.slip-gaji', compact('slip'));
+
+    $nama = $slip->karyawan?->nama_karyawan ?? 'karyawan';
+    return $pdf->download('slip-gaji-'.$nama.'.pdf');
 }
 
 

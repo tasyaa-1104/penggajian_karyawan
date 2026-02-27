@@ -344,8 +344,8 @@
                 </div>
             </div>
 
-            <a href="{{ route('karyawan.slip-gaji.show') }}" class="btn-web">
-                📄 Lihat Slip Gaji
+            <a href="{{ route('karyawan.slip-gaji.download') }}" class="btn-web">
+                📥 Unduh Slip Gaji (PDF)
             </a>
 
 
