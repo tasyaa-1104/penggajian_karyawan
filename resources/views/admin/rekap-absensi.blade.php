@@ -286,6 +286,16 @@
             </a>
         </div>
 
+        <div style="margin-bottom:15px; display:flex; gap:10px;">
+    <a href="{{ route('rekap-absensi.excel') }}" class="btn btn-add">
+        <i class="fas fa-file-excel"></i> Export Excel
+    </a>
+
+    <a href="{{ route('rekap-absensi.pdf') }}" class="btn btn-add">
+        <i class="fas fa-file-pdf"></i> Export PDF
+    </a>
+</div>
+
         <!-- INFO CARD (PANDUAN) -->
         <div class="info-card">
             <div class="info-icon">

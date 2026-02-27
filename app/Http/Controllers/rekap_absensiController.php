@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+
+use App\Exports\RekapAbsensiExport;
+use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\rekap_absensi;
 use App\Models\Absensi;
 use App\Models\Karyawan;
@@ -168,4 +172,18 @@ if ($tanggalMasuk->gt($carbon->copy()->endOfMonth())) {
             ->route('rekap-absensi.index')
             ->with('success', 'Rekap dihapus');
     }
+
+    public function exportExcel()
+{
+    return Excel::download(new RekapAbsensiExport, 'rekap-absensi.xlsx');
+}
+
+public function exportPDF()
+{
+    $rekap = rekap_absensi::with('karyawan')->get();
+
+    $pdf = Pdf::loadView('admin.rekap-absensi-pdf', compact('rekap'));
+
+    return $pdf->download('rekap-absensi.pdf');
+}
 }

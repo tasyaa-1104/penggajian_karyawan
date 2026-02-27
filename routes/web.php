@@ -216,6 +216,13 @@ Route::prefix('hrd')->middleware(['web','role:hrd'])->group(function () {
 
     Route::put('/overtime/{id}/approve', [OvertimeController::class, 'approve'])
         ->name('overtime.approve');
+        
+        Route::get('/rekap-absensi/excel', [rekap_absensiController::class, 'exportExcel'])
+    ->name('rekap-absensi.excel');
+
+Route::get('/rekap-absensi/pdf', [rekap_absensiController::class, 'exportPDF'])
+    ->name('rekap-absensi.pdf');
+
 
 });
 use Illuminate\Support\Facades\Auth;
