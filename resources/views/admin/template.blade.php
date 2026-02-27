@@ -388,7 +388,7 @@
             </a>
         </li>
 
-        <li class="nav-item">
+        {{-- <li class="nav-item">
             <a href="{{ route('tunjangan.index') }}"
                class="nav-link {{ request()->routeIs('tunjangan*') ? 'active' : '' }}">
                 <i class="fa-solid fa-hand-holding-dollar"></i> Tunjangan
@@ -400,7 +400,7 @@
                class="nav-link {{ request()->routeIs('gaji*') ? 'active' : '' }}">
                 <i class="fa-solid fa-sack-dollar"></i> Gaji
             </a>
-        </li>
+        </li> --}}
 
         <li class="nav-item">
             <a href="{{ route('overtime.index') }}"
