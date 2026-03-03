@@ -1,90 +1,202 @@
-{{-- @extends('template')
-
-@section('content')
-<div class="container mt-4">
-    <h4>Slip Gaji Karyawan</h4>
-
-   @if($slip->isEmpty())
-    <div class="alert alert-info">
-        Slip gaji belum tersedia. Silakan hubungi admin.
-    </div>
-@else
-    <table class="table">
-        <tr>
-            <th>Bulan</th>
-            <th>Gaji Bersih</th>
-            <th>Aksi</th>
-        </tr>
-        @foreach($slip as $s)
-        <tr>
-            <td>{{ $s->gaji->bulan }}</td>
-            <td>
-                Rp {{ number_format($s->gaji->gaji_bersih,0,',','.') }}
-            </td>
-            <td>
-                <a href="{{ route('karyawan.slip-gaji.show', $s->id_slip) }}"
-                   class="btn btn-info btn-sm">
-                    Detail
-                </a>
-            </td>
-        </tr>
-        @endforeach
-    </table>
-@endif
-
-</div>
-@endsection --}}
-
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
     <meta charset="utf-8">
     <title>Slip Gaji</title>
     <style>
-        body { font-family: sans-serif; }
-        .container { width: 100%; }
-        h2 { text-align: center; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        td { padding: 8px; }
-        .line { border-top: 2px solid #000; margin: 20px 0; }
+        /* Font Standar (Arial) */
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #fff;
+            color: #000;
+            margin: 0;
+            padding: 20px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            border: 1px solid #000; /* Garis luar dokumen */
+            padding: 30px;
+            position: relative;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #000;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 22px;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .header p {
+            margin: 5px 0 0;
+            font-size: 12px;
+        }
+
+        /* Informasi Karyawan */
+        .info-section {
+            margin-bottom: 25px;
+        }
+
+        .info-row {
+            display: flex;
+            margin-bottom: 8px;
+        }
+
+        .info-label {
+            width: 120px;
+            font-weight: bold;
+        }
+
+        .info-value {
+            flex: 1;
+            border-bottom: 1px dotted #999; /* Garis putus-putus */
+        }
+
+        /* Tabel Gaji */
+        table.salary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 10px;
+        }
+
+        table.salary-table th,
+        table.salary-table td {
+            border: 1px solid #000;
+            padding: 10px 12px;
+        }
+
+        table.salary-table th {
+            background-color: #eee;
+            text-align: left;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 12px;
+        }
+
+        .amount-col {
+            text-align: right !important;
+            font-family: 'Courier New', Courier, monospace; /* Angka tetap monospace agar rapi */
+        }
+
+        .deduction-row {
+            font-weight: bold;
+        }
+
+        .total-row td {
+            background-color: #f9f9f9;
+            font-weight: bold;
+            border-top: 2px solid #000;
+        }
+
+        /* Footer */
+        .footer-note {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 11px;
+            color: #666;
+            border-top: 1px solid #eee;
+            padding-top: 10px;
+        }
+
+        /* Metadata Tanggal */
+        .doc-meta {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            text-align: right;
+            font-size: 11px;
+        }
     </style>
 </head>
 <body>
 
-<h2>SLIP GAJI KARYAWAN</h2>
+<div class="container">
 
-<p>Nama: {{ $slip->gaji->karyawan->nama_karyawan }}</p>
-<p>NIK: {{ $slip->gaji->karyawan->nik }}</p>
-<p>Jabatan: {{ $slip->gaji->karyawan->jabatan->nama_jabatan }}</p>
+    <!-- Metadata Dokumen -->
+    <div class="doc-meta">
+        <p>Tgl Cetak: <br>
+        @php use Carbon\Carbon; @endphp
+        <strong>{{ Carbon::parse($slip->tanggal_cetak)->format('d-m-Y') }}</strong></p>
+    </div>
 
-<p>Bulan:
-{{ $slip->gaji->bulan }} / {{ $slip->gaji->tahun }}
-</p>
+    <!-- Header -->
+    <div class="header">
+        <h1>Slip Gaji Karyawan</h1>
+        <p>Periode: {{ $slip->gaji->bulan }} {{ $slip->gaji->tahun }}</p>
+    </div>
 
-<hr>
+    <!-- Info Karyawan -->
+    <div class="info-section">
+        <div class="info-row">
+        <table style="margin-bottom: 10px;">
+            <tr>
+                <td style="width:120px;"><strong>Nama</strong></td>
+                <td style="width:20px;">:</td>
+                <td>{{ $slip->gaji->karyawan->nama_karyawan }}</td>
+            </tr>
+            <tr>
+                <td><strong>NIK</strong></td>
+                <td>:</td>
+                <td>{{ $slip->gaji->karyawan->nik }}</td>
+            </tr>
+            <tr>
+                <td><strong>Jabatan</strong></td>
+                <td>:</td>
+                <td>{{ $slip->gaji->karyawan->jabatan->nama_jabatan }}</td>
+            </tr>
+        </table>
+    </div>
 
-<p>Gaji Pokok:
-Rp {{ number_format($slip->gaji->gaji_pokok) }}
-</p>
+    <!-- Tabel Rincian Gaji -->
+    <h3 style="margin-bottom: 10px; border-bottom: 1px solid #000; padding-bottom: 5px;">Rincian Penghasilan</h3>
+    <table class="salary-table">
+        <thead>
+            <tr>
+                <th width="70%">Keterangan</th>
+                <th width="30%" class="amount-col">Jumlah (Rp)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Gaji Pokok</td>
+                <td class="amount-col">{{ number_format($slip->gaji->karyawan->gaji_pokok) }}</td>
+            </tr>
+            <tr>
+                <td>Overtime (Lembur)</td>
+                <td class="amount-col">{{ number_format($slip->gaji->total_overtime) }}</td>
+            </tr>
+            <tr>
+                <td>Tunjangan</td>
+                <td class="amount-col">{{ number_format($slip->gaji->total_tunjangan) }}</td>
+            </tr>
+            <tr class="deduction-row">
+                <td>(-) Potongan</td>
+                <td class="amount-col">({{ number_format($slip->gaji->total_potongan) }})</td>
+            </tr>
+            <tr class="total-row">
+                <td style="text-align: right;">TOTAL GAJI BERSIH</td>
+                <td class="amount-col">{{ number_format($slip->gaji->gaji_bersih) }}</td>
+            </tr>
+        </tbody>
+    </table>
 
-<p>Overtime:
-Rp {{ number_format($slip->gaji->total_overtime) }}
-</p>
+    <!-- Catatan Kaki -->
+    <div class="footer-note">
+        <p>Dokumen ini diterbitkan secara elektronik oleh sistem dan sah tanpa tanda tangan basah.</p>
+    </div>
 
-<p>Tunjangan:
-Rp {{ number_format($slip->gaji->total_tunjangan) }}
-</p>
-
-<p>Potongan:
-Rp {{ number_format($slip->gaji->total_potongan) }}
-</p>
-
-<hr>
-
-<h3>
-Total Gaji Bersih:
-Rp {{ number_format($slip->gaji->gaji_bersih) }}
-</h3>
+</div>
 
 </body>
 </html>

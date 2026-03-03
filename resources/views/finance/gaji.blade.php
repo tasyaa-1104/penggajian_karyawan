@@ -210,9 +210,16 @@
         <!-- HEADER & TOMBOL HITUNG -->
         <div class="page-header">
             <h4 class="page-title">Daftar Gaji</h4>
-            <a href="{{ route('gaji.create') }}" class="btn-modern btn-add">
-                <i class="fas fa-calculator"></i> Hitung Gaji
-            </a>
+
+            <div style="display:flex; gap:10px;">
+                <a href="{{ route('gaji.pdf') }}" class="btn-modern btn-add">
+                    <i class="fas fa-file-pdf"></i> Unduh PDF
+                </a>
+
+                <a href="{{ route('gaji.create') }}" class="btn-modern btn-add">
+                    <i class="fas fa-calculator"></i> Hitung Gaji
+                </a>
+            </div>
         </div>
 
         <!-- ALERT SUKSES -->

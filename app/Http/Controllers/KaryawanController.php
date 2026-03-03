@@ -7,6 +7,7 @@ use App\Models\Divisi;
 use App\Models\Jabatan;
 use App\Models\Karyawan;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -131,11 +132,38 @@ class KaryawanController extends Controller
                             ->where('status_kehadiran', 'Alpha')
                             ->count();
 
+        // Ambil riwayat absensi
+        $absensi = Absensi::where('id_karyawan', $karyawan->id_karyawan)
+            ->orderBy('tanggal', 'desc')
+            ->get();
+
+        // Ambil riwayat cuti (pastikan relasi/model Cuti ada)
+        $cuti = [];
+        if (method_exists($karyawan, 'cuti')) {
+            $cuti = $karyawan->cuti()->orderBy('tanggal_mulai', 'desc')->get();
+        } elseif (class_exists('App\\Models\\Cuti')) {
+            $cuti = \App\Models\Cuti::where('id_karyawan', $karyawan->id_karyawan)
+                ->orderBy('tanggal_mulai', 'desc')
+                ->get();
+        }
+
         return view('karyawan-dashboard', compact(
             'karyawan',
             'totalHadir',
             'totalIzin',
-            'totalAlpha'
+            'totalAlpha',
+            'absensi',
+            'cuti'
         ));
+    }
+
+    public function exportPdf()
+    {
+        $karyawans = Karyawan::with('divisi','jabatan')->get();
+
+        $pdf = Pdf::loadView('admin.karyawan_pdf', compact('karyawans'))
+                ->setPaper('A4', 'landscape');
+
+        return $pdf->download('Data_Karyawan.pdf');
     }
 }

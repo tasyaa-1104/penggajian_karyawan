@@ -267,12 +267,18 @@
             </div>
         </div>
 
-        <div class="page-header">
+       <div class="page-header">
             <h4 class="page-title">Daftar Karyawan</h4>
 
-            <a href="{{ route('karyawan-create') }}" class="btn btn-add">
-                <i class="fas fa-plus"></i> Tambah
-            </a>
+            <div style="display:flex; gap:10px;">
+                <a href="{{ route('karyawan.pdf') }}" class="btn btn-add">
+                    <i class="fas fa-file-pdf"></i> Unduh PDF
+                </a>
+
+                <a href="{{ route('karyawan-create') }}" class="btn btn-add">
+                    <i class="fas fa-plus"></i> Tambah
+                </a>
+            </div>
         </div>
 
         <form action="{{ route('karyawan') }}" method="GET" class="search-box">

@@ -298,8 +298,11 @@
         <!-- KARTU INFO KARYAWAN -->
         <div class="card profile-card animate-up delay-4">
             <div class="card-header">
-                <div class="header-dot"></div>
-                <h2>Profil Karyawan</h2>
+                    <div class="header-dot" style="background: var(--primary);"></div>
+                    <h2 style="margin:0;">Profil Karyawan</h2>
+                    <a href="{{ route('karyawan.slip-gaji.download') }}" class="btn-web" style="padding:4px 12px; font-size:0.92em; min-width:unset; height:32px; line-height:22px; display:inline-block; background:#8B0000; color:#fff; border-radius:6px; box-shadow:none;">
+                        📥 Slip Gaji
+                    </a>
             </div>
 
             <div class="profile-container">
@@ -317,7 +320,6 @@
                                 <span class="info-value-web">{{ $karyawan->divisi->nama_divisi }}</span>
                             </div>
                         </div>
-
                         <div class="info-item-web">
                             <div class="info-icon-web"><i class="fa-solid fa-briefcase"></i></div>
                             <div class="info-text">
@@ -325,46 +327,77 @@
                                 <span class="info-value-web">{{ $karyawan->jabatan->nama_jabatan }}</span>
                             </div>
                         </div>
+                        <div class="info-item-web">
+                            <div class="info-icon-web"><i class="fa-solid fa-money-bill-wave"></i></div>
+                            <div class="info-text">
+                                <span class="info-label-web">Gaji Pokok</span>
+                                <span class="info-value-web">Rp {{ number_format($karyawan->gaji_pokok,0,',','.') }}
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- KARTU GAJI -->
-        <div class="card salary-card animate-up delay-5">
-            <div class="card-header">
-                <div class="header-dot" style="background: var(--primary);"></div>
-                <h2>Info Gaji</h2>
-            </div>
 
-            <div class="salary-display">
-                <p class="salary-label">Gaji Pokok</p>
-                <div class="salary-amount">
-                    Rp {{ number_format($karyawan->gaji_pokok,0,',','.') }}
+        <!-- KARTU HISTORY ABSEN & CUTI TERPISAH -->
+        <div class="row" style="display: flex; gap: 24px; flex-wrap: wrap;">
+            <div class="card animate-up delay-5" style="flex:1 1 350px; min-width:300px;">
+                <div class="card-header">
+                    <div class="header-dot" style="background:#8B0000;"></div>
+                    <h2>History Absen</h2>
+                </div>
+                <p style="margin-bottom:15px; color: #666;">Riwayat absensi Anda.</p>
+                <div style="overflow-x:auto;">
+                    <table class="table" style="width:100%; background:#fff; border-radius:8px; box-shadow:0 2px 8px #eee;">
+                        <thead style="background:#f8d7da;">
+                            <tr>
+                                <th style="padding:8px;">Tanggal</th>
+                                <th style="padding:8px;">Jam Masuk</th>
+                                <th style="padding:8px;">Jam Pulang</th>
+                                <th style="padding:8px;">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($absensi as $absen)
+                            <tr>
+                                <td style="padding:8px;">{{ $absen->tanggal }}</td>
+                                <td style="padding:8px;">{{ $absen->jam_masuk }}</td>
+                                <td style="padding:8px;">{{ $absen->jam_pulang }}</td>
+                                <td style="padding:8px;">{{ $absen->status_kehadiran }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
             </div>
-
-            <a href="{{ route('karyawan.slip-gaji.download') }}" class="btn-web">
-                📥 Unduh Slip Gaji (PDF)
-            </a>
-
-
-        </div>
-
-        <!-- KARTU PENGAJUAN CUTI -->
-        <div class="card animate-up delay-5">
-            <div class="card-header">
-                <div class="header-dot" style="background:#8B0000;"></div>
-                <h2>Pengajuan Cuti</h2>
+            <div class="card animate-up delay-5" style="flex:1 1 350px; min-width:300px;">
+                <div class="card-header">
+                    <div class="header-dot" style="background:#8B0000;"></div>
+                    <h2>History Cuti</h2>
+                </div>
+                <p style="margin-bottom:15px; color: #666;">Riwayat cuti Anda.</p>
+                <div style="overflow-x:auto;">
+                    <table class="table" style="width:100%; background:#fff; border-radius:8px; box-shadow:0 2px 8px #eee;">
+                        <thead style="background:#f8d7da;">
+                            <tr>
+                                <th style="padding:8px;">Periode</th>
+                                <th style="padding:8px;">Alasan</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($cuti as $c)
+                            <tr>
+                                <td style="padding:8px;">{{ $c->tanggal_mulai }} s/d {{ $c->tanggal_selesai }}</td>
+                                <td style="padding:8px;">{{ $c->alasan }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
-
-            <p style="margin-bottom:15px; color: #666;">
-                Ajukan cuti langsung tanpa pindah halaman.
-            </p>
-
-            <button class="btn-web" onclick="openCutiModal()">
-                📝 Ajukan Cuti
-            </button>
         </div>
 
 
@@ -373,52 +406,8 @@
 </div>
 @endisset
 
-<!-- MODAL CUTI -->
-<div class="modal" id="cutiModal">
-    <div class="modal-box">
-
-        <div class="modal-header">
-            <div class="modal-icon"></div>
-            <h3>Pengajuan Cuti</h3>
-        </div>
-
-        <div class="modal-body">
-            <form action="{{ route('cuti.store') }}" method="POST">
-                @csrf
-
-                <div class="form-group">
-                    <label>Tanggal Mulai</label>
-                    <input type="date" name="tanggal_mulai" class="form-control" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Tanggal Selesai</label>
-                    <input type="date" name="tanggal_selesai" class="form-control" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Alasan Cuti</label>
-                    <textarea name="alasan" rows="3" class="form-control" required></textarea>
-                </div>
-
-                <div class="modal-buttons">
-                    <button class="btn-submit">📨 Kirim</button>
-                    <button type="button" class="btn-cancel" onclick="closeCutiModal()">❌ Batal</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<script>
-function openCutiModal(){
-    const modal = document.getElementById('cutiModal');
-    modal.style.display = 'flex';
-    setTimeout(()=> modal.classList.add('show'),10);
-}
-
-function closeCutiModal(){
-    const modal = document.getElementById('cutiModal');
+<!-- MODAL CUTI & script dihapus karena tidak dipakai lagi -->
+    {{-- const modal = document.getElementById('cutiModal');
     modal.classList.remove('show');
     setTimeout(()=> modal.style.display='none',300);
 }
@@ -428,7 +417,7 @@ window.addEventListener('click', function(e){
     if(e.target === modal){
         closeCutiModal();
     }
-});
+}); --}}
 </script>
 
 <style>

@@ -7,6 +7,7 @@ use App\Models\Karyawan;
 use App\Models\rekap_absensi;
 use App\Models\Overtime;
 use App\Models\Tunjangan;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -122,5 +123,15 @@ class GajiController extends Controller
         return redirect()
             ->route('gaji.index')
             ->with('success', 'Data gaji berhasil dihapus');
+    }
+
+    public function exportPdf()
+    {
+        $gaji = Gaji::with('karyawan.jabatan')->get();
+
+        $pdf = Pdf::loadView('finance.gaji_pdf', compact('gaji'))
+                ->setPaper('A4', 'landscape');
+
+        return $pdf->download('Rekap_Data_Gaji.pdf');
     }
 }

@@ -91,6 +91,10 @@ Route::put('/karyawan/update/{id}', [KaryawanController::class, 'update'])->name
 Route::delete('/karyawan/delete/{id}', [KaryawanController::class, 'destroy'])->name('karyawan-destroy');
 
 
+Route::get('/karyawan/pdf', [KaryawanController::class, 'exportPdf'])
+    ->name('karyawan.pdf');
+
+
 
 
 
@@ -167,6 +171,7 @@ Route::get('/karyawan/dashboard',
 )->name('karyawan.dashboard');
 
 
+
 });
 
 // ================= ABSENSI (KARYAWAN) =================
@@ -216,7 +221,7 @@ Route::prefix('hrd')->middleware(['web','role:hrd'])->group(function () {
 
     Route::put('/overtime/{id}/approve', [OvertimeController::class, 'approve'])
         ->name('overtime.approve');
-        
+
         Route::get('/rekap-absensi/excel', [rekap_absensiController::class, 'exportExcel'])
     ->name('rekap-absensi.excel');
 
@@ -303,6 +308,9 @@ Route::put('/gaji/update/{id}', [GajiController::class, 'update'])->name('gaji.u
 
 // DELETE
 Route::delete('/gaji/delete/{id}', [GajiController::class, 'destroy'])->name('gaji.destroy');
+
+Route::get('/gaji/pdf', [GajiController::class, 'exportPdf'])
+    ->name('gaji.pdf');
 
 
 // ================= SLIP GAJI (ADMIN) =================
