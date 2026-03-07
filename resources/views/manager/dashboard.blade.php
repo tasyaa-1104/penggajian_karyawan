@@ -66,22 +66,22 @@
         </div>
     </div>
 
+    {{-- LEMBUR DITOLAK --}}
+    <div class="col-md-3">
+        <div class="card bg-danger text-white shadow">
+            <div class="card-body">
+                <h6>Lembur Ditolak</h6>
+                <h3>{{ $overtime_rejected ?? 0 }}</h3>
+            </div>
+        </div>
+    </div>
+
     {{-- ABSENSI HARI INI --}}
     <div class="col-md-3">
         <div class="card bg-dark text-white shadow">
             <div class="card-body">
                 <h6>Absensi Hari Ini</h6>
                 <h3>{{ $absensi_hari_ini ?? 0 }}</h3>
-            </div>
-        </div>
-    </div>
-
-    {{-- TOTAL LEMBUR BULAN INI --}}
-    <div class="col-md-3">
-        <div class="card bg-success text-white shadow">
-            <div class="card-body">
-                <h6>Lembur Bulan Ini</h6>
-                <h3>{{ $overtime_bulan_ini ?? 0 }}</h3>
             </div>
         </div>
     </div>

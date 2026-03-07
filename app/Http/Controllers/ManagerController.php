@@ -10,7 +10,6 @@ use App\Models\Cuti;
 use App\Models\Overtime;
 use App\Models\Absensi;
 
-
 class ManagerController extends Controller
 {
 
@@ -27,12 +26,9 @@ class ManagerController extends Controller
 
         $overtime_pending = Overtime::where('status','pending')->count();
         $overtime_approved = Overtime::where('status','approved')->count();
+        $overtime_rejected = Overtime::where('status','rejected')->count(); // tambah ini
 
         $absensi_hari_ini = Absensi::whereDate('tanggal', Carbon::today())->count();
-
-        $overtime_bulan_ini = Overtime::whereMonth('tanggal', Carbon::now()->month)
-            ->where('status','approved')
-            ->sum('total_jam');
 
         return view('manager.dashboard', compact(
             'jumlah_karyawan',
@@ -41,8 +37,8 @@ class ManagerController extends Controller
             'cuti_ditolak',
             'overtime_pending',
             'overtime_approved',
-            'absensi_hari_ini',
-            'overtime_bulan_ini'
+            'overtime_rejected',
+            'absensi_hari_ini'
         ));
     }
 
@@ -70,13 +66,14 @@ class ManagerController extends Controller
         return view('manager.laporan-index', compact('laporan'));
     }
 
-  
+    /**
+     * Data Karyawan
+     */
+    public function karyawan()
+    {
+        $karyawan = Karyawan::orderBy('nama_karyawan','asc')->get();
 
-public function karyawan()
-{
-    $karyawan = Karyawan::orderBy('nama_karyawan','asc')->get();
-
-    return view('manager.karyawan-index', compact('karyawan'));
-}
+        return view('manager.karyawan-index', compact('karyawan'));
+    }
 
 }
