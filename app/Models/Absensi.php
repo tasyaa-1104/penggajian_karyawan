@@ -26,4 +26,8 @@ class Absensi extends Model
     {
         return $this->belongsTo(Karyawan::class, 'id_karyawan');
     }
+   public function overtime()
+{
+    return $this->hasOne(Overtime::class, 'karyawan_id', 'id_karyawan');
+}
 }

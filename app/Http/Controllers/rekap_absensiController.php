@@ -177,7 +177,7 @@ if ($tanggalMasuk->gt($carbon->copy()->endOfMonth())) {
 {
     return Excel::download(new RekapAbsensiExport, 'rekap-absensi.xlsx');
 }
-
+  
 public function exportPDF()
 {
     $rekap = rekap_absensi::with('karyawan')->get();

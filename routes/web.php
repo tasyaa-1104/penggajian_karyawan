@@ -211,16 +211,16 @@ Route::post('/login', [UserController::class, 'login'])
 
 use App\Http\Controllers\OvertimeController;
 
-Route::prefix('hrd')->middleware(['web','role:hrd'])->group(function () {
+// Route::prefix('hrd')->middleware(['web','role:hrd'])->group(function () {
 
-    Route::get('/overtime', [OvertimeController::class, 'index'])
-        ->name('overtime.index');
+//     Route::get('/overtime', [OvertimeController::class, 'index'])
+//         ->name('overtime.index');
 
-    Route::post('/overtime/store', [OvertimeController::class, 'store'])
-        ->name('overtime.store');
+//     Route::post('/overtime/store', [OvertimeController::class, 'store'])
+//         ->name('overtime.store');
 
-    Route::put('/overtime/{id}/approve', [OvertimeController::class, 'approve'])
-        ->name('overtime.approve');
+//     Route::put('/overtime/{id}/approve', [OvertimeController::class, 'approve'])
+//         ->name('overtime.approve');
 
         Route::get('/rekap-absensi/excel', [rekap_absensiController::class, 'exportExcel'])
     ->name('rekap-absensi.excel');
@@ -229,7 +229,6 @@ Route::get('/rekap-absensi/pdf', [rekap_absensiController::class, 'exportPDF'])
     ->name('rekap-absensi.pdf');
 
 
-});
 use Illuminate\Support\Facades\Auth;
 
 Route::post('/logout', function () {
@@ -331,3 +330,47 @@ Route::get('/admin/slip-gaji/{id}/download',
     [slip_gajiController::class, 'downloadAdmin'])
     ->name('admin.slip-gaji.download');
 });
+
+
+
+Route::get('/overtime', [OvertimeController::class, 'index'])
+    ->name('overtime.index');
+
+Route::post('/overtime/store', [OvertimeController::class, 'store'])
+    ->name('overtime.store');
+
+Route::post('/overtime/generate', [OvertimeController::class, 'generateFromAbsensi'])
+    ->name('overtime.generate');
+
+Route::delete('/overtime/{id}', [OvertimeController::class, 'destroy'])
+    ->name('overtime.destroy');
+
+
+/*
+|--------------------------------------------------------------------------
+| MANAGER
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/manager/persetujuan-lembur', [OvertimeController::class, 'indexManager'])
+    ->name('manager.overtime');
+Route::put('/overtime/{id}/approve', [OvertimeController::class, 'approve'])
+    ->name('overtime.approve');
+
+Route::put('/overtime/{id}/reject', [OvertimeController::class, 'reject'])
+    ->name('overtime.reject');
+
+
+
+Route::get('/manager/dashboard', [ManagerController::class, 'dashboard'])
+    ->name('manager.dashboard');
+
+Route::get('/manager/overtime', [ManagerController::class, 'indexManager'])
+    ->name('manager.overtime');
+Route::get('/manager/laporan', [ManagerController::class, 'laporan'])
+->name('manager.laporan');
+
+
+
+Route::get('/manager/karyawan', [ManagerController::class, 'karyawan'])
+    ->name('manager.karyawan');

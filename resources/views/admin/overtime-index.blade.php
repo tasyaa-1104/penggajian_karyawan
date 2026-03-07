@@ -305,19 +305,12 @@
                             </td>
 
                             {{-- AKSI --}}
-                            <td style="text-align: center;">
-                                <div style="display:flex; gap:6px; justify-content:center;">
-                                    {{-- APPROVE --}}
-                                    @if($overtime->status == 'pending')
-                                        <form action="{{ route('overtime.approve', $overtime->id) }}" method="POST" style="display:inline;">
-                                            @csrf
-                                            @method('PUT')
-                                            <button class="btn-action-sm btn-approve" title="Setujui">
-                                                <i class="fas fa-check"></i>
-                                            </button>
-                                        </form>
-                                    @endif
+                           <td style="text-align: center;">
+    <form action="{{ route('overtime.destroy', $overtime->id) }}" method="POST"
+          onsubmit="return confirm('Yakin hapus overtime ini?')">
 
+        @csrf
+     
                                     {{-- HAPUS --}}
                                     <form action="{{ route('overtime.destroy', $overtime->id) }}" method="POST" style="display:inline;"
                                           onsubmit="return confirm('Yakin hapus overtime ini?')">
@@ -357,13 +350,12 @@
                 Sistem akan otomatis mendeteksi data absensi yang melebihi jam kerja normal dan membuat data overtime baru.
             </p>
 
-            <form action="{{ route('overtime.generate') }}" method="POST">
-                @csrf
-                <button type="submit" class="modal-btn">
-                    <i class="fas fa-sync-alt"></i> Generate dari Absensi
-                </button>
-            </form>
-
+           <form action="{{ route('overtime.generate') }}" method="POST">
+    @csrf
+    <button type="submit" class="modal-btn">
+        <i class="fas fa-sync-alt"></i> Generate dari Absensi
+    </button>
+</form>
             <button class="btn-close-modal" onclick="closeModal()">Batal</button>
         </div>
     </div>

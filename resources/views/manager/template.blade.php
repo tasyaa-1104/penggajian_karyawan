@@ -58,17 +58,23 @@
         <i class="bi bi-speedometer2"></i> Dashboard
     </a>
 
-    <a href="#">
-        <i class="bi bi-people"></i> Data Karyawan
-    </a>
-
+  <li>
+<a href="{{ route('manager.karyawan') }}">
+Data Karyawan
+</a>
+</li>
     <a href="#">
         <i class="bi bi-calendar-check"></i> Persetujuan Cuti
     </a>
+    <a href="{{ route('manager.overtime') }}">
+    <i class="bi bi-clock-history"></i> Persetujuan Lembur
+</a>
 
-    <a href="#">
-        <i class="bi bi-bar-chart"></i> Laporan
-    </a>
+   <li>
+<a href="{{ route('manager.laporan') }}">
+Laporan
+</a>
+</li>
 
     <hr>
 
