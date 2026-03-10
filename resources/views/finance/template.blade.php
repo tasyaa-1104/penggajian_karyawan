@@ -18,29 +18,63 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            /* --- PERBAIKAN LAYOUT (Agar pas di layar, tidak scroll ganda) --- */
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
         }
 
-        /* 1. Navbar Maroon */
-        .navbar-maroon {
-            background-color: var(--maroon-primary) !important;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        /* Container Fluid agar mengisi layar penuh */
+        .container-fluid {
+            flex-grow: 1;
+            display: flex;
+            padding: 0; /* Hapus padding default agar sidebar mentok pinggir */
         }
 
-        /* 2. Sidebar Maroon */
+        /* Row agar mengisi tinggi container */
+        .row {
+            flex-grow: 1;
+            margin: 0;
+            width: 100%;
+        }
+
+        /* 2. Sidebar Maroon (Sekarang jadi pengganti Navbar utama) */
         .sidebar-maroon {
             background-color: var(--maroon-primary) !important;
-            min-height: 100vh;
             color: white;
-            padding-top: 20px;
+            display: flex;
+            flex-direction: column;
+            height: 100%; /* Tinggi sidebar mengikuti layar */
         }
 
-        .sidebar-maroon h6 {
+        /* Bagian User Info di Atas Sidebar */
+        .sidebar-user-info {
+            padding: 30px 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            background-color: rgba(0,0,0,0.1); /* Sedikit gelap */
+        }
+
+        .sidebar-user-info h5 {
+            font-weight: 700;
+            margin-bottom: 0;
+            font-size: 1.1rem;
+        }
+
+        .sidebar-user-info small {
+            opacity: 0.8;
+            font-size: 0.8rem;
+        }
+
+        .sidebar-menu-title {
             color: rgba(255,255,255,0.7);
             font-weight: 600;
             text-transform: uppercase;
-            font-size: 0.8rem;
-            margin-bottom: 20px;
-            padding-left: 10px;
+            font-size: 0.75rem;
+            margin: 20px 0 10px 15px;
         }
 
         /* Styling Link Sidebar */
@@ -48,8 +82,8 @@
             color: rgba(255,255,255,0.9);
             border-radius: 0 25px 25px 0;
             margin-bottom: 5px;
-            padding: 12px 15px;
-            transition: all 0.3s ease; /* Animasi Transisi */
+            padding: 12px 20px;
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
             gap: 12px;
@@ -60,7 +94,7 @@
         .nav-link-custom:hover {
             background-color: var(--maroon-dark);
             color: white;
-            padding-left: 25px; /* Animasi Geser Kanan */
+            padding-left: 25px;
             text-decoration: none;
         }
 
@@ -72,36 +106,39 @@
         }
 
         .nav-link-custom:hover i {
-            transform: scale(1.3) rotate(10deg); /* Ikon membesar & berputar */
+            transform: scale(1.3) rotate(10deg);
             color: #ffcccc;
+        }
+
+        /* Area Konten agar bisa discroll jika panjang */
+        .content-area {
+            background-color: #f8f9fa;
+            height: 100vh;
+            overflow-y: auto; /* Scroll hanya di konten, bukan sidebar */
         }
     </style>
 </head>
 <body>
 
-<!-- NAVBAR (Logout SUDAH DIHAPUS, Hanya tersisa Nama User) -->
-<nav class="navbar navbar-dark navbar-maroon shadow">
-    <div class="container-fluid">
-        <span class="navbar-brand fw-bold">
-            <i class="fas fa-wallet me-2"></i>Finance Panel
-        </span>
-
-        <div class="text-white">
-            <i class="fas fa-user-circle me-2"></i>
-            <!-- Logika Auth Tetap -->
-            {{ Auth::user()->nama }}
-        </div>
-    </div>
-</nav>
+<!-- TIDAK ADA NAVBAR DI ATAS -->
 
 <div class="container-fluid">
     <div class="row">
 
-        <!-- SIDEBAR (Logout dipindahkan ke bawah Gaji) -->
+        <!-- SIDEBAR (Berisi User Info + Menu + Logout) -->
         <div class="col-md-2 sidebar-maroon shadow-sm">
 
-            
-            <ul class="nav flex-column">
+            <!-- 1. USER INFO (Dipindah dari Navbar ke Sini) -->
+            <div class="sidebar-user-info">
+                <i class="fas fa-user-circle fa-3x mb-2 opacity-75"></i>
+                <h5>{{ Auth::user()->nama }}</h5>
+                <small>Administrator</small>
+            </div>
+
+            <!-- 2. MENU -->
+            <div class="sidebar-menu-title">MENU FINANCE</div>
+
+            <ul class="nav flex-column px-2 flex-grow-1">
 
                 <!-- Dashboard -->
                 <li class="nav-item mb-2">
@@ -124,20 +161,24 @@
                     </a>
                 </li>
 
-                <!-- LOGOUT (Dipindahkan ke sini, di bawah Gaji) -->
-                <!-- mt-3 ditambahkan untuk memberi jarak sedikit -->
-                <li class="nav-item mt-3 mb-2">
-                    <a href="{{ route('login') }}" class="nav-link-custom">
-                        <i class="fas fa-sign-out-alt"></i> Logout
-                    </a>
-                </li>
-
             </ul>
+
+            <!-- 3. LOGOUT (Di Paling Bawah) -->
+            <div class="mt-auto pb-4 px-2">
+                <a href="{{ route('logout') }}" class="nav-link-custom" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+
+                <!-- Form Logout Tersembunyi -->
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    @csrf
+                </form>
+            </div>
 
         </div>
 
-        <!-- CONTENT -->
-        <div class="col-md-10 p-4 bg-light" style="min-height: 100vh;">
+        <!-- CONTENT (Tanpa Navbar, Konten langsung mulai) -->
+        <div class="col-md-10 content-area p-4">
             @yield('content')
         </div>
 
