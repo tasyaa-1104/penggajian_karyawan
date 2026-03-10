@@ -2,6 +2,8 @@
 
 @section('content')
 
+
+
 <h3 class="mb-4">Dashboard Manager</h3>
 
 <div class="row g-4">

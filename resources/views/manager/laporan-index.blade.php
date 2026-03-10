@@ -1,100 +1,194 @@
 @extends('manager.template')
 
-@section('title','Laporan')
+@section('title', 'Laporan')
 
 @section('content')
 
-<div class="container mt-4">
+<!-- FontAwesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-<h3 class="mb-4">Laporan Data Karyawan</h3>
+<style>
+    /* Page Title Section */
+    .page-title-section {
+        background: #FFF5F5;
+        border-left: 5px solid #9B1C20;
+        padding: 20px 25px;
+        border-radius: 10px;
+        margin-bottom: 25px;
+    }
 
-<div class="card shadow">
-<div class="card-body">
+    .page-title {
+        color: #9B1C20;
+        font-weight: 700;
+        font-size: 24px;
+        margin-bottom: 5px;
+    }
 
-<table class="table table-bordered table-striped">
+    .page-subtitle {
+        color: #6b7280;
+        font-size: 14px;
+        margin: 0;
+    }
 
-<thead class="table-dark">
-<tr>
-    <th>No</th>
-    <th>Karyawan</th>
-    <th>Tanggal</th>
-    <th>Absensi</th>
-    <th>Cuti</th>
-    <th>Lembur</th>
-    <th>Status</th>
-</tr>
-</thead>
+    /* Card Styling */
+    .main-card {
+        background: white;
+        border-radius: 15px;
+        border: none;
+        box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+    }
 
-<tbody>
+    .main-card .card-body {
+        padding: 25px;
+    }
 
-@forelse($laporan as $data)
+    /* Table Styling */
+    .custom-table {
+        border: none;
+        border-radius: 10px;
+        overflow: hidden;
+    }
 
-<tr>
+    .custom-table thead th {
+        background: #9B1C20 !important;
+        color: white !important;
+        font-weight: 500;
+        font-size: 14px;
+        padding: 15px 12px;
+        border: none;
+        vertical-align: middle;
+    }
 
-<td>{{ $loop->iteration }}</td>
+    .custom-table tbody td {
+        padding: 14px 12px;
+        vertical-align: middle;
+        border-color: #fee2e2;
+        font-size: 14px;
+    }
 
-<td>
-{{ $data->karyawan->nama_karyawan ?? '-' }}
-</td>
+    .custom-table tbody tr:hover {
+        background: #FFF5F5;
+    }
 
-<td>
-{{ \Carbon\Carbon::parse($data->tanggal)->format('d-m-Y') }}
-</td>
+    /* Status Badges */
+    .badge-status {
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 500;
+    }
 
-<td>
-{{ $data->status ?? 'Hadir' }}
-</td>
+    .badge-pending {
+        background: #FEF3C7 !important;
+        color: #92400E !important;
+    }
 
-<td>
-{{ $data->cuti ?? '-' }}
-</td>
+    .badge-approved {
+        background: #D1FAE5 !important;
+        color: #065F46 !important;
+    }
 
-<td>
-@if($data->overtime)
+    .badge-rejected {
+        background: #FEE2E2 !important;
+        color: #9B1C20 !important;
+    }
 
-{{ $data->overtime->total_jam }} Jam
+    .badge-normal {
+        background: #E5E7EB !important;
+        color: #374151 !important;
+    }
 
-@else
+    /* Empty State */
+    .empty-state {
+        padding: 50px 20px;
+        text-align: center;
+    }
 
-0 Jam
+    .empty-state i {
+        font-size: 60px;
+        color: #d1d5db;
+        margin-bottom: 20px;
+    }
 
-@endif
-</td>
-<td>
+    .empty-state p {
+        color: #6b7280;
+        font-size: 16px;
+        margin: 0;
+    }
+</style>
 
-@if($data->status == 'approved')
-<span class="badge bg-success">Approved</span>
+<div class="container-fluid mt-4">
 
-@elseif($data->status == 'pending')
-<span class="badge bg-warning">Pending</span>
+    <!-- Page Title Section -->
+    <div class="page-title-section">
+        <div class="d-flex align-items-center justify-content-between">
+            <div>
+                <h3 class="page-title">
+                    <i class="fas fa-file-alt me-2"></i> Laporan Data Karyawan
+                </h3>
+                <p class="page-subtitle">Laporan absensi, cuti, dan lembur karyawan</p>
+            </div>
+        </div>
+    </div>
 
-@elseif($data->status == 'rejected')
-<span class="badge bg-danger">Rejected</span>
-
-@else
-<span class="badge bg-secondary">Normal</span>
-@endif
-
-</td>
-
-</tr>
-
-@empty
-
-<tr>
-<td colspan="7" class="text-center">
-Tidak ada data laporan
-</td>
-</tr>
-
-@endforelse
-
-</tbody>
-
-</table>
-
-</div>
-</div>
+    <!-- Main Card -->
+    <div class="card main-card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table custom-table">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Karyawan</th>
+                            <th>Tanggal</th>
+                            <th>Absensi</th>
+                            <th>Cuti</th>
+                            <th>Lembur</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($laporan as $data)
+                        <tr>
+                            <td>{{ $loop->iteration }}</td>
+                            <td><strong>{{ $data->karyawan->nama_karyawan ?? '-' }}</strong></td>
+                            <td>{{ \Carbon\Carbon::parse($data->tanggal)->format('d-m-Y') }}</td>
+                            <td>{{ $data->status ?? 'Hadir' }}</td>
+                            <td>{{ $data->cuti ?? '-' }}</td>
+                            <td>
+                                @if($data->overtime)
+                                    {{ $data->overtime->total_jam }} Jam
+                                @else
+                                    0 Jam
+                                @endif
+                            </td>
+                            <td>
+                                @if($data->status == 'approved')
+                                    <span class="badge-status badge-approved">Approved</span>
+                                @elseif($data->status == 'pending')
+                                    <span class="badge-status badge-pending">Pending</span>
+                                @elseif($data->status == 'rejected')
+                                    <span class="badge-status badge-rejected">Rejected</span>
+                                @else
+                                    <span class="badge-status badge-normal">Normal</span>
+                                @endif
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="7">
+                                <div class="empty-state">
+                                    <i class="fas fa-file-alt"></i>
+                                    <p>Tidak ada data laporan</p>
+                                </div>
+                            </td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
 </div>
 

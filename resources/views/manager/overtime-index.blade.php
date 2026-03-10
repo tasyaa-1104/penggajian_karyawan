@@ -1,145 +1,255 @@
 @extends('manager.template')
 
-@section('title','Persetujuan Lembur')
+@section('title', 'Persetujuan Lembur')
 
 @section('content')
 
-<div class="container mt-4">
+<!-- FontAwesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-<h3 class="mb-4">Persetujuan Lembur</h3>
+<style>
+    /* Page Title Section */
+    .page-title-section {
+        background: #FFF5F5;
+        border-left: 5px solid #9B1C20;
+        padding: 20px 25px;
+        border-radius: 10px;
+        margin-bottom: 25px;
+    }
 
-{{-- ALERT --}}
-@if(session('success'))
-<div class="alert alert-success">
-    {{ session('success') }}
-</div>
-@endif
+    .page-title {
+        color: #9B1C20;
+        font-weight: 700;
+        font-size: 24px;
+        margin-bottom: 5px;
+    }
 
-@if(session('error'))
-<div class="alert alert-danger">
-    {{ session('error') }}
-</div>
-@endif
+    .page-subtitle {
+        color: #6b7280;
+        font-size: 14px;
+        margin: 0;
+    }
 
-<table class="table table-bordered table-striped">
+    /* Card Styling */
+    .main-card {
+        background: white;
+        border-radius: 15px;
+        border: none;
+        box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+    }
 
-<thead class="table-dark">
-<tr>
-    <th>No</th>
-    <th>Karyawan</th>
-    <th>Tanggal</th>
-    <th>Jam</th>
-    <th>Total Jam</th>
-    <th>Upah</th>
-    <th>Status</th>
-    <th width="160">Aksi</th>
-</tr>
-</thead>
+    .main-card .card-body {
+        padding: 25px;
+    }
 
-<tbody>
+    /* Table Styling */
+    .custom-table {
+        border: none;
+        border-radius: 10px;
+        overflow: hidden;
+    }
 
-@forelse($overtimes as $overtime)
+    .custom-table thead th {
+        background: #9B1C20 !important;
+        color: white !important;
+        font-weight: 500;
+        font-size: 14px;
+        padding: 15px 12px;
+        border: none;
+        vertical-align: middle;
+    }
 
-<tr>
+    .custom-table tbody td {
+        padding: 14px 12px;
+        vertical-align: middle;
+        border-color: #fee2e2;
+        font-size: 14px;
+    }
 
-<td>{{ $loop->iteration }}</td>
+    .custom-table tbody tr:hover {
+        background: #FFF5F5;
+    }
 
-<td>
-{{ $overtime->karyawan->nama_karyawan ?? '-' }}
-</td>
+    /* Status Badges */
+    .badge-status {
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 500;
+    }
 
-<td>
-{{ \Carbon\Carbon::parse($overtime->tanggal)->format('d-m-Y') }}
-</td>
+    .badge-pending {
+        background: #FEF3C7 !important;
+        color: #92400E !important;
+    }
 
-<td>
-{{ $overtime->jam_mulai }} - {{ $overtime->jam_selesai }}
-</td>
+    .badge-approved {
+        background: #D1FAE5 !important;
+        color: #065F46 !important;
+    }
 
-<td>
-{{ $overtime->total_jam }} Jam
-</td>
+    .badge-rejected {
+        background: #FEE2E2 !important;
+        color: #9B1C20 !important;
+    }
 
-<td>
-Rp {{ number_format($overtime->total_upah,0,',','.') }}
-</td>
+    /* Buttons */
+    .btn-approve {
+        background: #D1FAE5 !important;
+        color: #065F46 !important;
+        border: none;
+        padding: 6px 14px;
+        border-radius: 8px;
+        font-weight: 500;
+        font-size: 13px;
+        transition: all 0.3s ease;
+    }
 
-<td>
+    .btn-approve:hover {
+        background: #065F46 !important;
+        color: white !important;
+    }
 
-@if($overtime->status == 'pending')
-<span class="badge bg-warning text-dark">Pending</span>
+    .btn-reject {
+        background: #FEE2E2 !important;
+        color: #9B1C20 !important;
+        border: none;
+        padding: 6px 14px;
+        border-radius: 8px;
+        font-weight: 500;
+        font-size: 13px;
+        transition: all 0.3s ease;
+    }
 
-@elseif($overtime->status == 'approved')
-<span class="badge bg-success">Approved</span>
+    .btn-reject:hover {
+        background: #9B1C20 !important;
+        color: white !important;
+    }
 
-@elseif($overtime->status == 'rejected')
-<span class="badge bg-danger">Rejected</span>
+    /* Alert Styling */
+    .alert-success {
+        background: #D1FAE5;
+        color: #065F46;
+        border: none;
+        border-radius: 10px;
+        padding: 15px 20px;
+    }
 
-@endif
+    .alert-danger {
+        background: #FEE2E2;
+        color: #9B1C20;
+        border: none;
+        border-radius: 10px;
+        padding: 15px 20px;
+    }
 
-</td>
+    /* Empty State */
+    .text-muted {
+        color: #9ca3af !important;
+        font-style: italic;
+    }
+</style>
 
-<td>
+<div class="container-fluid mt-4">
 
-@if($overtime->status == 'pending')
+    <!-- Page Title Section -->
+    <div class="page-title-section">
+        <div class="d-flex align-items-center justify-content-between">
+            <div>
+                <h3 class="page-title">
+                    <i class="fas fa-clock me-2"></i> Persetujuan Lembur
+                </h3>
+                <p class="page-subtitle">Kelola persetujuan lembur karyawan</p>
+            </div>
+        </div>
+    </div>
 
-<div class="d-flex gap-1">
+    {{-- ALERT --}}
+    @if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-2"></i> {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    @endif
 
-{{-- APPROVE --}}
-<form action="{{ route('overtime.approve',$overtime->id) }}" method="POST">
+    @if(session('error'))
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-circle me-2"></i> {{ session('error') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    @endif
 
-@csrf
-@method('PUT')
-
-<button type="submit" class="btn btn-success btn-sm"
-onclick="return confirm('Setujui lembur ini?')">
-
-Approve
-
-</button>
-
-</form>
-
-{{-- REJECT --}}
-<form action="{{ route('overtime.reject',$overtime->id) }}" method="POST">
-
-@csrf
-@method('PUT')
-
-<button type="submit" class="btn btn-danger btn-sm"
-onclick="return confirm('Tolak lembur ini?')">
-
-Reject
-
-</button>
-
-</form>
-
-</div>
-
-@else
-
-<span class="text-muted">Selesai</span>
-
-@endif
-
-</td>
-
-</tr>
-
-@empty
-
-<tr>
-<td colspan="8" class="text-center">
-Tidak ada data lembur
-</td>
-</tr>
-
-@endforelse
-
-</tbody>
-
-</table>
+    <!-- Main Card -->
+    <div class="card main-card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table custom-table">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Karyawan</th>
+                            <th>Tanggal</th>
+                            <th>Jam</th>
+                            <th>Total Jam</th>
+                            <th>Upah</th>
+                            <th>Status</th>
+                            <th style="width: 160px;">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($overtimes as $overtime)
+                        <tr>
+                            <td>{{ $loop->iteration }}</td>
+                            <td><strong>{{ $overtime->karyawan->nama_karyawan ?? '-' }}</strong></td>
+                            <td>{{ \Carbon\Carbon::parse($overtime->tanggal)->format('d-m-Y') }}</td>
+                            <td>{{ $overtime->jam_mulai }} - {{ $overtime->jam_selesai }}</td>
+                            <td>{{ $overtime->total_jam }} Jam</td>
+                            <td>Rp {{ number_format($overtime->total_upah,0,',','.') }}</td>
+                            <td>
+                                @if($overtime->status == 'pending')
+                                    <span class="badge-status badge-pending">Pending</span>
+                                @elseif($overtime->status == 'approved')
+                                    <span class="badge-status badge-approved">Approved</span>
+                                @elseif($overtime->status == 'rejected')
+                                    <span class="badge-status badge-rejected">Rejected</span>
+                                @endif
+                            </td>
+                            <td>
+                                @if($overtime->status == 'pending')
+                                    <div class="d-flex gap-2">
+                                        <form action="{{ route('overtime.approve', $overtime->id) }}" method="POST">
+                                            @csrf
+                                            @method('PUT')
+                                            <button type="submit" class="btn-approve" onclick="return confirm('Setujui lembur ini?')">
+                                                <i class="fas fa-check me-1"></i> Approve
+                                            </button>
+                                        </form>
+                                        <form action="{{ route('overtime.reject', $overtime->id) }}" method="POST">
+                                            @csrf
+                                            @method('PUT')
+                                            <button type="submit" class="btn-reject" onclick="return confirm('Tolak lembur ini?')">
+                                                <i class="fas fa-times me-1"></i> Reject
+                                            </button>
+                                        </form>
+                                    </div>
+                                @else
+                                    <span class="text-muted">Selesai</span>
+                                @endif
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="8" class="text-center py-5">
+                                <i class="fas fa-clock text-muted" style="font-size: 50px;"></i>
+                                <p class="text-muted mt-3">Tidak ada data lembur</p>
+                            </td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
 </div>
 
