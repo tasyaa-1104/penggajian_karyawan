@@ -2,229 +2,322 @@
 
 @section('content')
 
-<!-- CSS Khusus Halaman Dashboard untuk Animasi Gelombang -->
 <style>
     :root {
         --maroon-primary: #800000;
-        --maroon-light: #a52a2a;
+        --maroon-hover: #990000;
     }
 
+    /* Mencegah layout shift (ukuran berubah) */
+    body {
+        overflow-x: hidden;
+    }
+
+    /* --- STYLE KARTU STATISTIK --- */
     .card-maroon {
-        background-color: var(--maroon-primary);
+        background: var(--maroon-primary);
         color: white;
-        border: none;
         border-radius: 15px;
-        overflow: hidden; /* Penting untuk memotong gelombang */
+        overflow: hidden; /* Penting agar ombak tidak keluar */
         position: relative;
-        box-shadow: 0 4px 15px rgba(128, 0, 0, 0.4);
-        transition: transform 0.3s ease;
+        box-shadow: 0 4px 15px rgba(128, 0, 0, 0.2);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
+    /* Efek Hover Halus (Tidak merubah ukuran signifikan) */
     .card-maroon:hover {
-        transform: translateY(-5px);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(128, 0, 0, 0.3);
     }
 
-    /* --- ANIMASI GELOMBANG (WAVE) --- */
+    /* --- ANIMASI GELOMBANG (DIPERBAIKI) --- */
     .wave-container {
         position: absolute;
         bottom: 0;
         left: 0;
         width: 100%;
-        height: 50px;
-        overflow: hidden;
+        height: 60px;
+        z-index: 1;
+        pointer-events: none; /* Agar tidak mengganggu klik */
     }
 
     .wave {
         position: absolute;
-        bottom: 0;
-        left: 0;
         width: 200%;
         height: 100%;
-        background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 88.7'%3E%3Cpath d='M800 56.9c-155.5 0-204.9-50-405.5-49.9-200 0-250 49.9-394.5 49.9v31.8h800v-.2-31.6z' fill='%23ffffff' fill-opacity='0.2'/%3E%3C/svg%3E");
+        bottom: 0;
+        left: 0;
+        background: url("https://svgshare.com/i/uYk.svg");
         background-size: 50% 100%;
-        animation: wave-animation 10s linear infinite;
+        animation: waveMove 10s linear infinite; /* Diperlambat sedikit agar lebih smooth */
     }
 
     .wave:nth-child(2) {
-        bottom: 5px;
         opacity: 0.5;
-        animation: wave-animation 7s linear infinite reverse;
+        animation: waveMove 7s linear infinite reverse;
+        bottom: 5px;
     }
 
     .wave:nth-child(3) {
+        opacity: 0.3;
+        animation: waveMove 5s linear infinite;
         bottom: 10px;
-        opacity: 0.7;
-        animation: wave-animation 5s linear infinite;
     }
 
-    @keyframes wave-animation {
+    @keyframes waveMove {
         0% { transform: translateX(0); }
         100% { transform: translateX(-50%); }
     }
 
+    /* --- STYLE GRAFIK & LIST --- */
     .card-chart {
         border: none;
         border-radius: 15px;
         box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         border-top: 4px solid var(--maroon-primary);
+        transition: transform 0.3s ease;
+        background: white;
+        height: 100%; /* Pastikan tinggi penuh */
+        display: flex;
+        flex-direction: column;
+    }
+
+    .card-chart:hover {
+        transform: translateY(-3px);
+    }
+
+    /* Container Grafik dengan tinggi tetap agar tidak melompat */
+    .chart-container {
+        position: relative;
+        height: 250px; /* Tinggi tetap */
+        width: 100%;
+    }
+
+    /* List Styling */
+    .list-group-item {
+        border: none;
+        border-bottom: 1px solid #f0f0f0;
+        transition: background-color 0.2s;
+    }
+
+    .list-group-item:last-child {
+        border-bottom: none;
+    }
+
+    .list-group-item:hover {
+        background-color: #f8f9fa;
+    }
+
+    /* Animasi Masuk Halaman (Fade In) */
+    .fade-in {
+        animation: fadeIn 0.8s ease-out forwards;
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    @keyframes fadeIn {
+        to { opacity: 1; transform: translateY(0); }
     }
 </style>
 
-<!-- Judul Dashboard -->
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="fw-bold" style="color: var(--maroon-primary);">Dashboard SmartGaji</h2>
-    <span class="text-muted">Analisis Keuangan & Tunjangan</span>
-</div>
+<!-- Wrapper dengan animasi fade-in -->
+<div class="fade-in">
 
-<!-- ROW 1: 2 KARTU STATISTIK (MAROON + GELOMBANG) -->
-<div class="row g-4 mb-4">
-
-    <!-- Kartu 1: Total Tunjangan -->
-    <div class="col-md-6">
-        <div class="card card-maroon h-100">
-            <div class="card-body d-flex justify-content-between align-items-center position-relative" style="z-index: 2;">
-                <div>
-                    <h6 class="text-uppercase opacity-75">Total Tunjangan</h6>
-                    <h2 class="fw-bold mb-0">
-                        Rp {{ number_format($total_tunjangan ?? 0, 0, ',', '.') }}
-                    </h2>
-                    <small class="mt-2 d-block opacity-75">
-                        <i class="fas fa-chart-line me-1"></i> Bulan Ini
-                    </small>
-                </div>
-                <div class="icon-bg">
-                    <i class="fas fa-hand-holding-usd fa-4x opacity-50"></i>
-                </div>
-            </div>
-            <div class="wave-container">
-                <div class="wave"></div>
-                <div class="wave"></div>
-                <div class="wave"></div>
-            </div>
-        </div>
+    <div class="d-flex justify-content-between mb-4 align-items-center">
+        <h2 class="fw-bold" style="color: #800000;">Dashboard SmartGaji</h2>
+        <span class="text-muted">Analisis Keuangan</span>
     </div>
 
-    <!-- Kartu 2: Total Gaji -->
-    <div class="col-md-6">
-        <div class="card card-maroon h-100">
-            <div class="card-body d-flex justify-content-between align-items-center position-relative" style="z-index: 2;">
-                <div>
-                    <h6 class="text-uppercase opacity-75">Total Gaji Karyawan</h6>
-                    <h2 class="fw-bold mb-0">
-                        Rp {{ number_format($total_gaji ?? 0, 0, ',', '.') }}
-                    </h2>
-                    <small class="mt-2 d-block opacity-75">
-                        <i class="fas fa-money-bill-wave me-1"></i> Bulan Ini
-                    </small>
+    <!-- ROW 1: KARTU STATISTIK -->
+    <div class="row g-4 mb-4">
+
+        <!-- Kartu Total Tunjangan -->
+        <div class="col-md-6">
+            <div class="card card-maroon">
+                <div class="card-body d-flex justify-content-between align-items-center position-relative" style="z-index: 2;">
+                    <div>
+                        <h6 class="text-uppercase opacity-75">Total Tunjangan</h6>
+                        <h2 class="fw-bold mb-0">
+                            Rp {{ number_format($total_tunjangan ?? 0, 0, ',', '.') }}
+                        </h2>
+                    </div>
+                    <i class="fas fa-hand-holding-usd fa-3x opacity-50"></i>
                 </div>
-                <div class="icon-bg">
-                    <i class="fas fa-wallet fa-4x opacity-50"></i>
+                <div class="wave-container">
+                    <div class="wave"></div>
+                    <div class="wave"></div>
+                    <div class="wave"></div>
                 </div>
             </div>
-            <div class="wave-container">
-                <div class="wave"></div>
-                <div class="wave"></div>
+        </div>
+
+        <!-- Kartu Total Gaji -->
+        <div class="col-md-6">
+            <div class="card card-maroon">
+                <div class="card-body d-flex justify-content-between align-items-center position-relative" style="z-index: 2;">
+                    <div>
+                        <h6 class="text-uppercase opacity-75">Total Gaji</h6>
+                        <h2 class="fw-bold mb-0">
+                            Rp {{ number_format($total_gaji ?? 0, 0, ',', '.') }}
+                        </h2>
+                    </div>
+                    <i class="fas fa-wallet fa-3x opacity-50"></i>
+                </div>
+                <div class="wave-container">
+                    <div class="wave"></div>
+                    <div class="wave"></div>
+                </div>
             </div>
         </div>
+
     </div>
 
-</div>
+    <!-- ROW 2: GRAFIK & LIST -->
+    <div class="row g-4">
 
-<!-- ROW 2: GRAFIK ANALISIS (CHART.JS) -->
-<div class="row g-4">
-    <!-- Grafik Tunjangan -->
-    <div class="col-md-6">
-        <div class="card card-chart h-100 p-3">
-            <h5 class="fw-bold mb-3" style="color: var(--maroon-primary);">Analisis Tunjangan</h5>
-            <div style="height: 300px; width: 100%;">
-                <canvas id="chartTunjangan"></canvas>
+        <!-- Kiri: Grafik Tunjangan & List -->
+        <div class="col-md-6">
+            <div class="card card-chart p-3">
+                <h5 class="fw-bold mb-3" style="color: var(--maroon-primary);">Grafik Tunjangan</h5>
+
+                <!-- Container Grafik dengan Tinggi Tetap -->
+                <div class="chart-container mb-3">
+                    <canvas id="chartTunjangan"></canvas>
+                </div>
+
+                <h6 class="fw-bold mt-2 text-secondary text-uppercase" style="font-size: 0.85rem;">Jenis Tunjangan</h6>
+                <div style="max-height: 200px; overflow-y: auto; padding-right: 5px;">
+                    <!-- Scroll jika item terlalu banyak -->
+                    <ul class="list-group list-group-flush">
+                        @foreach($jenis_tunjangan ?? [] as $t)
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                            <span class="fw-bold text-dark">{{ $t->nama_tunjangan }}</span>
+                            <span class="text-danger fw-bold">Rp {{ number_format($t->nominal, 0, ',', '.') }}</span>
+                        </li>
+                        @endforeach
+                        @if(empty($jenis_tunjangan))
+                        <li class="list-group-item text-center text-muted">Tidak ada data tunjangan</li>
+                        @endif
+                    </ul>
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- Grafik Gaji -->
-    <div class="col-md-6">
-        <div class="card card-chart h-100 p-3">
-            <h5 class="fw-bold mb-3" style="color: var(--maroon-primary);">Analisis Gaji Bulanan</h5>
-            <div style="height: 300px; width: 100%;">
-                <canvas id="chartGaji"></canvas>
+        <!-- Kanan: Grafik Gaji -->
+        <div class="col-md-6">
+            <div class="card card-chart p-3">
+                <h5 class="fw-bold mb-3" style="color: var(--maroon-primary);">Grafik Gaji Bulanan</h5>
+
+                <!-- Container Grafik dengan Tinggi Tetap -->
+                <div class="chart-container">
+                    <canvas id="chartGaji"></canvas>
+                </div>
             </div>
         </div>
-    </div>
-</div>
 
-<!-- SCRIPT CHART JS DIPINDAHKAN KE SINI AGAR PASTI JALAN -->
-<!-- Load Chart.js -->
+    </div>
+
+</div> <!-- End Fade In -->
+
+<!-- SCRIPT CHART JS -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-    // --- 1. GRAFIK TUNJANGAN ---
-    const ctxTunjangan = document.getElementById('chartTunjangan').getContext('2d');
+    // Konfigurasi Global untuk Font
+    Chart.defaults.font.family = "'Segoe UI', 'Helvetica', 'Arial', sans-serif";
+    Chart.defaults.color = '#666';
 
-    // Data Chart (Gunakan data dummy 0 jika kosong)
-    const labelsTunjangan = {{ isset($labels_tunjangan) ? json_encode($labels_tunjangan) : '["Jan", "Feb", "Mar", "Apr", "Mei", "Jun"]' }};
-    const dataTunjangan = {{ isset($values_tunjangan) ? json_encode($values_tunjangan) : '[0, 0, 0, 0, 0, 0]' }};
+    // --- GRAFIK TUNJANGAN ---
+    const labelsTunjangan = @json($labels_tunjangan ?? []);
+    const valuesTunjangan = @json($values_tunjangan ?? []);
 
-    new Chart(ctxTunjangan, {
-        type: 'bar',
-        data: {
-            labels: labelsTunjangan,
-            datasets: [{
-                label: 'Nominal Tunjangan',
-                data: dataTunjangan,
-                backgroundColor: 'rgba(128, 0, 0, 0.7)',
-                borderColor: 'rgba(128, 0, 0, 1)',
-                borderWidth: 1,
-                borderRadius: 5
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            animation: {
-                duration: 2000,
-                easing: 'easeOutQuart'
+    const ctxTunjangan = document.getElementById('chartTunjangan');
+
+    if (ctxTunjangan) {
+        new Chart(ctxTunjangan, {
+            type: 'bar',
+            data: {
+                labels: labelsTunjangan,
+                datasets: [{
+                    label: 'Total Tunjangan',
+                    data: valuesTunjangan,
+                    backgroundColor: 'rgba(128, 0, 0, 0.7)',
+                    borderColor: '#800000',
+                    borderWidth: 1,
+                    borderRadius: 5,
+                    barPercentage: 0.6
+                }]
             },
-            scales: {
-                y: { beginAtZero: true }
+            options: {
+                responsive: true,
+                maintainAspectRatio: false, // PENTING: Agar ukuran tetap pas, tidak melompat
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { borderDash: [2, 2], color: '#f0f0f0' }
+                    },
+                    x: {
+                        grid: { display: false }
+                    }
+                }
             }
-        }
-    });
+        });
+    }
 
-    // --- 2. GRAFIK GAJI ---
-    const ctxGaji = document.getElementById('chartGaji').getContext('2d');
+    // --- GRAFIK GAJI ---
+    const labelsGaji = @json($labels_gaji ?? []);
+    const valuesGaji = @json($values_gaji ?? []);
 
-    const labelsGaji = {{ isset($labels_gaji) ? json_encode($labels_gaji) : '["Jan", "Feb", "Mar", "Apr", "Mei", "Jun"]' }};
-    const dataGaji = {{ isset($values_gaji) ? json_encode($values_gaji) : '[0, 0, 0, 0, 0, 0]' }};
+    const ctxGaji = document.getElementById('chartGaji');
 
-    new Chart(ctxGaji, {
-        type: 'line',
-        data: {
-            labels: labelsGaji,
-            datasets: [{
-                label: 'Tren Gaji',
-                data: dataGaji,
-                fill: true,
-                backgroundColor: 'rgba(128, 0, 0, 0.1)',
-                borderColor: '#800000',
-                tension: 0.4,
-                pointBackgroundColor: '#ffffff',
-                pointBorderColor: '#800000',
-                pointRadius: 5
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            animation: {
-                duration: 2000,
-                easing: 'easeOutQuart'
+    if (ctxGaji) {
+        new Chart(ctxGaji, {
+            type: 'line',
+            data: {
+                labels: labelsGaji,
+                datasets: [{
+                    label: 'Total Gaji',
+                    data: valuesGaji,
+                    borderColor: '#800000',
+                    backgroundColor: 'rgba(128, 0, 0, 0.1)',
+                    fill: true,
+                    tension: 0.4, // Membuat garis melengkung halus
+                    pointBackgroundColor: '#fff',
+                    pointBorderColor: '#800000',
+                    pointRadius: 4,
+                    pointHoverRadius: 6
+                }]
             },
-            scales: {
-                y: { beginAtZero: true }
+            options: {
+                responsive: true,
+                maintainAspectRatio: false, // PENTING: Agar ukuran tetap pas
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: '#800000',
+                        padding: 10,
+                        cornerRadius: 5
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false, // Karena nilai gaji besar (jutaan), mulai dari 0 akan membuat garis terlihat datar
+                        grid: { borderDash: [2, 2], color: '#f0f0f0' }
+                    },
+                    x: {
+                        grid: { display: false }
+                    }
+                },
+                interaction: {
+                    intersect: false,
+                    mode: 'index',
+                },
             }
-        }
-    });
+        });
+    }
 </script>
 
 @endsection

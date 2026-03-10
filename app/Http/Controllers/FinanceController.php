@@ -7,22 +7,26 @@ use App\Models\Cuti;
 
 class FinanceController extends Controller
 {
-    public function dashboard()
-    {
-        $jumlah_karyawan = User::where('role', 'karyawan')->count();
+   public function dashboard()
+{
 
-        $cuti_disetujui = Cuti::where('status', 'approved')->count();
+    $total_tunjangan = \App\Models\Tunjangan::sum('nominal');
+    $total_gaji = \App\Models\Gaji::sum('gaji_bersih');
 
-        // contoh data dummy gaji
-        $total_gaji = 50000000;
+    $labels_tunjangan = [];
+    $values_tunjangan = [];
 
-        $penggajian_pending = 3;
+    $labels_gaji = [];
+    $values_gaji = [];
 
-        return view('finance.dashboard', compact(
-            'jumlah_karyawan',
-            'cuti_disetujui',
-            'total_gaji',
-            'penggajian_pending'
-        ));
-    }
+    return view('finance.dashboard', compact(
+        'total_tunjangan',
+        'total_gaji',
+        'labels_tunjangan',
+        'values_tunjangan',
+        'labels_gaji',
+        'values_gaji'
+    ));
+
+}
 }

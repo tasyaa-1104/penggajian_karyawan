@@ -136,6 +136,8 @@ Route::get('/divisi/create', [DivisiController::class, 'create'])->name('divisi.
      Route::get('/admin/cuti',
         [CutiController::class, 'indexHRD']
     )->name('admin.cuti');
+    Route::delete('/cuti/{id}', [CutiController::class, 'destroy'])->name('cuti.destroy');
+
 
 
 

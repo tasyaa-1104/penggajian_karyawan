@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\slip_gaji;
 use App\Models\Gaji;
+use App\Models\Tunjangan;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -139,15 +140,18 @@ public function downloadKaryawan()
 
 public function downloadAdmin($id)
 {
-    $slip = slip_gaji::with(['karyawan'])->findOrFail($id);
+    $slip = slip_gaji::with(['gaji.karyawan.jabatan'])->findOrFail($id);
 
-    $pdf = Pdf::loadView('finance.slip-gaji', compact('slip'));
+    $tunjangan = Tunjangan::all();
 
-    $nama = $slip->karyawan?->nama_karyawan ?? 'karyawan';
+    $pdf = Pdf::loadView('finance.slip-gaji', compact('slip','tunjangan'));
+
+    $nama = $slip->gaji->karyawan->nama_karyawan ?? 'karyawan';
+
     return $pdf->download('slip-gaji-'.$nama.'.pdf');
+
+
 }
-
-
 }
 
 

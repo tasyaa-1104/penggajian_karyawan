@@ -372,9 +372,11 @@
                             {{ $k->jabatan->nama_jabatan ?? '-' }}
                         </td>
 
+
                         {{-- <td>
                             Rp {{ number_format($k->gaji_pokok,0,',','.') }}
                         </td> --}}
+
 
                         <td>
                             {{ $k->tanggal_masuk ? date('d-m-Y', strtotime($k->tanggal_masuk)) : '-' }}

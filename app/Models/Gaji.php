@@ -32,4 +32,9 @@ class Gaji extends Model
     {
         return $this->hasOne(slip_gaji::class, 'id_gaji', 'id_gaji');
     }
+   public function rekap()
+    {
+        return $this->hasOne(\App\Models\rekap_absensi::class, 'id_karyawan', 'id_karyawan')
+            ->where('bulan', $this->bulan);
+    }
 }
