@@ -416,12 +416,12 @@
             </a>
         </li>
 
-         <li class="nav-item">
+         {{-- <li class="nav-item">
             <a href="{{ route('login') }}"
                class="nav-link {{ request()->routeIs('login*') ? 'active' : '' }}">
                 <i class="fa-solid fa-user-lock"></i> Login
             </a>
-        </li>
+        </li> --}}
     </ul> <!-- Akhir Menu Utama -->
 
     <!-- MENU LOGOUT (Ditaruh di bawah) -->
