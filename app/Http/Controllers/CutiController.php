@@ -27,28 +27,40 @@ class CutiController extends Controller
     /* =========================
      * SIMPAN CUTI KARYAWAN
      * ========================= */
-    public function store(Request $request)
-    {
-        $request->validate([
-            'tanggal_mulai'   => 'required|date',
-            'tanggal_selesai' => 'required|date|after_or_equal:tanggal_mulai',
-            'alasan'          => 'required'
-        ]);
+   public function store(Request $request)
+{
+    $request->validate([
+        'tanggal_mulai'   => 'required|date',
+        'tanggal_selesai' => 'required|date|after_or_equal:tanggal_mulai',
+        'alasan'          => 'required'
+    ]);
 
-        $karyawan = Karyawan::where('id_user', Auth::id())->firstOrFail();
+    $karyawan = Karyawan::where('id_user', Auth::id())->firstOrFail();
 
-        Cuti::create([
-            'id_karyawan'     => $karyawan->id_karyawan,
-            'tanggal_mulai'   => $request->tanggal_mulai,
-            'tanggal_selesai' => $request->tanggal_selesai,
-            'alasan'          => $request->alasan,
-            'status'          => 'pending'
-        ]);
+    // CEK apakah sudah mengajukan cuti bulan ini
+    $sudahCuti = Cuti::where('id_karyawan', $karyawan->id_karyawan)
+        ->whereMonth('tanggal_mulai', date('m'))
+        ->whereYear('tanggal_mulai', date('Y'))
+        ->exists();
 
+    if ($sudahCuti) {
         return redirect()
             ->route('karyawan.cuti')
-            ->with('success', 'Pengajuan cuti berhasil dikirim');
+            ->with('error', 'Anda sudah mengajukan cuti bulan ini. Pengajuan berikutnya hanya bisa dilakukan bulan depan.');
     }
+
+    Cuti::create([
+        'id_karyawan'     => $karyawan->id_karyawan,
+        'tanggal_mulai'   => $request->tanggal_mulai,
+        'tanggal_selesai' => $request->tanggal_selesai,
+        'alasan'          => $request->alasan,
+        'status'          => 'pending'
+    ]);
+
+    return redirect()
+        ->route('karyawan.cuti')
+        ->with('success', 'Pengajuan cuti berhasil dikirim');
+}
 
     /* =========================
      * HALAMAN ADMIN - DATA CUTI
@@ -107,5 +119,12 @@ public function indexManager()
         ->get();
 
     return view('manager.cuti', compact('cuti'));
+}
+
+public function destroy($id)
+{
+    Cuti::where('id_cuti', $id)->delete();
+
+    return back()->with('success','Data cuti berhasil dihapus');
 }
 }

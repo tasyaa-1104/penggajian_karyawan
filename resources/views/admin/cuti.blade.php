@@ -212,22 +212,57 @@
                         <th>Nama Karyawan</th>
                         <th>Tanggal Cuti</th>
                         <th>Alasan</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
                     </tr>
                 </thead>
-                <tbody>
-                    @forelse($cuti as $c)
-                        <tr>
-                            <td><strong>{{ $c->karyawan->nama_karyawan }}</strong></td>
-                            <td>{{ $c->tanggal_mulai }} <span style="color:#ccc">s/d</span> {{ $c->tanggal_selesai }}</td>
-                            <td>{{ $c->alasan }}</td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="3" class="empty-state">
-                                Belum ada data cuti
-                            </td>
-                        </tr>
-                    @endforelse
+               <tbody>
+                @forelse($cuti as $c)
+                <tr>
+                    <td><strong>{{ $c->karyawan->nama_karyawan }}</strong></td>
+
+                    <td>
+                        {{ $c->tanggal_mulai }}
+                        <span style="color:#ccc">s/d</span>
+                        {{ $c->tanggal_selesai }}
+                    </td>
+
+                    <td>{{ $c->alasan }}</td>
+
+                    <td>
+                        @if($c->status == 'disetujui')
+                            <span class="badge-status badge-approved">
+                                Approved
+                            </span>
+                        @elseif($c->status == 'ditolak')
+                            <span class="badge-status badge-rejected">
+                                Rejected
+                            </span>
+                        @else
+                            <span class="badge-status badge-pending">
+                                Pending
+                            </span>
+                        @endif
+                    </td>
+                    <td>
+                    <form action="{{ route('cuti.destroy', $c->id_cuti) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus data cuti ini?')">
+                    @csrf
+                    @method('DELETE')
+
+                    <button type="submit" class="btn-action-sm btn-reject">
+                    <i class="fas fa-trash"></i> Hapus
+                    </button>
+
+                    </form>
+                    </td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="4" class="empty-state">
+                        Belum ada data cuti
+                    </td>
+                </tr>
+                @endforelse
                 </tbody>
             </table>
         </div>

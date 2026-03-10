@@ -13,13 +13,17 @@ use Carbon\Carbon;
 
 class GajiController extends Controller
 {
-    public function index()
+   public function index()
     {
-        $gaji = Gaji::with(['karyawan.jabatan', 'slipGaji'])
-            ->orderBy('bulan', 'desc')
-            ->get();
+       $gaji = Gaji::with([
+        'karyawan.jabatan',
+        'slipGaji',
+        'rekap'
+    ])->orderBy('bulan','desc')->get();
 
-        return view('finance.gaji', compact('gaji'));
+        $tunjangan = Tunjangan::all();
+
+        return view('finance.gaji', compact('gaji','tunjangan'));
     }
 
     /* =========================

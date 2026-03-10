@@ -46,7 +46,6 @@
                         <th>Nama</th>
                         <th>Divisi</th>
                         <th>Jabatan</th>
-                        <th>Gaji Pokok</th>
                         <th>Tanggal Masuk</th>
                         <th>Status</th>
                     </tr>
@@ -80,10 +79,6 @@
 
                         <td>
                             {{ $k->jabatan->nama_jabatan ?? '-' }}
-                        </td>
-
-                        <td>
-                            Rp {{ number_format($k->gaji_pokok,0,',','.') }}
                         </td>
 
                         <td>
