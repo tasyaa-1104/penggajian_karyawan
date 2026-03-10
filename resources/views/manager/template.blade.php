@@ -63,7 +63,7 @@
 Data Karyawan
 </a>
 </li>
-    <a href="#">
+    <a href="{{ route('manager.cuti') }}">
         <i class="bi bi-calendar-check"></i> Persetujuan Cuti
     </a>
     <a href="{{ route('manager.overtime') }}">
@@ -78,7 +78,7 @@ Laporan
 
     <hr>
 
-    <a href="{{ route('logout') }}">
+    <a href="{{ route('login') }}">
         <i class="bi bi-box-arrow-right"></i> Logout
     </a>
 

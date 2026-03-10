@@ -83,4 +83,29 @@ class CutiController extends Controller
 
         return back()->with('success', 'Cuti ditolak');
     }
+
+    /* =========================
+ * HRD - HANYA MELIHAT CUTI
+ * ========================= */
+public function indexHRD()
+{
+    $cuti = Cuti::with('karyawan')
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+    return view('admin.cuti', compact('cuti'));
+}
+
+/* =========================
+ * MANAGER - APPROVE CUTI
+ * ========================= */
+public function indexManager()
+{
+    $cuti = Cuti::with('karyawan')
+        ->where('status', 'pending') // hanya yang mengajukan
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+    return view('manager.cuti', compact('cuti'));
+}
 }

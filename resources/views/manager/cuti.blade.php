@@ -1,4 +1,4 @@
-@extends('admin.template')
+@extends('manager.template')
 
 @section('title', 'Data Cuti Karyawan')
 
@@ -212,6 +212,8 @@
                         <th>Nama Karyawan</th>
                         <th>Tanggal Cuti</th>
                         <th>Alasan</th>
+                        <th>Status</th>
+                        <th width="150" style="text-align: center;">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -220,10 +222,40 @@
                             <td><strong>{{ $c->karyawan->nama_karyawan }}</strong></td>
                             <td>{{ $c->tanggal_mulai }} <span style="color:#ccc">s/d</span> {{ $c->tanggal_selesai }}</td>
                             <td>{{ $c->alasan }}</td>
+                            <td>
+                                <span class="badge-status
+                                    {{ $c->status == 'approved' ? 'badge-approved' :
+                                       ($c->status == 'rejected' ? 'badge-rejected' : 'badge-pending') }}">
+                                    {{ strtoupper($c->status) }}
+                                </span>
+                            </td>
+                            <td style="text-align: center;">
+                                @if($c->status == 'pending')
+                                    <div style="display:flex; gap:6px; justify-content:center;">
+                                        <!-- Form Approve (Logika Tetap) -->
+                                        <form action="{{ route('cuti.approve', $c->id_cuti) }}" method="POST" style="display:inline;">
+                                            @csrf
+                                            <button class="btn-action-sm btn-approve" title="Setujui">
+                                                <i class="fas fa-check"></i> ACC
+                                            </button>
+                                        </form>
+
+                                        <!-- Form Reject (Logika Tetap) -->
+                                        <form action="{{ route('cuti.reject', $c->id_cuti) }}" method="POST" style="display:inline;">
+                                            @csrf
+                                            <button class="btn-action-sm btn-reject" title="Tolak">
+                                                <i class="fas fa-times"></i> Tolak
+                                            </button>
+                                        </form>
+                                    </div>
+                                @else
+                                    <span class="text-muted" style="font-size:0.85rem; font-weight:600; color:#94a3b8;">Selesai</span>
+                                @endif
+                            </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="3" class="empty-state">
+                            <td colspan="5" class="empty-state">
                                 Belum ada data cuti
                             </td>
                         </tr>

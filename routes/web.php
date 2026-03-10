@@ -130,9 +130,13 @@ Route::get('/divisi/create', [DivisiController::class, 'create'])->name('divisi.
     Route::delete('/jabatan/{id}', [JabatanController::class, 'destroy'])->name('jabatan.destroy');
 
 
-    Route::get('/admin/cuti', [CutiController::class, 'indexAdmin'])->name('admin.cuti');
-    Route::post('/admin/cuti/{id}/approve', [CutiController::class, 'approve'])->name('cuti.approve');
-    Route::post('/admin/cuti/{id}/reject', [CutiController::class, 'reject'])->name('cuti.reject');
+    // Route::get('/admin/cuti', [CutiController::class, 'indexAdmin'])->name('admin.cuti');
+    // Route::post('/admin/cuti/{id}/approve', [CutiController::class, 'approve'])->name('cuti.approve');
+    // Route::post('/admin/cuti/{id}/reject', [CutiController::class, 'reject'])->name('cuti.reject');
+     Route::get('/admin/cuti',
+        [CutiController::class, 'indexHRD']
+    )->name('admin.cuti');
+
 
 
 
@@ -272,6 +276,41 @@ Route::middleware(['role:manager'])->group(function () {
 
     Route::get('/manager/dashboard',[ManagerController::class, 'dashboard']  )->name('manager.dashboard');
 
+    Route::get('/manager/cuti',
+        [CutiController::class, 'indexManager']
+    )->name('manager.cuti');
+
+    Route::post('/manager/cuti/{id}/approve',
+        [CutiController::class, 'approve']
+    )->name('cuti.approve');
+
+    Route::post('/manager/cuti/{id}/reject',
+        [CutiController::class, 'reject']
+    )->name('cuti.reject');
+
+    Route::get('/manager/persetujuan-lembur', [OvertimeController::class, 'indexManager'])
+    ->name('manager.overtime');
+Route::put('/overtime/{id}/approve', [OvertimeController::class, 'approve'])
+    ->name('overtime.approve');
+
+Route::put('/overtime/{id}/reject', [OvertimeController::class, 'reject'])
+    ->name('overtime.reject');
+
+
+
+Route::get('/manager/dashboard', [ManagerController::class, 'dashboard'])
+    ->name('manager.dashboard');
+
+Route::get('/manager/overtime', [ManagerController::class, 'indexManager'])
+    ->name('manager.overtime');
+Route::get('/manager/laporan', [ManagerController::class, 'laporan'])
+->name('manager.laporan');
+
+
+
+Route::get('/manager/karyawan', [ManagerController::class, 'karyawan'])
+    ->name('manager.karyawan');
+
 });
 
 use App\Http\Controllers\FinanceController;
@@ -352,25 +391,4 @@ Route::delete('/overtime/{id}', [OvertimeController::class, 'destroy'])
 |--------------------------------------------------------------------------
 */
 
-Route::get('/manager/persetujuan-lembur', [OvertimeController::class, 'indexManager'])
-    ->name('manager.overtime');
-Route::put('/overtime/{id}/approve', [OvertimeController::class, 'approve'])
-    ->name('overtime.approve');
 
-Route::put('/overtime/{id}/reject', [OvertimeController::class, 'reject'])
-    ->name('overtime.reject');
-
-
-
-Route::get('/manager/dashboard', [ManagerController::class, 'dashboard'])
-    ->name('manager.dashboard');
-
-Route::get('/manager/overtime', [ManagerController::class, 'indexManager'])
-    ->name('manager.overtime');
-Route::get('/manager/laporan', [ManagerController::class, 'laporan'])
-->name('manager.laporan');
-
-
-
-Route::get('/manager/karyawan', [ManagerController::class, 'karyawan'])
-    ->name('manager.karyawan');
