@@ -98,10 +98,11 @@
             to { opacity: 1; transform: scale(1); }
         }
 
-        /* --- 4. SISI KIRI: FOTO --- */
+        /* --- 4. SISI KIRI: FOTO (DIUBAH) --- */
         .image-side {
             flex: 0 0 35%;
-            background-image: url('https://z-cdn-media.chatglm.cn/files/4abd032b-72c4-4369-a91b-c92c7d9d2718.jpg?auth_key=1870881704-f315d37b08f542fbbd94ed3e58f583cd-0-8a65f9989b904182f075a310e11c9c4e');
+            /* FOTO TUMPUKAN UANG (STACK OF BILLS) */
+            background-image: url('https://z-cdn-media.chatglm.cn/files/212e076d-891c-40e1-a4a5-8112bd8d703d.jpg?auth_key=1873202059-cfa65f2584334351a431602c756e811c-0-eb165adf61c2b0ef55e8b21aef04c629');
             background-size: cover;
             background-position: center;
             position: relative;
@@ -366,7 +367,7 @@
         <!-- Kartu Login -->
         <div class="login-card" id="main-card">
 
-            <!-- SISI KIRI: FOTO -->
+            <!-- SISI KIRI: FOTO TUMPUKAN UANG -->
             <div class="image-side">
                 <div class="image-content">
                     <h3>SmartGaji</h3>

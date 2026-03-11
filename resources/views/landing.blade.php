@@ -26,9 +26,11 @@
             background: #ffffff;
             overflow-x: hidden;
             color: var(--text-main);
+            position: relative;
         }
 
         /* --- BACKGROUND BLOBS (ANIMASI BESAR) --- */
+        /* Z-INDEX -1 AGAR SELALU DI BELAKANG KONTEN */
         .bg-blobs {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -41,7 +43,7 @@
             position: absolute;
             border-radius: 50%;
             filter: blur(80px);
-            opacity: 0.5;
+            opacity: 0.4;
             animation: floatBlob 25s infinite alternate ease-in-out;
         }
 
@@ -56,36 +58,35 @@
             100% { transform: translate(50px, 70px) scale(1.1); }
         }
 
-        /* --- ANIMASI GELEMBUNG AIR (BARU) --- */
+        /* --- ANIMASI GELEMBUNG AIR --- */
         .bubble-container {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             z-index: -1;
             pointer-events: none;
-            overflow: hidden; /* Gelembung hilang di pinggir */
+            overflow: hidden;
         }
 
         .bubble {
             position: absolute;
-            bottom: -100px; /* Mulai dari bawah layar */
-            background: rgba(255, 255, 255, 0.2); /* Putih transparan halus */
+            bottom: -100px;
+            background: rgba(255, 255, 255, 0.2);
             border-radius: 50%;
             box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
-            animation: riseUp linear infinite; /* Animasi naik ke atas */
+            animation: riseUp linear infinite;
         }
 
-        /* Keyframe: Bergerak dari bawah ke atas lalu membesar sedikit */
         @keyframes riseUp {
             0% {
                 transform: translateY(0) scale(0.5);
                 opacity: 0;
             }
             20% {
-                opacity: 0.6; /* Muncul perlahan */
+                opacity: 0.6;
             }
             100% {
-                transform: translateY(-120vh) scale(1.2); /* Pergi ke layar atas (di luar viewport) */
-                opacity: 0; /* Hilang */
+                transform: translateY(-120vh) scale(1.2);
+                opacity: 0;
             }
         }
 
@@ -93,7 +94,9 @@
         .navbar {
             padding: 15px 0;
             transition: all 0.4s ease;
-            background: transparent; /* Transparan di awal */
+            background: transparent;
+            position: relative;
+            z-index: 1000;
         }
 
         .navbar.scrolled {
@@ -147,45 +150,47 @@
             color: white;
         }
 
-        /* --- HERO SECTION (SPLIT LAYOUT) --- */
+        /* --- HERO SECTION --- */
         .hero {
             min-height: 100vh;
             display: flex;
             align-items: center;
             position: relative;
-            padding-top: 80px; /* Space untuk navbar */
+            padding-top: 80px;
             padding-bottom: 50px;
+            z-index: 1;
         }
 
-        /* Foto Gedung di Kiri */
         .hero-img-wrapper {
             position: relative;
-            border-radius: 10px; /* Sedikit Kotak */
+            border-radius: 10px;
             overflow: hidden;
             box-shadow: 0 20px 50px rgba(128, 0, 0, 0.2);
             transform: perspective(1000px) rotateY(-3deg);
             transition: transform 0.5s ease;
-            height: 550px;
+            background-color: white;
+            z-index: 10;
+
+            /* PENYESUAIAN UKURAN FOTO TUMPUKAN UANG */
+            width: 100%;
+            max-width: 480px; /* Lebar sedikit lebih kecil karena foto uang biasanya portrait */
+            height: auto;
+            margin: 0 auto;
+            border: 5px solid white;
         }
 
         .hero-img-wrapper:hover {
             transform: perspective(1000px) rotateY(0deg);
+            box-shadow: 0 30px 60px rgba(128, 0, 0, 0.3);
         }
 
         .hero-img-wrapper img {
             width: 100%;
-            height: 100%;
-            object-fit: cover;
+            height: 450px; /* Tinggi fixed agar layout konsisten */
+            object-fit: cover; /* Foto di-crop rapi agar memenuhi kotak */
+            display: block;
         }
 
-        /* Gradasi Maroon di Foto */
-        .img-gradient {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(135deg, rgba(128, 0, 0, 0.6) 0%, rgba(255, 255, 255, 0) 100%);
-            mix-blend-mode: multiply;
-        }
-
-        /* Teks di Kanan */
         .hero-text h1 {
             font-size: 3.5rem;
             font-weight: 800;
@@ -228,6 +233,13 @@
         }
 
         /* --- FEATURES --- */
+        #features {
+            position: relative;
+            z-index: 1;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(5px);
+        }
+
         .feature-card {
             background: white;
             border: 1px solid rgba(0,0,0,0.05);
@@ -237,6 +249,8 @@
             transition: .4s;
             height: 100%;
             box-shadow: 0 10px 30px rgba(128, 0, 0, 0.03);
+            position: relative;
+            z-index: 2;
         }
         .feature-card:hover {
             transform: translateY(-10px);
@@ -291,6 +305,7 @@
             box-shadow: 0 20px 50px rgba(128, 0, 0, 0.3);
             position: relative;
             overflow: hidden;
+            z-index: 2;
         }
         .cta-box::before {
             content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -302,20 +317,26 @@
             color: #ffcccc;
             padding: 40px 0;
             border-top: 3px solid var(--secondary);
+            position: relative;
+            z-index: 2;
         }
 
         /* Responsive */
         @media (max-width: 991px) {
             .hero-img-wrapper {
-                height: 380px;
+                max-width: 100%;
                 margin-bottom: 30px;
                 transform: none;
                 border-radius: 10px;
+                max-width: 380px; /* Ukuran wajar di HP */
+                height: 350px; /* Sesuaikan tinggi di HP */
+            }
+            .hero-img-wrapper img {
+                height: 100%;
             }
             .hero-text h1 { font-size: 2.5rem; text-align: center; }
             .hero-text { text-align: center; }
             .hero { padding-top: 100px; }
-            /* Matikan animasi berat di mobile */
             .blob, .bubble { display: none; }
             body { background: linear-gradient(180deg, #fff5f5 0%, #ffffff 100%); }
         }
@@ -323,10 +344,10 @@
 </head>
 <body>
 
-    <!-- CONTAINER ANIMASI GELEMBUNG AIR (BARU) -->
+    <!-- CONTAINER ANIMASI GELEMBUNG AIR (Z-Index -1) -->
     <div class="bubble-container" id="bubbleContainer"></div>
 
-    <!-- BACKGROUND BLOBS ANIMATION (BESAR) -->
+    <!-- BACKGROUND BLOBS ANIMATION (Z-Index -1) -->
     <div class="bg-blobs">
         <div class="blob blob-1"></div>
         <div class="blob blob-2"></div>
@@ -335,7 +356,7 @@
         <div class="blob blob-5"></div>
     </div>
 
-    <!-- NAVBAR (Scrollable) -->
+    <!-- NAVBAR -->
     <nav class="navbar navbar-expand-lg fixed-top" id="mainNavbar">
         <div class="container">
             <a class="navbar-brand" href="#">
@@ -362,18 +383,16 @@
         </div>
     </nav>
 
-    <!-- HERO SECTION (Split Layout) -->
+    <!-- HERO SECTION -->
     <section class="hero" id="home">
         <div class="container">
             <div class="row align-items-center">
 
-                <!-- KOLOM KIRI: FOTO GEDUNG -->
+                <!-- KOLOM KIRI: FOTO TUMPUKAN UANG -->
                 <div class="col-lg-6 mb-5 mb-lg-0" data-aos="fade-right" data-aos-duration="1200">
                     <div class="hero-img-wrapper">
-                        <!-- Foto Gedung Biru -->
-                        <img src="https://z-cdn-media.chatglm.cn/files/635e2c78-09b6-4586-bc9c-9f4a99f5a461.jpg?auth_key=1870906914-a253b36a29b44a8c8c7c46b285a08957-0-0b54851ae1e42d403e79eb0b7346b5e9" alt="SmartGaji Office">
-                        <!-- Overlay Gradasi Maroon -->
-                        <div class="img-gradient"></div>
+                        <!-- FOTO TUMPUKAN UANG -->
+                        <img src="https://z-cdn-media.chatglm.cn/files/212e076d-891c-40e1-a4a5-8112bd8d703d.jpg?auth_key=1873202059-cfa65f2584334351a431602c756e811c-0-eb165adf61c2b0ef55e8b21aef04c629" alt="SmartGaji - Keuangan">
                     </div>
                 </div>
 
@@ -401,7 +420,7 @@
         </div>
     </section>
 
-    <!-- FEATURES SECTION (About Us) -->
+    <!-- FEATURES SECTION -->
     <section class="py-5" id="features">
         <div class="container">
             <div class="text-center mb-5" data-aos="fade-up">
@@ -472,7 +491,7 @@
         <small>&copy; {{ date('Y') }} SmartGaji | Sistem Penggajian Terpadu</small>
     </footer>
 
-    <!-- Scripts (LOGIKA TIDAK DIUBAH) -->
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
@@ -516,7 +535,7 @@
             window.requestAnimationFrame(step);
         }
 
-        // 3. Efek Scroll pada Navbar (Jadi Putih Solid saat discroll)
+        // 3. Efek Scroll pada Navbar
         window.addEventListener('scroll', () => {
             const navbar = document.getElementById('mainNavbar');
             if (window.scrollY > 50) {
@@ -539,36 +558,30 @@
             }
         }
 
-        // Mulai mengetik setelah delay
         setTimeout(typeWriter, 800);
 
-        // 5. SCRIPT GENERATOR GELEMBUNG AIR (BARU)
+        // 5. SCRIPT GENERATOR GELEMBUNG AIR
         function createBubble() {
             const container = document.getElementById('bubbleContainer');
             const bubble = document.createElement('div');
             bubble.classList.add('bubble');
 
-            // Ukuran acak
             const size = Math.random() * 30 + 10 + 'px';
             bubble.style.width = size;
             bubble.style.height = size;
 
-            // Posisi horizontal acak
             bubble.style.left = Math.random() * 100 + '%';
 
-            // Durasi naik acak (antara 5s sampai 10s)
             const duration = Math.random() * 5 + 5 + 's';
             bubble.style.animationDuration = duration;
 
             container.appendChild(bubble);
 
-            // Hapus gelembung setelah animasi selesai agar DOM tidak penuh
             setTimeout(() => {
                 bubble.remove();
             }, parseFloat(duration) * 1000);
         }
 
-        // Buat gelembung baru setiap 400ms
         setInterval(createBubble, 400);
 
     </script>
