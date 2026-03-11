@@ -7,6 +7,8 @@ use App\Models\Absensi;
 use App\Models\Karyawan;
 use Carbon\Carbon;
 use App\Models\Libur;
+use App\Models\Izin;
+use App\Models\Sakit;
 use Illuminate\Support\Facades\Auth;
 
 class AbsensiController extends Controller
@@ -302,52 +304,89 @@ public function absenPulang(Request $request)
     return back()->with('success', 'Absen pulang berhasil');
 }
 
-
-public function absenIzin(Request $request)
+    public function absenIzin(Request $request)
 {
-    $now = Carbon::now('Asia/Jakarta');
-    $tanggal = $now->toDateString();
-
-    // ⛔ BATAS ABSEN MASUK JAM 10:00
-    // $batasMasuk = Carbon::createFromTime(10, 0, 0, 'Asia/Jakarta');
-
-    // if ($now->greaterThan($batasMasuk)) {
-    //     return back()->with('error', 'Absen izin hanya bisa sampai jam 10:00');
-    // }
     $request->validate([
         'status_kehadiran' => 'required|in:Izin,Sakit',
-        'keterangan'       => 'required|min:5'
+        'keterangan' => 'required|min:5'
     ]);
 
-
-    // ambil karyawan
     $karyawan = Karyawan::where('id_user', Auth::user()->id)->first();
 
     if (!$karyawan) {
-        return back()->with('error', 'Akun belum terhubung dengan data karyawan');
+        return back()->with('error','Akun belum terhubung dengan data karyawan');
     }
 
     $tanggal = Carbon::now('Asia/Jakarta')->toDateString();
 
-    // cegah dobel absensi hari yang sama
-    $sudahAbsen = Absensi::where('id_karyawan', $karyawan->id_karyawan)
-        ->where('tanggal', $tanggal)
-        ->exists();
-
-    if ($sudahAbsen) {
-        return back()->with('error', 'Kamu sudah melakukan absensi hari ini');
+    if($request->status_kehadiran == 'Izin')
+    {
+        Izin::create([
+            'karyawan_id' => $karyawan->id_karyawan,
+            'tanggal' => $tanggal,
+            'alasan' => $request->keterangan,
+            'status' => 'pending'
+        ]);
     }
 
-    // simpan izin / sakit (TANPA jam masuk & pulang)
-    Absensi::create([
-        'id_karyawan'      => $karyawan->id_karyawan,
-        'tanggal'          => $tanggal,
-        'status_kehadiran' => $request->status_kehadiran,
-        'keterangan'       => $request->keterangan,
-        'jam_masuk'        => null,
-        'jam_pulang'       => null,
-    ]);
+    if($request->status_kehadiran == 'Sakit')
+    {
+        Sakit::create([
+            'karyawan_id' => $karyawan->id_karyawan,
+            'tanggal' => $tanggal,
+            'keterangan' => $request->keterangan,
+            'status' => 'pending'
+        ]);
+    }
 
-    return back()->with('success', 'Izin berhasil dikirim');
+    return back()->with('success','Pengajuan berhasil dikirim, menunggu approval manager');
 }
+
+// public function absenIzin(Request $request)
+// {
+//     $now = Carbon::now('Asia/Jakarta');
+//     $tanggal = $now->toDateString();
+
+//     // ⛔ BATAS ABSEN MASUK JAM 10:00
+//     $batasMasuk = Carbon::createFromTime(10, 0, 0, 'Asia/Jakarta');
+
+//     if ($now->greaterThan($batasMasuk)) {
+//         return back()->with('error', 'Absen izin hanya bisa sampai jam 10:00');
+//     }
+//     $request->validate([
+//         'status_kehadiran' => 'required|in:Izin,Sakit',
+//         'keterangan'       => 'required|min:5'
+//     ]);
+
+
+//     // ambil karyawan
+//     $karyawan = Karyawan::where('id_user', Auth::user()->id)->first();
+
+//     if (!$karyawan) {
+//         return back()->with('error', 'Akun belum terhubung dengan data karyawan');
+//     }
+
+//     $tanggal = Carbon::now('Asia/Jakarta')->toDateString();
+
+//     // cegah dobel absensi hari yang sama
+//     $sudahAbsen = Absensi::where('id_karyawan', $karyawan->id_karyawan)
+//         ->where('tanggal', $tanggal)
+//         ->exists();
+
+//     if ($sudahAbsen) {
+//         return back()->with('error', 'Kamu sudah melakukan absensi hari ini');
+//     }
+
+//     // simpan izin / sakit (TANPA jam masuk & pulang)
+//     Absensi::create([
+//         'id_karyawan'      => $karyawan->id_karyawan,
+//         'tanggal'          => $tanggal,
+//         'status_kehadiran' => $request->status_kehadiran,
+//         'keterangan'       => $request->keterangan,
+//         'jam_masuk'        => null,
+//         'jam_pulang'       => null,
+//     ]);
+
+//     return back()->with('success', 'Izin berhasil dikirim');
+// }
 }

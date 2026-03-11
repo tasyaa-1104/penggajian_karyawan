@@ -2,8 +2,6 @@
 
 @section('content')
 
-
-
 <h3 class="mb-4">Dashboard Manager</h3>
 
 <div class="row g-4">
@@ -87,6 +85,35 @@
             </div>
         </div>
     </div>
+
+    {{-- IZIN PENDING --}}
+    <div class="col-md-3">
+        <div class="card bg-warning text-white shadow">
+            <div class="card-body">
+                <h6>Izin Pending</h6>
+                <h3>{{ $izin_pending ?? 0 }}</h3>
+                <a href="{{ route('manager.izin') }}" class="btn btn-light btn-sm mt-2">
+                    Approve
+                </a>
+            </div>
+        </div>
+    </div>
+
+    {{-- SAKIT PENDING --}}
+    <div class="col-md-3">
+        <div class="card bg-danger text-white shadow">
+            <div class="card-body">
+                <h6>Sakit Pending</h6>
+                <h3>{{ $sakit_pending ?? 0 }}</h3>
+                <a href="{{ route('manager.sakit') }}" class="btn btn-light btn-sm mt-2">
+                    Approve
+                </a>
+            </div>
+        </div>
+    </div>
+
+    </div>
+</li>
 
 </div>
 

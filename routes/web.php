@@ -276,6 +276,17 @@ Route::get('/admin/overtime/{id}/approve', [OvertimeController::class, 'approve'
 
 Route::middleware(['role:manager'])->group(function () {
 
+   // izin
+    Route::get('/izin', [ManagerController::class,'izin'])->name('manager.izin');
+    Route::post('/izin/{id}/approve', [ManagerController::class,'approveIzin'])->name('manager.izin.approve');
+    Route::post('/izin/{id}/reject', [ManagerController::class,'rejectIzin'])->name('manager.izin.reject');
+
+    // sakit
+    Route::get('/sakit', [ManagerController::class,'sakit'])->name('manager.sakit');
+    Route::post('/sakit/{id}/approve', [ManagerController::class,'approveSakit'])->name('manager.sakit.approve');
+    Route::post('/sakit/{id}/reject', [ManagerController::class,'rejectSakit'])->name('manager.sakit.reject');
+
+
     Route::get('/manager/dashboard',[ManagerController::class, 'dashboard']  )->name('manager.dashboard');
 
     Route::get('/manager/cuti',
