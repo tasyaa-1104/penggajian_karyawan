@@ -397,11 +397,7 @@ Route::post('/overtime/generate', [OvertimeController::class, 'generateFromAbsen
 Route::delete('/overtime/{id}', [OvertimeController::class, 'destroy'])
     ->name('overtime.destroy');
 
-
-/*
-|--------------------------------------------------------------------------
-| MANAGER
-|--------------------------------------------------------------------------
-*/
+Route::get('/finance/karyawan', [KaryawanController::class, 'index'])
+    ->name('finance.karyawan');
 
 

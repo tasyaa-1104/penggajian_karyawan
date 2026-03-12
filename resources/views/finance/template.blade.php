@@ -315,6 +315,12 @@
                         </a>
                     </li>
 
+                    <li class="nav-item mb-2">
+                        <a href="{{route('finance.karyawan')}}" class="nav-link-custom">
+                            <i class="fas fa-user"></i> <span>Karyawan</span>
+                        </a>
+                    </li>
+
                     <!-- Gaji -->
                     <li class="nav-item mb-2">
                         <a href="{{route('gaji.index')}}" class="nav-link-custom">

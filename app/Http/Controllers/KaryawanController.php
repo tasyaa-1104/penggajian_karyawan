@@ -13,21 +13,32 @@ use Illuminate\Support\Facades\Auth;
 
 class KaryawanController extends Controller
 {
-    public function index(Request $request)
-    {
-        $search = $request->search;
 
-        $karyawans = Karyawan::with(['divisi','jabatan','user'])
-            ->when($search, function ($q) use ($search) {
-                $q->where('nik', 'like', "%$search%")
-                  ->orWhereHas('user', fn ($u) =>
-                        $u->where('nama', 'like', "%$search%"));
-            })
-            ->orderBy('id_karyawan','desc')
-            ->get();
+public function index(Request $request)
+{
+    $search = $request->search;
 
-        return view('admin.karyawan', compact('karyawans','search'));
+    $karyawans = Karyawan::with(['divisi','jabatan','user'])
+        ->when($search, function ($q) use ($search) {
+            $q->where('nik', 'like', "%$search%")
+              ->orWhere('nama_karyawan', 'like', "%$search%");
+        })
+        ->orderBy('id_karyawan','desc')
+        ->get();
+
+    $role = Auth::user()->role;
+
+    if($role == 'finance'){
+        return view('finance.karyawan-finance', compact('karyawans','search'));
     }
+
+    if($role == 'manager'){
+        return view('manager.karyawan-index', compact('karyawans','search'));
+    }
+
+    // default untuk HRD
+    return view('admin.karyawan', compact('karyawans','search'));
+}
 
     public function create()
     {
