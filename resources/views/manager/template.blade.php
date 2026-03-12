@@ -43,6 +43,12 @@ body{
     border-bottom:1px solid rgba(255,255,255,0.1);
 }
 
+.sidebar-brand i{
+    font-size: 28px;
+    color: white;
+    margin-right: 8px;    /* ← Ditambahkan jarak */
+}
+
 .sidebar-menu{
     flex:1;
     padding:15px 0;
@@ -102,12 +108,18 @@ body{
 </head>
 
 <body>
-
+{{--
 <!-- SIDEBAR -->
 <div class="sidebar">
 
 <div class="sidebar-brand">
 <i class="bi bi-person-circle"></i> SmartGaji
+</div> --}}
+<!-- SIDEBAR -->
+<div class="sidebar">
+
+<div class="sidebar-brand">
+<i class="bi bi-cash-stack"></i>SmartGaji
 </div>
 
 <div class="sidebar-menu">
@@ -162,7 +174,7 @@ class="{{ request()->routeIs('manager.laporan') ? 'active' : '' }}">
 </a>
 
 </div>
-
+{{--
 <!-- LOGOUT -->
 <div class="sidebar-logout">
 <a href="#" onclick="event.preventDefault();document.getElementById('logout-form').submit();">
@@ -172,8 +184,17 @@ class="{{ request()->routeIs('manager.laporan') ? 'active' : '' }}">
 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
 @csrf
 </form>
-</div>
+</div> --}}
+<!-- LOGOUT -->
+<div class="sidebar-logout">
+<a href="#" onclick="event.preventDefault();document.getElementById('logout-form').submit();">
+<span><i class="bi bi-power"></i> Logout</span>
+</a>
 
+<form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+@csrf
+</form>
+</div>
 </div>
 
 <!-- CONTENT -->

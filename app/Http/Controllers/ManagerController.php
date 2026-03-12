@@ -27,12 +27,20 @@ class ManagerController extends Controller
         $jumlah_karyawan = Karyawan::count();
 
         $cuti_pending = Cuti::where('status','pending')->count();
-        $cuti_disetujui = Cuti::where('status','approved')->count();
-        $cuti_ditolak = Cuti::where('status','rejected')->count();
+        $cuti_disetujui = Cuti::where('status','disetujui')->count();
+        $cuti_ditolak = Cuti::where('status','ditolak')->count();
 
         $overtime_pending = Overtime::where('status','pending')->count();
         $overtime_approved = Overtime::where('status','approved')->count();
         $overtime_rejected = Overtime::where('status','rejected')->count();
+
+        $izin_pending = Izin::where('status','pending')->count();
+       $izin_disetujui = Izin::where('status','disetuji')->count();
+        $izin_ditolak= Izin::where('status','ditolak')->count();
+
+        $sakit_pending = Sakit::where('status','pending')->count();
+        $sakit_disetujui = Sakit::where('status','disetujui')->count();
+        $sakit_ditolak = Sakit::where('status','ditolak')->count();
 
         $absensi_hari_ini = Absensi::whereDate('tanggal', Carbon::today())->count();
 
@@ -46,6 +54,13 @@ class ManagerController extends Controller
             'overtime_pending',
             'overtime_approved',
             'overtime_rejected',
+            'izin_pending',
+            'izin_disetujui',
+            'izin_ditolak',
+
+            'sakit_pending',
+            'sakit_disetujui',
+            'sakit_ditolak',
             'absensi_hari_ini'
         ), $notif));
     }
@@ -106,14 +121,12 @@ class ManagerController extends Controller
     |--------------------------------------------------------------------------
     */
 
-    public function izin()
-    {
-        $data = Izin::with('karyawan')
-            ->orderBy('tanggal','desc')
-            ->get();
+ public function izin()
+{
+    $data = Izin::where('status','pending')->get();
 
-        return view('manager.izin', compact('data'));
-    }
+    return view('manager.izin', compact('data'));
+}
 
 
     /*
@@ -121,15 +134,12 @@ class ManagerController extends Controller
     | DATA SAKIT
     |--------------------------------------------------------------------------
     */
+public function sakit()
+{
+    $data = Sakit::where('status','pending')->get();
 
-    public function sakit()
-    {
-        $data = Sakit::with('karyawan')
-            ->orderBy('tanggal','desc')
-            ->get();
-
-        return view('manager.sakit', compact('data'));
-    }
+    return view('manager.sakit', compact('data'));
+}
 
 
     /*
@@ -138,23 +148,24 @@ class ManagerController extends Controller
     |--------------------------------------------------------------------------
     */
 
-    public function approveIzin($id)
-    {
-        $izin = Izin::findOrFail($id);
+public function approveIzin($id)
+{
+    $izin = Izin::findOrFail($id);
+    $izin->status = 'disetujui';
+    $izin->save();
 
-        $izin->status = 'disetujui';
-        $izin->save();
+    return redirect()->back()->with('success','Izin berhasil di approve');
+}
 
-        Absensi::create([
-            'id_karyawan' => $izin->karyawan_id,
-            'tanggal' => $izin->tanggal,
-            'status_kehadiran' => 'Izin',
-            'keterangan' => $izin->alasan
-        ]);
 
-        return back()->with('success','Izin berhasil disetujui');
-    }
+public function rejectIzin($id)
+{
+    $izin = Izin::findOrFail($id);
+    $izin->status = 'ditolak';
+    $izin->save();
 
+    return redirect()->back()->with('success','Izin ditolak');
+}
 
     /*
     |--------------------------------------------------------------------------
@@ -162,22 +173,24 @@ class ManagerController extends Controller
     |--------------------------------------------------------------------------
     */
 
-    public function approveSakit($id)
-    {
-        $sakit = Sakit::findOrFail($id);
+public function approveSakit($id)
+{
+    $sakit = Sakit::findOrFail($id);
+    $sakit->status = 'disetujui';
+    $sakit->save();
 
-        $sakit->status = 'disetujui';
-        $sakit->save();
+    return redirect()->back()->with('success','Sakit berhasil disetujui');
+}
 
-        Absensi::create([
-            'id_karyawan' => $sakit->karyawan_id,
-            'tanggal' => $sakit->tanggal,
-            'status_kehadiran' => 'Sakit',
-            'keterangan' => $sakit->keterangan
-        ]);
 
-        return back()->with('success','Pengajuan sakit disetujui');
-    }
+public function rejectSakit($id)
+{
+    $sakit = Sakit::findOrFail($id);
+    $sakit->status = 'ditolak';
+    $sakit->save();
+
+    return redirect()->back()->with('success','Sakit berhasil ditolak');
+}
 
 
     /*
