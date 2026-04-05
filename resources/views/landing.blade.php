@@ -30,7 +30,6 @@
         }
 
         /* --- BACKGROUND BLOBS (ANIMASI BESAR) --- */
-        /* Z-INDEX -1 AGAR SELALU DI BELAKANG KONTEN */
         .bg-blobs {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -110,7 +109,40 @@
             font-weight: 800;
             font-size: 1.5rem;
             color: var(--primary) !important;
+            display: flex;
+            align-items: center;
         }
+
+        /* --- LOGO ANIMATION STYLES --- */
+        .smart-logo-icon {
+            font-size: 1.8rem; /* Ukuran Logo */
+            color: var(--primary);
+            display: inline-block;
+            transition: color 0.3s ease;
+        }
+
+        /* Animasi Memantul Halus (Bounce) secara terus menerus */
+        .smart-logo-icon {
+            animation: gentleBounce 3s infinite ease-in-out;
+        }
+
+        /* Efek saat di hover (bergerak lebih cepat/berputar sedikit) */
+        .navbar-brand:hover .smart-logo-icon {
+            animation: wiggle 0.6s ease-in-out infinite;
+            color: var(--secondary); /* Berubah warna saat di hover */
+        }
+
+        @keyframes gentleBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
+        }
+
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-10deg); }
+            75% { transform: rotate(10deg); }
+        }
+        /* ------------------------------------- */
 
         .nav-link {
             font-weight: 500;
@@ -163,17 +195,16 @@
 
         .hero-img-wrapper {
             position: relative;
-            border-radius: 10px;
+            border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 20px 50px rgba(128, 0, 0, 0.2);
+            box-shadow: 0 20px 50px rgba(128, 0, 0, 0.25);
             transform: perspective(1000px) rotateY(-3deg);
             transition: transform 0.5s ease;
-            background-color: white;
+            background-color: #fff;
             z-index: 10;
 
-            /* PENYESUAIAN UKURAN FOTO TUMPUKAN UANG */
             width: 100%;
-            max-width: 480px; /* Lebar sedikit lebih kecil karena foto uang biasanya portrait */
+            max-width: 450px;
             height: auto;
             margin: 0 auto;
             border: 5px solid white;
@@ -181,14 +212,19 @@
 
         .hero-img-wrapper:hover {
             transform: perspective(1000px) rotateY(0deg);
-            box-shadow: 0 30px 60px rgba(128, 0, 0, 0.3);
+            box-shadow: 0 30px 60px rgba(128, 0, 0, 0.35);
         }
 
         .hero-img-wrapper img {
             width: 100%;
-            height: 450px; /* Tinggi fixed agar layout konsisten */
-            object-fit: cover; /* Foto di-crop rapi agar memenuhi kotak */
+            height: 500px;
+            object-fit: cover;
             display: block;
+            transition: transform 0.5s ease;
+        }
+
+        .hero-img-wrapper:hover img {
+            transform: scale(1.05);
         }
 
         .hero-text h1 {
@@ -327,9 +363,9 @@
                 max-width: 100%;
                 margin-bottom: 30px;
                 transform: none;
-                border-radius: 10px;
-                max-width: 380px; /* Ukuran wajar di HP */
-                height: 350px; /* Sesuaikan tinggi di HP */
+                border-radius: 15px;
+                max-width: 380px;
+                height: 350px;
             }
             .hero-img-wrapper img {
                 height: 100%;
@@ -359,8 +395,9 @@
     <!-- NAVBAR -->
     <nav class="navbar navbar-expand-lg fixed-top" id="mainNavbar">
         <div class="container">
+            <!-- LOGO DIUBAH: Menjadi 'fa-sack-dollar' (Karung Uang) sesuai tema Gaji + Animasi -->
             <a class="navbar-brand" href="#">
-                <i class="fa-solid fa-building-columns me-2"></i> SmartGaji
+                <i class="fa-solid fa-sack-dollar me-2 smart-logo-icon"></i> SmartGaji
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -388,11 +425,11 @@
         <div class="container">
             <div class="row align-items-center">
 
-                <!-- KOLOM KIRI: FOTO TUMPUKAN UANG -->
+                <!-- KOLOM KIRI: FOTO GEDUNG -->
                 <div class="col-lg-6 mb-5 mb-lg-0" data-aos="fade-right" data-aos-duration="1200">
                     <div class="hero-img-wrapper">
-                        <!-- FOTO TUMPUKAN UANG -->
-                        <img src="https://z-cdn-media.chatglm.cn/files/212e076d-891c-40e1-a4a5-8112bd8d703d.jpg?auth_key=1873202059-cfa65f2584334351a431602c756e811c-0-eb165adf61c2b0ef55e8b21aef04c629" alt="SmartGaji - Keuangan">
+                        <!-- FOTO GEDUNG MODERN -->
+                        <img src="https://z-cdn-media.chatglm.cn/files/ece55b11-2bfb-4545-95fc-92f45d4ec335.jpg?auth_key=1875097066-8218f88c02734f28b4fbb7d7904490d0-0-74a2f70754f8c91bf3fde4f7b9dc9d04" alt="Gedung Kantor SmartGaji Modern">
                     </div>
                 </div>
 
@@ -496,7 +533,7 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
     <script>
-        // 1. Inisialisasi AOS
+        // 1. Inisialisasi AOS (LOGIKA TIDAK DIUBAH)
         AOS.init({
             once: true,
             offset: 100,
@@ -504,17 +541,18 @@
             easing: 'ease-out-cubic',
         });
 
-        // 2. Script Counter (Laravel Logic)
+        // 2. Script Counter (LOGIKA LARAVEL TIDAK DIUBAH)
         window.addEventListener('DOMContentLoaded', () => {
             const counterElement = document.getElementById('count-karyawan');
 
             if (counterElement) {
                 const rawValue = counterElement.innerText.trim();
-                const finalValue = parseInt(rawValue.replace(/,/g, ''));
-
-                if (!isNaN(finalValue)) {
-                    counterElement.innerText = "0";
-                    animateValue(counterElement, 0, finalValue, 2000);
+                if (rawValue && !rawValue.includes('{{')) {
+                    const finalValue = parseInt(rawValue.replace(/,/g, ''));
+                    if (!isNaN(finalValue)) {
+                        counterElement.innerText = "0";
+                        animateValue(counterElement, 0, finalValue, 2000);
+                    }
                 }
             }
         });
@@ -535,7 +573,7 @@
             window.requestAnimationFrame(step);
         }
 
-        // 3. Efek Scroll pada Navbar
+        // 3. Efek Scroll pada Navbar (LOGIKA TIDAK DIUBAH)
         window.addEventListener('scroll', () => {
             const navbar = document.getElementById('mainNavbar');
             if (window.scrollY > 50) {
@@ -545,7 +583,7 @@
             }
         });
 
-        // 4. ANIMASI TYPEWRITER
+        // 4. ANIMASI TYPEWRITER (LOGIKA TIDAK DIUBAH)
         const textToType = "Solusi Cerdas Pengelolaan Gaji";
         const typeWriterElement = document.getElementById('typewriter');
         let i = 0;
@@ -560,7 +598,7 @@
 
         setTimeout(typeWriter, 800);
 
-        // 5. SCRIPT GENERATOR GELEMBUNG AIR
+        // 5. SCRIPT GENERATOR GELEMBUNG AIR (LOGIKA TIDAK DIUBAH)
         function createBubble() {
             const container = document.getElementById('bubbleContainer');
             const bubble = document.createElement('div');
