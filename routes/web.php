@@ -320,7 +320,7 @@ Route::get('/manager/laporan', [ManagerController::class, 'laporan'])
 ->name('manager.laporan');
 
 
-
+Route::get('/manager/izin-sakit', [ManagerController::class, 'izinSakit'])->name('manager.izin.sakit');
 Route::get('/manager/karyawan', [ManagerController::class, 'karyawan'])
     ->name('manager.karyawan');
 

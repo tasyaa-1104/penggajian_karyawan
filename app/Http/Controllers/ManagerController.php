@@ -120,15 +120,85 @@ class ManagerController extends Controller
     | DATA IZIN
     |--------------------------------------------------------------------------
     */
-
- public function izin()
+public function izin()
 {
-    $data = Izin::where('status','pending')->get();
+    $dataIzin = Izin::with('karyawan')->get()->map(function ($item) {
+        $item->jenis_pengajuan = 'Izin';
+        $item->isi = $item->alasan;
+        $item->source = 'izin';
+        return $item;
+    });
+
+    $dataSakit = Sakit::with('karyawan')->get()->map(function ($item) {
+        $item->jenis_pengajuan = 'Sakit';
+        $item->isi = $item->alasan;
+        $item->source = 'sakit';
+        return $item;
+    });
+
+    $data = $dataIzin->concat($dataSakit)->sortByDesc('tanggal')->values();
 
     return view('manager.izin', compact('data'));
 }
+//  public function izin()
+// {
+//     $data = Izin::where('status','pending')->get();
 
+//     return view('manager.izin', compact('data'));
+// }
+// public function izin()
+// {
+//     $dataIzin = Izin::with('karyawan')->get()->map(function($item){
+//       $item->jenis_pengajuan = 'Izin';
+// $item->source = 'izin';
+//     });
 
+//     $dataSakit = Sakit::with('karyawan')->get()->map(function($item){
+//        $item->jenis_pengajuan = 'Sakit';
+// $item->source = 'sakit';
+//     });
+
+//     $data = $dataIzin->concat($dataSakit)->sortByDesc('tanggal');
+
+//     return view('manager.izin', compact('data'));
+// }
+// public function izin()
+// {
+//    $dataIzin = Izin::with('karyawan')->get()->map(function($item){
+//     $item->jenis = 'Izin';
+//     return $item;
+// });
+
+// $dataSakit = Sakit::with('karyawan')->get()->map(function($item){
+//     $item->jenis = 'Sakit';
+//     return $item;
+// });
+
+// $data = $dataIzin->concat($dataSakit)->sortByDesc('tanggal');
+
+//     $data = $dataIzin->concat($dataSakit)->sortByDesc('tanggal');
+
+//     return view('manager.izin', compact('data'));
+// }
+
+public function izinSakit()
+{
+    $izin = Izin::with('karyawan')->get()->map(function ($item) {
+        $item->jenis = 'Izin';
+        $item->isi = $item->alasan;
+        return $item;
+    });
+
+    $sakit = Sakit::with('karyawan')->get()->map(function ($item) {
+        $item->jenis = 'Sakit';
+        $item->isi = $item->alasan;
+        return $item;
+    });
+
+    $data = $izin->concat($sakit)->sortByDesc('tanggal');
+
+    return view('manager.izin', compact('data'));
+}
     /*
     |--------------------------------------------------------------------------
     | DATA SAKIT
@@ -151,8 +221,19 @@ public function sakit()
 public function approveIzin($id)
 {
     $izin = Izin::findOrFail($id);
+
     $izin->status = 'disetujui';
     $izin->save();
+
+    // masuk ke absensi
+    Absensi::create([
+        'id_karyawan' => $izin->karyawan_id,
+        'tanggal' => $izin->tanggal,
+        'status_kehadiran' => 'Izin',
+        'alasan' => $izin->alasan,
+        'jam_masuk' => null,
+        'jam_pulang' => null
+    ]);
 
     return redirect()->back()->with('success','Izin berhasil di approve');
 }
@@ -176,8 +257,19 @@ public function rejectIzin($id)
 public function approveSakit($id)
 {
     $sakit = Sakit::findOrFail($id);
+
     $sakit->status = 'disetujui';
     $sakit->save();
+
+    // masuk ke absensi
+    Absensi::create([
+        'id_karyawan' => $sakit->karyawan_id,
+        'tanggal' => $sakit->tanggal,
+        'status_kehadiran' => 'Sakit',
+        'alasan' => $sakit->alasan,
+        'jam_masuk' => null,
+        'jam_pulang' => null
+    ]);
 
     return redirect()->back()->with('success','Sakit berhasil disetujui');
 }

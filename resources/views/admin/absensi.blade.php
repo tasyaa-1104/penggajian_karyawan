@@ -20,6 +20,9 @@
 @endsection
 
 @section('content')
+@php
+\Carbon\Carbon::setLocale('id');
+@endphp
 
 <!-- FontAwesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -311,6 +314,7 @@
                         <th width="5%">No</th>
                         <th>Karyawan</th>
                         <th>Tanggal</th>
+                        <th>Bulan</th>
                         <th>Jam Masuk</th>
                         <th>Jam Pulang</th>
                         <th>Status</th>
@@ -333,6 +337,7 @@
                             <td>{{ $loop->iteration }}</td>
                             <td><strong>{{ $a->karyawan->nama_karyawan ?? '-' }}</strong></td>
                             <td>{{ $a->tanggal }}</td>
+                            <td>{{ \Carbon\Carbon::parse($a->tanggal)->translatedFormat('F') }}</td>
                             <td style="font-family: monospace;">{{ $a->jam_masuk ?? '-' }}</td>
                             <td style="font-family: monospace;">{{ $a->jam_pulang ?? '-' }}</td>
                             <td>

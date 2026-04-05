@@ -147,26 +147,26 @@ class="{{ request()->routeIs('manager.overtime') ? 'active' : '' }}">
 <a href="{{ route('manager.izin') }}"
 class="{{ request()->routeIs('manager.izin') ? 'active' : '' }}">
 <span>
-<i class="bi bi-file-earmark-text"></i> Persetujuan Izin
+<i class="bi bi-file-earmark-text"></i> Persetujuan Izin & Sakit
 </span>
 
-@if(($izin_pending ?? 0) > 0)
-<span class="badge-notif">{{ $izin_pending }}</span>
+@if(($total_notif ?? 0) > 0)
+<span class="badge-notif">{{ $total_notif }}</span>
 @endif
 
 </a>
 
-<a href="{{ route('manager.sakit') }}"
+{{-- <a href="{{ route('manager.sakit') }}"
 class="{{ request()->routeIs('manager.sakit') ? 'active' : '' }}">
 <span>
 <i class="bi bi-heart-pulse"></i> Persetujuan Sakit
-</span>
-
+</span> --}}
+{{-- 
 @if(($sakit_pending ?? 0) > 0)
 <span class="badge-notif">{{ $sakit_pending }}</span>
 @endif
 
-</a>
+</a> --}}
 
 <a href="{{ route('manager.laporan') }}"
 class="{{ request()->routeIs('manager.laporan') ? 'active' : '' }}">

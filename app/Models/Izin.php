@@ -15,8 +15,8 @@ class Izin extends Model
         'status'
     ];
 
-    public function karyawan()
-    {
-        return $this->belongsTo(Karyawan::class,'karyawan_id','id_karyawan');
-    }
+   public function karyawan()
+{
+    return $this->belongsTo(Karyawan::class, 'karyawan_id', 'id_karyawan');
+}
 }

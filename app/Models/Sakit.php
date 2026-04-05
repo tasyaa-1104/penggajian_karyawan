@@ -11,12 +11,12 @@ class Sakit extends Model
     protected $fillable = [
         'karyawan_id',
         'tanggal',
-        'keterangan',
+        'alasan',
         'status'
     ];
 
-    public function karyawan()
-    {
-        return $this->belongsTo(Karyawan::class,'karyawan_id','id_karyawan');
-    }
+public function karyawan()
+{
+    return $this->belongsTo(Karyawan::class, 'karyawan_id', 'id_karyawan');
+}
 }

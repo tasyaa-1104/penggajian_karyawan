@@ -1,66 +1,15 @@
-{{-- @extends('manager.template')
-
-@section('content')
-
-<h3 class="mb-4">Data Izin Karyawan</h3>
-
-<table class="table table-bordered">
-<thead>
-<tr>
-    <th>No</th>
-    <th>Nama Karyawan</th>
-    <th>Tanggal</th>
-    <th>Alasan</th>
-    <th>Status</th>
-    <th>Aksi</th>
-</tr>
-</thead>
-
-<tbody>
-@foreach($data as $d)
-<tr>
-    <td>{{ $loop->iteration }}</td>
-    <td>{{ $d->karyawan->nama }}</td>
-    <td>{{ $d->tanggal }}</td>
-    <td>{{ $d->alasan }}</td>
-    <td>{{ $d->status }}</td>
-
-    <td>
-
-        @if($d->status == 'pending')
-
-        <form action="{{ route('manager.izin.approve',$d->id) }}" method="POST" style="display:inline">
-            @csrf
-            <button class="btn btn-success btn-sm">Approve</button>
-        </form>
-
-        <form action="{{ route('manager.izin.reject',$d->id) }}" method="POST" style="display:inline">
-            @csrf
-            <button class="btn btn-danger btn-sm">Reject</button>
-        </form>
-
-        @endif
-
-    </td>
-
-</tr>
-@endforeach
-</tbody>
-
-</table>
-
-@endsection --}}
 @extends('manager.template')
 
 @section('title', 'Persetujuan Izin')
 
 @section('content')
+@php
+\Carbon\Carbon::setLocale('id');
+@endphp
 
-<!-- FontAwesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <style>
-    /* Page Title Section */
     .page-title-section {
         background: #FFF5F5;
         border-left: 5px solid #9B1C20;
@@ -82,221 +31,263 @@
         margin: 0;
     }
 
-    /* Card Styling */
     .main-card {
         background: white;
         border-radius: 15px;
-        border: none;
         box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+        margin-bottom: 25px;
+        height: 100%;
     }
 
     .main-card .card-body {
         padding: 25px;
     }
 
-    /* Table Styling */
-    .custom-table {
-        border: none;
-        border-radius: 10px;
-        overflow: hidden;
-    }
-
     .custom-table thead th {
         background: #9B1C20 !important;
         color: white !important;
-        font-weight: 500;
-        font-size: 14px;
         padding: 15px 12px;
+        font-size: 14px;
         border: none;
-        vertical-align: middle;
     }
 
     .custom-table tbody td {
         padding: 14px 12px;
-        vertical-align: middle;
         border-color: #fee2e2;
-        font-size: 14px;
+        vertical-align: middle;
     }
 
     .custom-table tbody tr:hover {
         background: #FFF5F5;
     }
 
-    /* Status Badges */
     .badge-status {
         padding: 6px 14px;
         border-radius: 20px;
         font-size: 12px;
-        font-weight: 500;
     }
 
     .badge-pending {
-        background: #FEF3C7 !important;
-        color: #92400E !important;
+        background: #FEF3C7;
+        color: #92400E;
     }
 
     .badge-approved {
-        background: #D1FAE5 !important;
-        color: #065F46 !important;
+        background: #D1FAE5;
+        color: #065F46;
     }
 
     .badge-rejected {
-        background: #FEE2E2 !important;
-        color: #9B1C20 !important;
+        background: #FEE2E2;
+        color: #9B1C20;
     }
 
-    /* Buttons */
     .btn-approve {
-        background: #D1FAE5 !important;
-        color: #065F46 !important;
-        border: none;
-        padding: 6px 14px;
-        border-radius: 8px;
-        font-weight: 500;
-        font-size: 13px;
-        transition: all 0.3s ease;
-    }
-
-    .btn-approve:hover {
-        background: #065F46 !important;
-        color: white !important;
-    }
-
-    .btn-reject {
-        background: #FEE2E2 !important;
-        color: #9B1C20 !important;
-        border: none;
-        padding: 6px 14px;
-        border-radius: 8px;
-        font-weight: 500;
-        font-size: 13px;
-        transition: all 0.3s ease;
-    }
-
-    .btn-reject:hover {
-        background: #9B1C20 !important;
-        color: white !important;
-    }
-
-    /* Alert Styling */
-    .alert-success {
         background: #D1FAE5;
         color: #065F46;
         border: none;
-        border-radius: 10px;
-        padding: 15px 20px;
+        padding: 6px 14px;
+        border-radius: 8px;
     }
 
-    .alert-danger {
+    .btn-reject {
         background: #FEE2E2;
         color: #9B1C20;
         border: none;
-        border-radius: 10px;
-        padding: 15px 20px;
-    }
-
-    /* Empty State */
-    .text-muted {
-        color: #9ca3af !important;
-        font-style: italic;
+        padding: 6px 14px;
+        border-radius: 8px;
     }
 </style>
 
 <div class="container-fluid mt-4">
 
-    <!-- Page Title Section -->
     <div class="page-title-section">
-        <div class="d-flex align-items-center justify-content-between">
-            <div>
-                <h3 class="page-title">
-                    <i class="fas fa-file-alt me-2"></i> Data Izin Karyawan
-                </h3>
-                <p class="page-subtitle">Kelola persetujuan izin karyawan</p>
-            </div>
-        </div>
+        <h3 class="page-title">
+            <i class="fas fa-file-alt me-2"></i> Data Izin & Sakit Karyawan
+        </h3>
+        <p class="page-subtitle">Kelola persetujuan izin dan sakit karyawan</p>
     </div>
 
-    {{-- ALERT --}}
     @if(session('success'))
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <i class="fas fa-check-circle me-2"></i> {{ session('success') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
     @endif
 
-    @if(session('error'))
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        <i class="fas fa-exclamation-circle me-2"></i> {{ session('error') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-    @endif
+    @php
+        $sakitPending = $data->where('jenis_pengajuan','Sakit')->where('status','pending')->count();
+    @endphp
 
-    <!-- Main Card -->
-    <div class="card main-card">
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table custom-table">
-                    <thead>
-                        <tr>
-                            <th>No</th>
-                            <th>Nama Karyawan</th>
-                            <th>Tanggal</th>
-                            <th>Alasan</th>
-                            <th>Status</th>
-                            <th style="width: 160px;">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($data as $d)
-                        <tr>
-                            <td>{{ $loop->iteration }}</td>
-                             <td><strong>{{ $d->karyawan->nama_karyawan ?? '-' }}</strong></td>
-                            <td>{{ $d->tanggal }}</td>
-                            <td>{{ $d->alasan }}</td>
-                            <td>
-                                @if($d->status == 'pending')
-                                    <span class="badge-status badge-pending">Pending</span>
-                                @elseif($d->status == 'approved')
-                                    <span class="badge-status badge-approved">Approved</span>
-                                @elseif($d->status == 'rejected')
-                                    <span class="badge-status badge-rejected">Rejected</span>
-                                @endif
-                            </td>
-                            <td>
-                                @if($d->status == 'pending')
-                                    <div class="d-flex gap-2">
-                                        <form action="{{ route('manager.izin.approve', $d->id) }}" method="POST">
-                                            @csrf
-                                            <button type="submit" class="btn-approve" onclick="return confirm('Setujui izin ini?')">
-                                                <i class="fas fa-check me-1"></i> Approve
-                                            </button>
-                                        </form>
-                                        <form action="{{ route('manager.izin.reject', $d->id) }}" method="POST">
-                                            @csrf
-                                            <button type="submit" class="btn-reject" onclick="return confirm('Tolak izin ini?')">
-                                                <i class="fas fa-times me-1"></i> Reject
-                                            </button>
-                                        </form>
-                                    </div>
-                                @else
-                                    <span class="text-muted">Selesai</span>
-                                @endif
-                            </td>
-                        </tr>
-                        @empty
-                        <tr>
-                            <td colspan="6" class="text-center py-5">
-                                <i class="fas fa-file-alt text-muted" style="font-size: 50px;"></i>
-                                <p class="text-muted mt-3">Tidak ada data izin</p>
-                            </td>
-                        </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+    {{-- @if($sakitPending > 0)
+        <div class="alert alert-warning">
+            Ada {{ $sakitPending }} pengajuan sakit menunggu persetujuan
+        </div>
+    @endif --}}
+
+    <div class="row">
+
+        {{-- KIRI = IZIN --}}
+        <div class="col-md-6">
+            <div class="card main-card">
+                <div class="card-body">
+                    <h4 class="mb-3">Data Izin</h4>
+                    <div class="mb-3">
+                        <input type="text" id="searchIzin" class="form-control" placeholder="Cari nama, tanggal, atau bulan izin...">
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table custom-table" id="tableIzin">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Nama</th>
+                                    <th>Tanggal</th>
+                                    <th>Bulan</th>
+                                    <th>Status</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                    @forelse($data->where('jenis_pengajuan','Izin')->sortBy(function($item){
+                                    return $item->status != 'pending';
+                                }) as $d)
+                                <tr>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $d->karyawan->nama_karyawan ?? '-' }}</td>
+                                    <td>{{ $d->tanggal }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($d->tanggal)->translatedFormat('F') }}</td>
+
+                                    <td>
+                                        @if($d->status == 'pending')
+                                            <span class="badge-status badge-pending">Pending</span>
+                                        @elseif($d->status == 'disetujui')
+                                            <span class="badge-status badge-approved">Approved</span>
+                                        @else
+                                            <span class="badge-status badge-rejected">Rejected</span>
+                                        @endif
+                                    </td>
+
+                                    <td>
+                                        @if($d->status == 'pending')
+                                            <form action="{{ route('manager.izin.approve', $d->id) }}" method="POST" class="d-inline">
+                                                @csrf
+                                                <button class="btn-approve">Approve</button>
+                                            </form>
+
+                                            <form action="{{ route('manager.izin.reject', $d->id) }}" method="POST" class="d-inline">
+                                                @csrf
+                                                <button class="btn-reject">Reject</button>
+                                            </form>
+                                        @else
+                                            <span class="text-muted">Selesai</span>
+                                        @endif
+                                    </td>
+                                </tr>
+                                @empty
+                                <tr>
+                                    <td colspan="5" class="text-center">Tidak ada data izin</td>
+                                </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
+
+        {{-- KANAN = SAKIT --}}
+        <div class="col-md-6">
+            <div class="card main-card">
+                <div class="card-body">
+                    <h4 class="mb-3">Data Sakit</h4>
+                    <div class="mb-3">
+    <input type="text" id="searchSakit" class="form-control" placeholder="Cari nama, tanggal, atau bulan sakit...">
+</div>
+
+                    <div class="table-responsive">
+                       <table class="table custom-table" id="tableSakit">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Nama</th>
+                                    <th>Tanggal</th>
+                                    <th>Bulan</th>
+                                    <th>Status</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                              @forelse($data->where('jenis_pengajuan','Sakit')->sortBy(function($item){
+                                    return $item->status != 'pending';
+                                }) as $d)
+                                <tr>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $d->karyawan->nama_karyawan ?? '-' }}</td>
+                                    <td>{{ $d->tanggal }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($d->tanggal)->translatedFormat('F') }}</td>
+
+                                    <td>
+                                        @if($d->status == 'pending')
+                                            <span class="badge-status badge-pending">Pending</span>
+                                        @elseif($d->status == 'disetujui')
+                                            <span class="badge-status badge-approved">Approved</span>
+                                        @else
+                                            <span class="badge-status badge-rejected">Rejected</span>
+                                        @endif
+                                    </td>
+
+                                    <td>
+                                        @if($d->status == 'pending')
+                                            <form action="{{ route('manager.sakit.approve', $d->id) }}" method="POST" class="d-inline">
+                                                @csrf
+                                                <button class="btn-approve">Approve</button>
+                                            </form>
+
+                                            <form action="{{ route('manager.sakit.reject', $d->id) }}" method="POST" class="d-inline">
+                                                @csrf
+                                                <button class="btn-reject">Reject</button>
+                                            </form>
+                                        @else
+                                            <span class="text-muted">Selesai</span>
+                                        @endif
+                                    </td>
+                                </tr>
+                                @empty
+                                <tr>
+                                    <td colspan="5" class="text-center">Tidak ada data sakit</td>
+                                </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
 </div>
+<script>
+document.getElementById('searchIzin').addEventListener('keyup', function() {
+    let filter = this.value.toLowerCase();
+    let rows = document.querySelectorAll('#tableIzin tbody tr');
 
+    rows.forEach(row => {
+        let text = row.textContent.toLowerCase();
+        row.style.display = text.includes(filter) ? '' : 'none';
+    });
+});
+
+document.getElementById('searchSakit').addEventListener('keyup', function() {
+    let filter = this.value.toLowerCase();
+    let rows = document.querySelectorAll('#tableSakit tbody tr');
+
+    rows.forEach(row => {
+        let text = row.textContent.toLowerCase();
+        row.style.display = text.includes(filter) ? '' : 'none';
+    });
+});
+</script>
 @endsection

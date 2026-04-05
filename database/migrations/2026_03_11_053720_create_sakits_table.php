@@ -15,7 +15,7 @@ public function up(): void
         $table->id();
         $table->unsignedBigInteger('karyawan_id');
         $table->date('tanggal');
-        $table->text('keterangan');
+        $table->text('alasan');
         $table->enum('status',['pending','disetujui','ditolak'])->default('pending');
         $table->timestamps();
     });

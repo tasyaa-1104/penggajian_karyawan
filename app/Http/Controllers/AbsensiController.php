@@ -13,29 +13,48 @@ use Illuminate\Support\Facades\Auth;
 
 class AbsensiController extends Controller
 {
-    // TAMPILKAN DATA + SEARCH
-    public function index(Request $request)
-    {
-        $search = $request->search;
+public function index(Request $request)
+{
+    $search = $request->search;
 
-        $absensi = Absensi::with('karyawan')
-            ->when($search, function ($query, $search) {
-                $query->whereHas('karyawan', function ($q) use ($search) {
-                        $q->where('nama_karyawan', 'like', "%{$search}%");
-                    })
-                    ->orWhere('tanggal', 'like', "%{$search}%")
-                    ->orWhere('status_kehadiran', 'like', "%{$search}%");
-            })
-            ->orderBy('tanggal', 'desc')
-            ->get();
+    $absensi = Absensi::with('karyawan')
+        ->when($search, function ($query) use ($search) {
+            $query->where(function ($q) use ($search) {
 
-        return view('admin.absensi', [
-            'absensi' => $absensi,
-            'search'  => $search,
-            'karyawan' => Karyawan::all() 
-        ]);
-    }
+                $q->whereHas('karyawan', function ($k) use ($search) {
+                    $k->where('nama_karyawan', 'like', "%{$search}%");
+                })
+                ->orWhere('tanggal', 'like', "%{$search}%")
+                ->orWhere('status_kehadiran', 'like', "%{$search}%")
+                ->orWhereRaw("
+                    CASE
+                        WHEN MONTH(tanggal)=1 THEN 'Januari'
+                        WHEN MONTH(tanggal)=2 THEN 'Februari'
+                        WHEN MONTH(tanggal)=3 THEN 'Maret'
+                        WHEN MONTH(tanggal)=4 THEN 'April'
+                        WHEN MONTH(tanggal)=5 THEN 'Mei'
+                        WHEN MONTH(tanggal)=6 THEN 'Juni'
+                        WHEN MONTH(tanggal)=7 THEN 'Juli'
+                        WHEN MONTH(tanggal)=8 THEN 'Agustus'
+                        WHEN MONTH(tanggal)=9 THEN 'September'
+                        WHEN MONTH(tanggal)=10 THEN 'Oktober'
+                        WHEN MONTH(tanggal)=11 THEN 'November'
+                        WHEN MONTH(tanggal)=12 THEN 'Desember'
+                    END LIKE ?
+                ", ["%{$search}%"]);
+            });
+        })
+        ->orderBy('tanggal', 'desc')
+        ->orderBy('jam_masuk', 'desc')
+        ->orderBy('id_absensi', 'desc')
+        ->get();
 
+    return view('admin.absensi', [
+        'absensi' => $absensi,
+        'search' => $search,
+        'karyawan' => Karyawan::all()
+    ]);
+}
     public function create()
     {
         return view('admin.absensi-create', [
@@ -150,8 +169,11 @@ public function storeKaryawan(Request $request)
         'id_karyawan' => 'required',
         'tanggal' => 'required|date',
         'status_kehadiran' => 'required|in:Hadir,Izin,Sakit,Alpha',
+        'alasan' => 'nullable',
         'keterangan' => 'nullable'
     ]);
+
+    $alasan = $request->alasan ?? $request->keterangan;
 
     // ⬇️ MASUK KE TABEL ABSENSI (ADMIN JUGA LIAT INI)
     Absensi::create([
@@ -159,7 +181,7 @@ public function storeKaryawan(Request $request)
         'tanggal' => $request->tanggal,
         'jam_masuk' => Carbon::now('Asia/Jakarta')->format('H:i'),
         'status_kehadiran' => $request->status_kehadiran,
-        'keterangan' => $request->keterangan
+        'keterangan' => $alasan
     ]);
 
     return redirect()->route('karyawan.dashboard')
@@ -304,45 +326,158 @@ public function absenPulang(Request $request)
     return back()->with('success', 'Absen pulang berhasil');
 }
 
-    public function absenIzin(Request $request)
+//     public function absenIzin(Request $request)
+// {
+//     $request->validate([
+//         'status_kehadiran' => 'required|in:Izin,Sakit',
+//         'keterangan' => 'required|min:5'
+//     ]);
+
+//     $karyawan = Karyawan::where('id_user', Auth::user()->id)->first();
+
+//     if (!$karyawan) {
+//         return back()->with('error','Akun belum terhubung dengan data karyawan');
+//     }
+
+//     $tanggal = Carbon::now('Asia/Jakarta')->toDateString();
+
+//     if($request->status_kehadiran == 'Izin')
+//     {
+//         Izin::create([
+//             'karyawan_id' => $karyawan->id_karyawan,
+//             'tanggal' => $tanggal,
+//             'alasan' => $request->keterangan,
+//             'status' => 'pending'
+//         ]);
+//     }
+
+//     if($request->status_kehadiran == 'Sakit')
+//     {
+//         Sakit::create([
+//             'karyawan_id' => $karyawan->id_karyawan,
+//             'tanggal' => $tanggal,
+//             'keterangan' => $request->keterangan,
+//             'status' => 'pending'
+//         ]);
+//     }
+
+//     return back()->with('success','Pengajuan berhasil dikirim, menunggu approval manager');
+// }
+
+public function absenIzin(Request $request)
 {
     $request->validate([
         'status_kehadiran' => 'required|in:Izin,Sakit',
-        'keterangan' => 'required|min:5'
+        'alasan' => 'required|min:5'
     ]);
 
     $karyawan = Karyawan::where('id_user', Auth::user()->id)->first();
 
     if (!$karyawan) {
-        return back()->with('error','Akun belum terhubung dengan data karyawan');
+        return back()->with('error', 'Akun belum terhubung dengan data karyawan');
     }
 
     $tanggal = Carbon::now('Asia/Jakarta')->toDateString();
 
-    if($request->status_kehadiran == 'Izin')
-    {
+    $cekIzin = Izin::where('karyawan_id', $karyawan->id_karyawan)
+        ->where('tanggal', $tanggal)
+        ->exists();
+
+    $cekSakit = Sakit::where('karyawan_id', $karyawan->id_karyawan)
+        ->where('tanggal', $tanggal)
+        ->exists();
+
+    if ($cekIzin || $cekSakit) {
+        return back()->with('error', 'Kamu sudah mengajukan izin/sakit hari ini');
+    }
+
+    if ($request->status_kehadiran == 'Izin') {
         Izin::create([
             'karyawan_id' => $karyawan->id_karyawan,
             'tanggal' => $tanggal,
-            'alasan' => $request->keterangan,
+            'alasan' => $request->alasan,
             'status' => 'pending'
         ]);
-    }
-
-    if($request->status_kehadiran == 'Sakit')
-    {
+    } else {
         Sakit::create([
             'karyawan_id' => $karyawan->id_karyawan,
             'tanggal' => $tanggal,
-            'keterangan' => $request->keterangan,
+            'alasan' => $request->alasan,
             'status' => 'pending'
         ]);
     }
 
-    return back()->with('success','Pengajuan berhasil dikirim, menunggu approval manager');
+    return back()->with('success', 'Pengajuan berhasil dikirim');
 }
-
 // public function absenIzin(Request $request)
+// {
+//     $request->validate([
+//         'status_kehadiran' => 'required|in:Izin,Sakit',
+//         'keterangan' => 'required|min:5'
+//     ]);
+
+//     $karyawan = Karyawan::where('id_user', Auth::user()->id)->first();
+
+//     if (!$karyawan) {
+//         return back()->with('error', 'Akun belum terhubung dengan data karyawan');
+//     }
+
+//     $tanggal = Carbon::now('Asia/Jakarta')->toDateString();
+
+//     // Cegah dobel pengajuan di hari yang sama
+//     $cek = Izin::where('karyawan_id', $karyawan->id_karyawan)
+//         ->where('tanggal', $tanggal)
+//         ->exists();
+
+//     if ($cek) {
+//         return back()->with('error', 'Kamu sudah mengajukan izin/sakit hari ini');
+//     }
+
+//     // =========================
+//     // JIKA IZIN
+//     // =========================
+//     if ($request->status_kehadiran == 'Izin') {
+
+//         Izin::create([
+//             'karyawan_id' => $karyawan->id_karyawan,
+//             'tanggal' => $tanggal,
+//             'alasan' => $request->keterangan,
+//             'status' => 'pending'
+//         ]);
+//     }
+
+//     // =========================
+//     // JIKA SAKIT
+//     // =========================
+//     if ($request->status_kehadiran == 'Sakit') {
+
+//         // masuk tabel sakit
+//         Sakit::create([
+//             'karyawan_id' => $karyawan->id_karyawan,
+//             'tanggal' => $tanggal,
+//             'keterangan' => $request->keterangan,
+//             'status' => 'pending'
+//         ]);
+
+//         // masuk juga tabel izin supaya tampil satu tabel manager
+//         Izin::create([
+//             'karyawan_id' => $karyawan->id_karyawan,
+//             'tanggal' => $tanggal,
+//             'alasan' => 'SAKIT - ' . $request->keterangan,
+//             'status' => 'pending'
+//         ]);
+//     }
+
+//     return back()->with('success', 'Pengajuan berhasil dikirim, menunggu approval manager');
+// }
+// public function izinSakit()
+// {
+//     $izin = Izin::with('karyawan')->get();
+//     $sakit = Sakit::with('karyawan')->get();
+
+//     return view('manager.izin_sakit', compact('izin','sakit'));
+// }
+// // public function absenIzin(Request $request)
 // {
 //     $now = Carbon::now('Asia/Jakarta');
 //     $tanggal = $now->toDateString();

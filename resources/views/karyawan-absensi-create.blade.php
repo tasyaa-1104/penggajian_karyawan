@@ -261,8 +261,8 @@
                         <span>📍</span> Absen Masuk
                     </button>
                     <div class="btn-grid">
-                        <button type="button" class="btn-action btn-outline" onclick="openModal()"><span>🏥</span> Sakit</button>
-                        <button type="button" class="btn-action btn-outline" onclick="openModal()"><span>📝</span> Izin</button>
+                        {{-- <button type="button" class="btn-action btn-outline" onclick="openModal()"><span>🏥</span> Sakit</button> --}}
+                        <button type="button" class="btn-action btn-outline" onclick="openModal()"><span>📝</span> Sakit/Izin</button>
                     </div>
                 </form>
 
@@ -322,7 +322,7 @@
 <!-- MODAL -->
 <div class="modal" id="izinModal">
     <div class="modal-box">
-        <h3 style="margin:0 0 20px 0; color:#1e293b; font-weight:800;">Form Izin</h3>
+        <h3 style="margin:0 0 20px 0; color:#1e293b; font-weight:800;">Form Izin/Sakit</h3>
         <form action="{{ route('karyawan.absen.izin') }}" method="POST">
             @csrf
             <div class="form-group">
@@ -334,7 +334,7 @@
             </div>
             <div class="form-group">
                 <label style="display:block; margin-bottom:8px; font-weight:700; font-size:0.9rem; color:#64748b;">Alasan</label>
-                <textarea name="keterangan" class="form-control" rows="3" required placeholder="Tulis alasan anda..."></textarea>
+                <textarea name="alasan" class="form-control" rows="3" required placeholder="Tulis alasan anda..."></textarea>
             </div>
             <div style="display:flex; gap:10px; margin-top:25px;">
                 <button type="button" class="btn-action btn-outline" style="margin-bottom:0;" onclick="closeModal()">Batal</button>
