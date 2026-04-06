@@ -13,4 +13,14 @@ class Tunjangan extends Model
         'nama_tunjangan',
         'nominal'
     ];
+    public function karyawan()
+{
+    return $this->belongsToMany(
+        Karyawan::class,
+        'karyawan_tunjangan',
+        'id_tunjangan',
+        'id_karyawan'
+    );
 }
+}
+

@@ -294,25 +294,130 @@ cursor:pointer;
 <table class="modern-table">
 
 <thead>
-
 <tr>
-<th>No</th>
-<th>Nama</th>
-<th>Jabatan</th>
-<th>Bulan</th>
-<th>Tunjangan</th>
-<th>Lembur</th>
-<th>Potongan</th>
-<th>Gaji Bersih</th>
-<th style="text-align:center">Aksi</th>
+    <th>No</th>
+    <th>Nama</th>
+    <th>Jabatan</th>
+    <th>Bulan</th>
+    <th>Tunjangan</th>
+    <th>Atur</th>
+    <th>Lembur</th>
+    <th>Potongan</th>
+    <th>Gaji Bersih</th>
+    <th style="text-align:center">Aksi</th>
 </tr>
-
 </thead>
 
-
 <tbody>
-
 @foreach($gaji as $g)
+<tr>
+
+    <td>{{ $loop->iteration }}</td>
+
+    <td><strong>{{ $g->karyawan->nama_karyawan }}</strong></td>
+
+    <td>{{ $g->karyawan->jabatan->nama_jabatan }}</td>
+
+    <td>{{ $g->bulan }}</td>
+
+    {{-- TUNJANGAN --}}
+    <td>
+        <span class="currency-text"
+        onclick="showTunjangan(
+        '{{ $g->karyawan->nama_karyawan }}',
+        `@forelse($g->karyawan->tunjangan as $t)
+        <li>{{ $t->nama_tunjangan }} - Rp {{ number_format($t->nominal,0,',','.') }}</li>
+        @empty
+        <li>Tidak ada tunjangan</li>
+        @endforelse`
+        )">
+
+        Rp {{ number_format($g->karyawan->tunjangan->sum('nominal'),0,',','.') }}
+
+        </span>
+    </td>
+
+    {{-- BUTTON ATUR --}}
+    <td>
+        <a href="{{ route('karyawan.tunjangan',$g->id_karyawan) }}"
+           class="btn btn-sm btn-primary">
+           Atur
+        </a>
+    </td>
+
+    {{-- LEMBUR --}}
+    <td>
+        Rp {{ number_format($g->total_overtime ?? 0,0,',','.') }}
+    </td>
+
+    {{-- POTONGAN --}}
+    <td>
+        <span class="currency-text"
+        onclick="showPotongan(
+        '{{ $g->karyawan->nama_karyawan }}',
+
+        `@php
+        $rekap = \App\Models\rekap_absensi::where('id_karyawan',$g->id_karyawan)
+        ->where('bulan',$g->bulan)
+        ->first();
+        @endphp
+
+        <li>Alpha : {{ $rekap->jumlah_alpha ?? 0 }}</li>
+        <li>Izin : {{ $rekap->jumlah_izin ?? 0 }}</li>
+        <li>Sakit : {{ $rekap->jumlah_sakit ?? 0 }}</li>
+        `
+        )">
+
+        Rp {{ number_format($g->total_potongan,0,',','.') }}
+
+        </span>
+    </td>
+
+    {{-- GAJI BERSIH --}}
+    <td>
+        <span class="currency-bold">
+            Rp {{ number_format($g->gaji_bersih,0,',','.') }}
+        </span>
+    </td>
+
+    {{-- AKSI --}}
+    <td style="text-align:center">
+        <div style="display:flex;gap:6px;justify-content:center">
+
+            @if ($g->slipGaji)
+                <a href="{{ route('admin.slip-gaji.download',$g->slipGaji->id_slip) }}"
+                   class="btn-action-sm btn-slip-view">
+                    <i class="fas fa-file-pdf"></i>
+                </a>
+            @else
+                <form action="{{ route('admin.slip-gaji.store',$g->id_gaji) }}" method="POST">
+                    @csrf
+                    <button class="btn-action-sm btn-slip-create">
+                        <i class="fas fa-file-invoice"></i>
+                    </button>
+                </form>
+            @endif
+
+            <form action="{{ route('gaji.destroy',$g->id_gaji) }}" method="POST">
+                @csrf
+                @method('DELETE')
+
+                <button class="btn-action-sm btn-delete"
+                onclick="return confirm('Yakin ingin menghapus data gaji ini?')">
+
+                    <i class="fas fa-trash"></i>
+
+                </button>
+            </form>
+
+        </div>
+    </td>
+
+</tr>
+@endforeach
+</tbody>
+
+{{-- @foreach($gaji as $g)
 
 <tr>
 
@@ -323,17 +428,25 @@ cursor:pointer;
 <td>{{ $g->karyawan->jabatan->nama_jabatan }}</td>
 
 <td>{{ $g->bulan }}</td>
+<td>
+<a href="{{ route('karyawan.tunjangan',$g->id_karyawan) }}" class="btn btn-sm btn-primary">
+Atur Tunjangan
+</a>
+</a>
+</td>
 
 
 <td>
 <span class="currency-text"
 onclick="showTunjangan(
 '{{ $g->karyawan->nama_karyawan }}',
-`@foreach($tunjangan as $t)
+`@forelse($g->karyawan->tunjangan as $t)
 <li>{{ $t->nama_tunjangan }} - Rp {{ number_format($t->nominal,0,',','.') }}</li>
-@endforeach`
+@empty
+<li>Tidak ada tunjangan</li>
+@endforelse`
 )">
-Rp {{ number_format($g->total_tunjangan,0,',','.') }}
+Rp {{ number_format($g->karyawan->tunjangan->sum('nominal'),0,',','.') }}
 </span>
 </td>
 
@@ -427,7 +540,7 @@ onclick="return confirm('Yakin ingin menghapus data gaji ini?')">
 
 </tr>
 
-@endforeach
+@endforeach --}}
 
 </tbody>
 

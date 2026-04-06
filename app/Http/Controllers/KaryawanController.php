@@ -48,6 +48,24 @@ public function index(Request $request)
             'users'   => User::where('role','karyawan')->get(),
         ]);
     }
+     public function tunjangan($id)
+    {
+        $karyawan = \App\Models\Karyawan::findOrFail($id);
+        $tunjangan = \App\Models\Tunjangan::all();
+
+        return view('finance.karyawan-tunjangan', compact('karyawan', 'tunjangan'));
+    }
+   public function simpanTunjangan(Request $request, $id)
+{
+    $karyawan = Karyawan::findOrFail($id);
+
+    // Simpan tunjangan
+    $karyawan->tunjangan()->sync($request->tunjangan);
+
+    // Redirect ke halaman daftar gaji
+    return redirect()->route('gaji.index')
+                     ->with('success','Tunjangan berhasil disimpan');
+}
 
     public function store(Request $request)
     {
@@ -177,4 +195,5 @@ public function index(Request $request)
 
         return $pdf->download('Data_Karyawan.pdf');
     }
+    
 }

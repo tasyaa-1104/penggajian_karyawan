@@ -59,6 +59,15 @@ class Karyawan extends Model
     {
         return $this->hasMany(rekap_absensi::class, 'id_karyawan');
     }
+    public function tunjangan()
+{
+    return $this->belongsToMany(
+        Tunjangan::class,
+        'karyawan_tunjangan',
+        'id_karyawan',
+        'id_tunjangan'
+    );
+}
 
      public function slipGaji()
     {

@@ -37,4 +37,5 @@ class Gaji extends Model
         return $this->hasOne(\App\Models\rekap_absensi::class, 'id_karyawan', 'id_karyawan')
             ->where('bulan', $this->bulan);
     }
+    
 }

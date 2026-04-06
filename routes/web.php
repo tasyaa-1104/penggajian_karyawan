@@ -401,3 +401,5 @@ Route::get('/finance/karyawan', [KaryawanController::class, 'index'])
     ->name('finance.karyawan');
 
 
+Route::get('/karyawan/{id}/tunjangan', [KaryawanController::class,'tunjangan'])->name('karyawan.tunjangan');
+Route::post('/karyawan/{id}/tunjangan', [KaryawanController::class,'simpanTunjangan'])->name('karyawan.tunjangan.simpan');

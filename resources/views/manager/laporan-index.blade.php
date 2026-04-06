@@ -1,4 +1,4 @@
-{{-- @extends('manager.template')
+{{-- {{-- @extends('manager.template')
 
 @section('content')
 
@@ -221,17 +221,17 @@ Sakit
 </div>
 
 @endsection --}}
-@extends('manager.template')
+{{-- @extends('manager.template')
 
 @section('title', 'Laporan Data Karyawan')
 
 @section('content')
 
-<!-- FontAwesome -->
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <style>
-    /* Page Title Section */
+
     .page-title-section {
         background: #FFF5F5;
         border-left: 5px solid #9B1C20;
@@ -253,7 +253,7 @@ Sakit
         margin: 0;
     }
 
-    /* Card Styling */
+
     .main-card {
         background: white;
         border-radius: 15px;
@@ -265,7 +265,7 @@ Sakit
         padding: 25px;
     }
 
-    /* Table Styling */
+
     .custom-table {
         border: none;
         border-radius: 10px;
@@ -293,7 +293,7 @@ Sakit
         background: #FFF5F5;
     }
 
-    /* Status Badges */
+
     .badge-status {
         padding: 6px 14px;
         border-radius: 20px;
@@ -414,10 +414,10 @@ Sakit
                 </li>
             </ul>
 
-            <!-- Tab Content -->
+
             <div class="tab-content">
 
-                {{-- ================= ABSENSI ================= --}}
+
                 <div class="tab-pane fade show active" id="absensi">
                     <div class="table-responsive">
                         <table class="table custom-table">
@@ -460,7 +460,7 @@ Sakit
                     </div>
                 </div>
 
-                {{-- ================= CUTI ================= --}}
+
                 <div class="tab-pane fade" id="cuti">
                     <div class="table-responsive">
                         <table class="table custom-table">
@@ -505,7 +505,7 @@ Sakit
                     </div>
                 </div>
 
-                {{-- ================= LEMBUR ================= --}}
+
                 <div class="tab-pane fade" id="lembur">
                     <div class="table-responsive">
                         <table class="table custom-table">
@@ -550,7 +550,7 @@ Sakit
                     </div>
                 </div>
 
-                {{-- ================= IZIN ================= --}}
+
                 <div class="tab-pane fade" id="izin">
                     <div class="table-responsive">
                         <table class="table custom-table">
@@ -595,7 +595,7 @@ Sakit
                     </div>
                 </div>
 
-                {{-- ================= SAKIT ================= --}}
+
                 <div class="tab-pane fade" id="sakit">
                     <div class="table-responsive">
                         <table class="table custom-table">
@@ -646,4 +646,4 @@ Sakit
 
 </div>
 
-@endsection
+@endsection --}}

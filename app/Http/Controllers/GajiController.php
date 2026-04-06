@@ -59,11 +59,13 @@ class GajiController extends Controller
         ];
 
         // total tunjangan global
-        $total_tunjangan = Tunjangan::sum('nominal');
+     
 
         foreach ($karyawanIds as $id_karyawan) {
 
             $karyawan = Karyawan::findOrFail($id_karyawan);
+
+              $total_tunjangan = $karyawan->tunjangan->sum('nominal');
 
             // ambil rekap absensi bulanan
             $rekap = rekap_absensi::where('id_karyawan', $id_karyawan)

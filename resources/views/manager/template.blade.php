@@ -161,17 +161,17 @@ class="{{ request()->routeIs('manager.sakit') ? 'active' : '' }}">
 <span>
 <i class="bi bi-heart-pulse"></i> Persetujuan Sakit
 </span> --}}
-{{-- 
+{{--
 @if(($sakit_pending ?? 0) > 0)
 <span class="badge-notif">{{ $sakit_pending }}</span>
 @endif
 
 </a> --}}
 
-<a href="{{ route('manager.laporan') }}"
+{{-- <a href="{{ route('manager.laporan') }}"
 class="{{ request()->routeIs('manager.laporan') ? 'active' : '' }}">
 <span><i class="bi bi-file-earmark-text"></i> Laporan</span>
-</a>
+</a> --}}
 
 </div>
 {{--
