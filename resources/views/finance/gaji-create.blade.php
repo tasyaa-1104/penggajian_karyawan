@@ -222,10 +222,21 @@
                     <i class="fas fa-calculator" style="color: var(--maroon-main);"></i> Hitung Gaji Massal
                 </h3>
 
+                <div style="display:flex; gap:15px;">
+
                 <div class="month-wrapper">
-                    <label for="bulan">Pilih Periode</label>
+                    <label for="bulan">Pilih Bulan</label>
                     <input type="month" name="bulan" required class="search-input" id="bulan">
                 </div>
+
+                <div class="month-wrapper">
+                    <label>Jenis Periode</label>
+                    <select name="jenis_periode" class="search-input" required>
+                        <option value="akhir">Akhir Bulan</option>
+                        <option value="25">Periode Tanggal 25</option>
+                    </select>
+                </div>
+
             </div>
 
             <!-- Tabel Data -->

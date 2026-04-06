@@ -39,88 +39,115 @@ class GajiController extends Controller
     /* =========================
      * PROSES HITUNG GAJI MASSAL
      * ========================= */
-    public function store(Request $request)
-    {
-        $request->validate([
-            'bulan'       => 'required|date_format:Y-m',
-            'id_karyawan' => 'required|array'
-        ]);
 
-        $bulanInput = $request->bulan;
-        $karyawanIds = $request->id_karyawan;
 
-        // parsing bulan
-        $bulan = Carbon::createFromFormat('Y-m', $bulanInput);
+public function store(Request $request)
+{
+    $request->validate([
+        'bulan' => 'required|date_format:Y-m',
+        'id_karyawan' => 'required|array',
+        'jenis_periode' => 'required'
+    ]);
 
-        // tarif potongan
-        $tarif = [
-            'alpha' => 100000,
-            'izin'  => 25000,
-        ];
+    $bulanInput = $request->bulan;
+    $jenis = $request->jenis_periode;
+    $karyawanIds = $request->id_karyawan;
 
-        // total tunjangan global
-     
+    $bulan = Carbon::createFromFormat('Y-m', $bulanInput);
 
-        foreach ($karyawanIds as $id_karyawan) {
+    // =========================
+    // 🔥 HITUNG PERIODE
+    // =========================
+    if ($jenis == '25') {
+        $start = $bulan->copy()->subMonth()->day(26);
+        $end   = $bulan->copy()->day(25);
+    } else {
+        $start = $bulan->copy()->startOfMonth();
+        $end   = $bulan->copy()->endOfMonth();
+    }
 
-            $karyawan = Karyawan::findOrFail($id_karyawan);
+    $tarif = [
+        'alpha' => 100000,
+        'izin'  => 25000,
+    ];
 
-              $total_tunjangan = $karyawan->tunjangan->sum('nominal');
+    foreach ($karyawanIds as $id_karyawan) {
 
-            // ambil rekap absensi bulanan
-            $rekap = rekap_absensi::where('id_karyawan', $id_karyawan)
-                ->where('bulan', $bulanInput)
-                ->first();
+        $karyawan = Karyawan::with('tunjangan')->findOrFail($id_karyawan);
 
-            // kalau tidak ada rekap, skip
-            if (!$rekap) {
-                continue;
-            }
+        // =========================
+        // 🔥 FILTER TANGGAL MASUK
+        // =========================
+        $tanggalMasuk = Carbon::parse($karyawan->tanggal_masuk);
 
-            // =====================
-            // HITUNG OVERTIME
-            // =====================
-            $total_overtime = Overtime::where('karyawan_id', $id_karyawan)
-                ->whereMonth('tanggal', $bulan->month)
-                ->whereYear('tanggal', $bulan->year)
-                ->where('status', 'approved')
-                ->sum('total_upah');
+        $startHitung = $tanggalMasuk > $start ? $tanggalMasuk : $start;
 
-            // =====================
-            // HITUNG POTONGAN
-            // =====================
-            $total_potongan =
-                ($rekap->jumlah_alpha * $tarif['alpha']) +
-                ($rekap->jumlah_izin  * $tarif['izin']);
+        // =========================
+        // 🔥 AMBIL REKAP SESUAI PERIODE
+        // =========================
+        $rekap = rekap_absensi::where('id_karyawan', $id_karyawan)
+            ->where('bulan', $bulanInput)
+            ->first();
 
-            // =====================
-            // HITUNG GAJI BERSIH
-            // =====================
-            $gaji_bersih =
-                $karyawan->gaji_pokok +
-                $total_tunjangan +
-                $total_overtime -
-                $total_potongan;
-
-            // simpan / update gaji
-            Gaji::updateOrCreate(
-                [
-                    'id_karyawan' => $id_karyawan,
-                    'bulan'       => $bulanInput
-                ],
-                [
-                    'total_tunjangan' => $total_tunjangan,
-                    'total_overtime'  => $total_overtime,
-                    'total_potongan'  => $total_potongan,
-                    'gaji_bersih'     => $gaji_bersih,
-                ]
-            );
+        if (!$rekap) {
+            continue;
         }
 
-        return redirect()
-            ->route('gaji.index')
-            ->with('success', 'Gaji massal berhasil dihitung');
+        // HITUNG MANUAL (biar fleksibel)
+        $jumlah_alpha = $rekap->jumlah_alpha;
+        $jumlah_izin  = $rekap->jumlah_izin;
+
+        // =========================
+        // TUNJANGAN
+        // =========================
+        $total_tunjangan = $karyawan->tunjangan->sum('nominal');
+
+        // =========================
+        // OVERTIME
+        // =========================
+        $total_overtime = Overtime::where('karyawan_id', $id_karyawan)
+            ->whereBetween('tanggal', [$startHitung, $end])
+            ->where('status', 'approved')
+            ->sum('total_upah');
+
+        // =========================
+        // POTONGAN
+        // =========================
+        $total_potongan =
+            ($jumlah_alpha * $tarif['alpha']) +
+            ($jumlah_izin  * $tarif['izin']);
+
+        // =========================
+        // GAJI AKHIR
+        // =========================
+        $gaji_bersih =
+            $karyawan->gaji_pokok +
+            $total_tunjangan +
+            $total_overtime -
+            $total_potongan;
+
+        // =========================
+        // SIMPAN
+        // =========================
+        Gaji::updateOrCreate(
+            [
+                'id_karyawan' => $id_karyawan,
+                'bulan' => $bulanInput
+            ],
+            [
+                'periode_awal' => $start,
+                'periode_akhir' => $end,
+                'total_tunjangan' => $total_tunjangan,
+                'total_overtime' => $total_overtime,
+                'total_potongan' => $total_potongan,
+                'gaji_bersih' => $gaji_bersih,
+            ]
+        );
     }
+
+    return redirect()->route('gaji.index')
+        ->with('success', 'Gaji berhasil dihitung sesuai periode!');
+}
 
     public function destroy($id)
     {

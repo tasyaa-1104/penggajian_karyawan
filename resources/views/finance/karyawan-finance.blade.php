@@ -2,206 +2,207 @@
 
 @section('title', 'Data Karyawan')
 
+@section('topbar')
+<div class="website-header">
+    <div class="header-content">
+        <div class="welcome-text">
+            <span>Selamat Datang, Admin 👋</span>
+        </div>
+        <div class="user-profile">
+            <span>SmartGaji</span>
+            <div class="avatar-small">
+                <i class="fas fa-user-shield"></i>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
+
 @section('content')
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
-.page-title-section{
-    background:#FFF5F5;
-    border-left:5px solid #9B1C20;
-    padding:20px 25px;
-    border-radius:10px;
-    margin-bottom:25px;
+:root {
+    --smart-maroon: #800000;
+    --smart-maroon-hover: #600000;
+    --bg-page: #F3F4F6;
+    --bg-white: #FFFFFF;
+    --text-dark: #2c3e50;
+    --text-grey: #7f8c8d;
 }
 
-.page-title{
-    color:#9B1C20;
-    font-weight:700;
-    font-size:24px;
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--bg-page);
+    margin: 0;
 }
 
-.page-subtitle{
-    color:#6b7280;
-    font-size:14px;
+.website-layout {
+    max-width: 1200px;
+    margin: auto;
+    padding: 30px;
+    padding-top: 90px;
 }
 
-.main-card{
-    background:white;
-    border-radius:15px;
-    border:none;
-    box-shadow:0 2px 15px rgba(0,0,0,0.08);
+.website-header {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 70px;
+    background: white;
+    border-bottom: 1px solid #ddd;
 }
 
-.custom-table thead th{
-    background:#9B1C20;
-    color:white;
-    font-size:14px;
-    padding:15px 12px;
+.header-content {
+    max-width: 1200px;
+    margin: auto;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.custom-table tbody td{
-    padding:14px 12px;
-    border-color:#fee2e2;
+.avatar-small {
+    width: 35px; height: 35px;
+    background: var(--smart-maroon);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.custom-table tbody tr:hover{
-    background:#FFF5F5;
+.card-box {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
 }
 
-.search-box{
-    max-width:400px;
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
 }
 
-.search-box .form-control{
-    border:2px solid #fee2e2;
-    border-radius:8px 0 0 8px;
+.page-title {
+    font-weight: bold;
+    border-left: 5px solid var(--smart-maroon);
+    padding-left: 10px;
 }
 
-.search-box .form-control:focus{
-    border-color:#9B1C20;
-    box-shadow:none;
+.btn {
+    padding: 10px 20px;
+    background: var(--smart-maroon);
+    color: white;
+    border-radius: 6px;
+    text-decoration: none;
 }
 
-.btn-maroon{
-    background:#9B1C20;
-    color:white;
-    border:none;
+table {
+    width: 100%;
+    border-collapse: collapse;
 }
 
-.btn-outline-maroon{
-    color:#9B1C20;
-    border:2px solid #9B1C20;
+thead {
+    background: var(--smart-maroon);
+    color: white;
 }
 
+th, td {
+    padding: 12px;
+    text-align: left;
+}
+
+tbody tr:hover {
+    background: #f9f9f9;
+}
+
+.badge-aktif {
+    background: #d1fae5;
+    color: green;
+    padding: 5px 10px;
+    border-radius: 10px;
+}
+
+.badge-nonaktif {
+    background: #eee;
+    padding: 5px 10px;
+    border-radius: 10px;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 30px;
+}
 </style>
 
-<div class="container-fluid mt-4">
+<div class="website-layout">
 
+    <div class="card-box">
 
-<div class="page-title-section">
-    <h3 class="page-title">
-        <i class="fas fa-users me-2"></i>
-        Data Karyawan
-    </h3>
-    <p class="page-subtitle">
-        Data karyawan perusahaan (view finance)
-    </p>
-</div>
+        <!-- HEADER -->
+        <div class="page-header">
+            <h4 class="page-title">Daftar Karyawan</h4>
 
-<!-- SEARCH -->
-<form action="{{ route('finance.karyawan') }}" method="GET" class="mb-4">
-    <div class="search-box d-flex">
-
-        <input type="text"
-               name="search"
-               class="form-control"
-               placeholder="Cari NIK / Nama / Divisi..."
-               value="{{ request('search') }}">
-
-        <button type="submit"
-                class="btn btn-maroon"
-                style="border-radius:0 8px 8px 0;">
-            <i class="fas fa-search"></i>
-        </button>
-
-        @if(request('search'))
-        <a href="{{ route('finance.karyawan') }}"
-           class="btn btn-outline-maroon ms-2">
-           Reset
-        </a>
-        @endif
-
-    </div>
-</form>
-
-<div class="card main-card">
-    <div class="card-body">
-
-        <div class="table-responsive">
-
-            <table class="table custom-table">
-
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>NIK</th>
-                        <th>Nama</th>
-                        <th>Divisi</th>
-                        <th>Jabatan</th>
-                        <th>Tanggal Masuk</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-
-                    @if($karyawans->count()==0)
-
-                    <tr>
-                        <td colspan="7" class="text-center">
-                            Data karyawan tidak ditemukan
-                        </td>
-                    </tr>
-
-                    @endif
-
-                    @foreach($karyawans as $k)
-
-                    <tr>
-
-                        <td>{{ $loop->iteration }}</td>
-
-                        <td>{{ $k->nik }}</td>
-
-                        <td>
-                            <strong>{{ $k->nama_karyawan }}</strong>
-                        </td>
-
-                        <td>
-                            {{ $k->divisi->nama_divisi ?? '-' }}
-                        </td>
-
-                        <td>
-                            {{ $k->jabatan->nama_jabatan ?? '-' }}
-                        </td>
-
-                        <td>
-                            {{ $k->tanggal_masuk
-                            ? date('d-m-Y', strtotime($k->tanggal_masuk))
-                            : '-' }}
-                        </td>
-
-                        <td>
-
-                            @if($k->status_karyawan=='aktif')
-                            <span class="badge bg-success">
-                                Aktif
-                            </span>
-                            @else
-                            <span class="badge bg-secondary">
-                                Nonaktif
-                            </span>
-                            @endif
-
-                        </td>
-
-                    </tr>
-
-                    @endforeach
-
-                </tbody>
-
-            </table>
-
+            <a href="{{ route('karyawan.pdf') }}" class="btn">
+                <i class="fas fa-file-pdf"></i> Unduh PDF
+            </a>
         </div>
 
-    </div>
-</div>
+        <!-- ALERT -->
+        @if(session('success'))
+            <div style="margin-bottom:15px; color:green;">
+                {{ session('success') }}
+            </div>
+        @endif
 
+        <table>
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>NIK</th>
+                    <th>Nama</th>
+                    <th>Divisi</th>
+                    <th>Jabatan</th>
+                    <th>Gaji Pokok</th>
+                    <th>Tanggal Masuk</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @if($karyawans->count() == 0)
+                    <tr>
+                        <td colspan="8" class="empty-state">
+                            Data tidak ditemukan
+                        </td>
+                    </tr>
+                @endif
+
+                @foreach($karyawans as $k)
+                <tr>
+                    <td>{{ $loop->iteration }}</td>
+                    <td>{{ $k->nik }}</td>
+                    <td><strong>{{ $k->nama_karyawan }}</strong></td>
+                    <td>{{ $k->divisi->nama_divisi ?? '-' }}</td>
+                    <td>{{ $k->jabatan->nama_jabatan ?? '-' }}</td>
+                    <td>Rp {{ number_format($k->gaji_pokok,0,',','.') }}</td>
+                    <td>{{ $k->tanggal_masuk ? date('d-m-Y', strtotime($k->tanggal_masuk)) : '-' }}</td>
+                    <td>
+                        <span class="{{ $k->status_karyawan == 'aktif' ? 'badge-aktif' : 'badge-nonaktif' }}">
+                            {{ ucfirst($k->status_karyawan) }}
+                        </span>
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+
+        </table>
+
+    </div>
 
 </div>
 
 @endsection
-
