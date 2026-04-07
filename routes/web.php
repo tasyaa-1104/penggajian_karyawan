@@ -403,3 +403,17 @@ Route::get('/finance/karyawan', [KaryawanController::class, 'index'])
 
 Route::get('/karyawan/{id}/tunjangan', [KaryawanController::class,'tunjangan'])->name('karyawan.tunjangan');
 Route::post('/karyawan/{id}/tunjangan', [KaryawanController::class,'simpanTunjangan'])->name('karyawan.tunjangan.simpan');
+
+Route::post('/overtime/store', [OvertimeController::class, 'store'])->name('overtime.store');
+Route::get('/karyawan/lembur', [OvertimeController::class, 'create'])
+    ->name('karyawan.lembur');
+
+Route::get('/karyawan/lembur', [OvertimeController::class, 'create'])
+    ->name('karyawan.lembur');
+
+Route::post('/karyawan/lembur', [OvertimeController::class, 'storeKaryawan'])
+    ->name('karyawan.lembur.store');Route::get('/karyawan/lembur', [OvertimeController::class, 'create'])
+    ->name('karyawan.lembur');
+
+Route::post('/karyawan/lembur', [OvertimeController::class, 'storeKaryawan'])
+    ->name('karyawan.lembur.store');
