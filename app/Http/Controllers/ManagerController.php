@@ -35,16 +35,34 @@ class ManagerController extends Controller
         $overtime_rejected = Overtime::where('status','rejected')->count();
 
         $izin_pending = Izin::where('status','pending')->count();
-       $izin_disetujui = Izin::where('status','disetuji')->count();
+       $izin_disetujui = Izin::where('status','disetujui')->count();
         $izin_ditolak= Izin::where('status','ditolak')->count();
 
         $sakit_pending = Sakit::where('status','pending')->count();
         $sakit_disetujui = Sakit::where('status','disetujui')->count();
         $sakit_ditolak = Sakit::where('status','ditolak')->count();
 
-        $absensi_hari_ini = Absensi::whereDate('tanggal', Carbon::today())->count();
+        // $absensi_hari_ini = Absensi::whereDate('tanggal', Carbon::today())->count();
 
-        $notif = $this->notif();
+        // $notif = $this->notif();
+              $absensi_hari_ini = Absensi::whereDate('tanggal', Carbon::today())->count();
+
+    // GANTI DENGAN INI: Query untuk 4 status sekaligus
+    $chartAbsensi = Absensi::selectRaw('DATE(tanggal) as tanggal,
+            SUM(CASE WHEN status_kehadiran IN ("Hadir", "Terlambat") THEN 1 ELSE 0 END) as masuk,
+            SUM(CASE WHEN status_kehadiran = "Cuti" THEN 1 ELSE 0 END) as cuti,
+            SUM(CASE WHEN status_kehadiran = "Izin" THEN 1 ELSE 0 END) as izin,
+            SUM(CASE WHEN status_kehadiran = "Sakit" THEN 1 ELSE 0 END) as sakit
+        ')
+        ->whereYear('tanggal', Carbon::now()->year)
+        ->whereMonth('tanggal', Carbon::now()->month)
+        ->whereDate('tanggal', '<=', Carbon::today())
+        ->groupBy('tanggal')
+        ->orderBy('tanggal', 'asc')
+        ->get();
+
+    $notif = $this->notif();
+  
 
         return view('manager.dashboard', array_merge(compact(
             'jumlah_karyawan',
@@ -57,11 +75,13 @@ class ManagerController extends Controller
             'izin_pending',
             'izin_disetujui',
             'izin_ditolak',
-
             'sakit_pending',
             'sakit_disetujui',
             'sakit_ditolak',
-            'absensi_hari_ini'
+            'absensi_hari_ini',
+            'chartAbsensi'
+     
+
         ), $notif));
     }
 
