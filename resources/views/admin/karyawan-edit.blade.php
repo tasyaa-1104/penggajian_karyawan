@@ -57,6 +57,18 @@
         </div>
 
         <div class="mb-2">
+            <label>Tunjangan</label>
+            <select name="tunjangan[]" class="form-control" multiple>
+                @foreach($tunjangan as $t)
+                    <option value="{{ $t->id_tunjangan }}"
+                        {{ $karyawan->tunjangan->contains($t->id_tunjangan) ? 'selected' : '' }}>
+                        {{ $t->nama_tunjangan }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="mb-2">
             <label>Gaji Pokok</label>
             <input name="gaji_pokok" value="{{ $karyawan->gaji_pokok }}" class="form-control">
         </div>

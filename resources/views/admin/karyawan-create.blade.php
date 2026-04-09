@@ -259,6 +259,17 @@
                 </select>
             </div>
 
+            <div class="form-group">
+                <label for="tunjangan">Pilih Tunjangan</label>
+                <select name="tunjangan[]" id="tunjangan" class="form-control" multiple>
+                    @foreach($tunjangan as $t)
+                        <option value="{{ $t->id_tunjangan }}">
+                            {{ $t->nama_tunjangan }} (Rp {{ number_format($t->nominal,0,',','.') }})
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
             <div class="text-info">
                 <i class="fas fa-info-circle"></i>
                 Gaji pokok awal otomatis mengikuti jabatan.

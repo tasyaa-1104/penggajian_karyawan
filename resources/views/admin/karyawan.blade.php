@@ -323,6 +323,7 @@
                         <th width="20%">Nama</th>
                         <th width="15%">Divisi</th>
                         <th width="15%">Jabatan</th>
+                        <th width="15%">Tunjangan</th>
                         <th width="15%">Gaji Pokok</th>
                         <th width="10%">Tanggal Masuk</th>
                         <th width="10%">Status</th>
@@ -345,6 +346,11 @@
                             <td><strong>{{ $k->nama_karyawan }}</strong></td>
                             <td>{{ $k->divisi->nama_divisi ?? '-' }}</td>
                             <td>{{ $k->jabatan->nama_jabatan ?? '-' }}</td>
+                            <td>
+                                @foreach($k->tunjangan as $t)
+                                    <span>{{ $t->nama_tunjangan }}</span><br>
+                                @endforeach
+                            </td>
                             <td>Rp {{ number_format($k->gaji_pokok,0,',','.') }}</td>
                             <td>{{ $k->tanggal_masuk ? date('d-m-Y', strtotime($k->tanggal_masuk)) : '-' }}</td>
                             <td>
