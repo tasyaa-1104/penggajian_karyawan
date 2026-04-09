@@ -386,6 +386,21 @@
                     <h2 class="stagger-anim delay-1">Login</h2>
                     <p class="stagger-anim delay-2">Silakan masuk dengan akun Anda</p>
 
+                    @if(session('error'))
+                        <div style="background:#fee2e2;color:#991b1b;padding:14px 20px;border-radius:8px;margin-bottom:18px;display:flex;align-items:center;gap:10px;font-weight:500;border-left:5px solid #ef4444;">
+                            <i class="fas fa-exclamation-circle"></i> {{ session('error') }}
+                        </div>
+                    @endif
+                    @if($errors->any())
+                        <div style="background:#fee2e2;color:#991b1b;padding:14px 20px;border-radius:8px;margin-bottom:18px;display:flex;align-items:center;gap:10px;font-weight:500;border-left:5px solid #ef4444;">
+                            <ul style="margin:0; padding-left:18px;">
+                                @foreach($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
                     <div class="input-group stagger-anim delay-3">
                         <input type="text" name="username" placeholder=" " required autocomplete="off">
                         <label>Username</label>

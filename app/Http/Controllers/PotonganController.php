@@ -24,11 +24,13 @@ class PotonganController extends Controller
             'nama_potongan' => 'required',
             'nominal' => 'required|numeric|min:0'
         ]);
-
-        Potongan::create($request->all());
-
-        return redirect()->route('potongan.index')
-            ->with('success', 'Potongan berhasil ditambahkan');
+        try {
+            Potongan::create($request->all());
+            return redirect()->route('potongan.index')
+                ->with('success', 'Potongan berhasil ditambahkan');
+        } catch (\Exception $e) {
+            return redirect()->back()->withInput()->with('error', 'Gagal menambah potongan: ' . $e->getMessage());
+        }
     }
 
     public function edit($id)
@@ -43,18 +45,26 @@ class PotonganController extends Controller
             'nama_potongan' => 'required',
             'nominal' => 'required|numeric|min:0'
         ]);
-
-        Potongan::findOrFail($id)->update($request->all());
-
-        return redirect()->route('potongan.index')
-            ->with('success', 'Potongan berhasil diupdate');
+        try {
+            Potongan::findOrFail($id)->update($request->all());
+            return redirect()->route('potongan.index')
+                ->with('success', 'Potongan berhasil diupdate');
+        } catch (\Exception $e) {
+            return redirect()->back()->withInput()->with('error', 'Gagal update potongan: ' . $e->getMessage());
+        }
     }
 
     public function destroy($id)
     {
-        Potongan::destroy($id);
-
-        return redirect()->route('potongan.index')
-            ->with('success', 'Potongan berhasil dihapus');
+        try {
+            $deleted = Potongan::destroy($id);
+            if (!$deleted) {
+                return redirect()->route('potongan.index')->with('error', 'Potongan tidak ditemukan atau gagal dihapus');
+            }
+            return redirect()->route('potongan.index')
+                ->with('success', 'Potongan berhasil dihapus');
+        } catch (\Exception $e) {
+            return redirect()->route('potongan.index')->with('error', 'Gagal menghapus potongan: ' . $e->getMessage());
+        }
     }
 }

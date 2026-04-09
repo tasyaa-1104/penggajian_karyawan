@@ -59,7 +59,7 @@ class DatabaseSeeder extends Seeder
          * SEEDER DIVISI
          * ===================== */
         DB::table('divisi')->insert([
-            ['id_divisi' => 1, 'nama_divisi' => 'HRD'],
+            // ['id_divisi' => 1, 'nama_divisi' => 'HRD'],
             ['id_divisi' => 2, 'nama_divisi' => 'Keuangan'],
             ['id_divisi' => 3, 'nama_divisi' => 'IT'],
         ]);
@@ -68,12 +68,12 @@ class DatabaseSeeder extends Seeder
          * SEEDER JABATAN
          * ===================== */
         DB::table('jabatan')->insert([
-            [
-                'id_jabatan' => 1,
-                'nama_jabatan' => 'Staff HRD',
-                'gaji_pokok' => 4000000,
-                'id_divisi' => 1,
-            ],
+            // [
+            //     'id_jabatan' => 1,
+            //     'nama_jabatan' => 'Staff HRD',
+            //     'gaji_pokok' => 4000000,
+            //     'id_divisi' => 1,
+            // ],
             [
                 'id_jabatan' => 2,
                 'nama_jabatan' => 'Staff Keuangan',

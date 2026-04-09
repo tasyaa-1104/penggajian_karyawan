@@ -69,38 +69,42 @@ public function index(Request $request)
                      ->with('success','Tunjangan berhasil disimpan');
 }
 
+
     public function store(Request $request)
-{
-    $request->validate([
-        'id_user'   => 'required|exists:users,id',
-        'nik'       => 'required|unique:karyawan,nik',
-        'id_divisi' => 'required',
-        'id_jabatan'=> 'required',
-        'status_karyawan' => 'required',
-    ]);
+    {
+        $request->validate([
+            'id_user'   => 'required|exists:users,id',
+            'nik'       => 'required|unique:karyawan,nik',
+            'id_divisi' => 'required',
+            'id_jabatan'=> 'required',
+            'status_karyawan' => 'required',
+        ]);
+        try {
+            $user    = User::findOrFail($request->id_user);
+            $jabatan = Jabatan::findOrFail($request->id_jabatan);
 
-    $user    = User::findOrFail($request->id_user);
-    $jabatan = Jabatan::findOrFail($request->id_jabatan);
+            $karyawan = Karyawan::create([
+                'id_user'         => $user->id,
+                'nik'             => $request->nik,
+                'nama_karyawan'   => $user->nama,
+                'id_divisi'       => $request->id_divisi,
+                'id_jabatan'      => $request->id_jabatan,
+                'gaji_pokok'      => $jabatan->gaji_pokok,
+                'status_karyawan' => $request->status_karyawan,
+                'tanggal_masuk'   => now()->toDateString(),
+            ]);
 
-    $karyawan = Karyawan::create([
-        'id_user'         => $user->id,
-        'nik'             => $request->nik,
-        'nama_karyawan'   => $user->nama,
-        'id_divisi'       => $request->id_divisi,
-        'id_jabatan'      => $request->id_jabatan,
-        'gaji_pokok'      => $jabatan->gaji_pokok,
-        'status_karyawan' => $request->status_karyawan,
-        'tanggal_masuk'   => now()->toDateString(),
-    ]);
+            // 🔥 SIMPAN TUNJANGAN
+            if ($request->tunjangan) {
+                $karyawan->tunjangan()->attach($request->tunjangan);
+            }
 
-    // 🔥 SIMPAN TUNJANGAN
-    if ($request->tunjangan) {
-        $karyawan->tunjangan()->attach($request->tunjangan);
+            return redirect()->route('karyawan')
+                ->with('success','Karyawan berhasil ditambahkan');
+        } catch (\Exception $e) {
+            return redirect()->back()->withInput()->with('error', 'Gagal menambah karyawan: ' . $e->getMessage());
+        }
     }
-
-    return redirect()->route('karyawan')
-        ->with('success','Karyawan berhasil ditambahkan');
-}
 
     public function edit($id)
     {
@@ -112,48 +116,57 @@ public function index(Request $request)
         ]);
     }
 
+
     public function update(Request $request, $id)
-{
-    $request->validate([
-        'id_user'   => 'required|exists:users,id',
-        'nik'       => 'required|unique:karyawan,nik,' . $id . ',id_karyawan',
-        'id_divisi' => 'required',
-        'id_jabatan'=> 'required',
-        'gaji_pokok'=> 'required|numeric',
-        'status_karyawan' => 'required',
-    ]);
+    {
+        $request->validate([
+            'id_user'   => 'required|exists:users,id',
+            'nik'       => 'required|unique:karyawan,nik,' . $id . ',id_karyawan',
+            'id_divisi' => 'required',
+            'id_jabatan'=> 'required',
+            'gaji_pokok'=> 'required|numeric',
+            'status_karyawan' => 'required',
+        ]);
+        try {
+            $user = User::findOrFail($request->id_user);
+            $karyawan = Karyawan::findOrFail($id);
 
-    $user = User::findOrFail($request->id_user);
+            $karyawan->update([
+                'id_user'         => $user->id,
+                'nik'             => $request->nik,
+                'nama_karyawan'   => $user->nama,
+                'id_divisi'       => $request->id_divisi,
+                'id_jabatan'      => $request->id_jabatan,
+                'gaji_pokok'      => $request->gaji_pokok,
+                'status_karyawan' => $request->status_karyawan,
+            ]);
 
-    $karyawan = Karyawan::findOrFail($id);
+            // 🔥 UPDATE TUNJANGAN
+            if ($request->tunjangan) {
+                $karyawan->tunjangan()->sync($request->tunjangan);
+            } else {
+                $karyawan->tunjangan()->detach();
+            }
 
-    $karyawan->update([
-        'id_user'         => $user->id,
-        'nik'             => $request->nik,
-        'nama_karyawan'   => $user->nama,
-        'id_divisi'       => $request->id_divisi,
-        'id_jabatan'      => $request->id_jabatan,
-        'gaji_pokok'      => $request->gaji_pokok,
-        'status_karyawan' => $request->status_karyawan,
-    ]);
-
-    // 🔥 UPDATE TUNJANGAN
-    if ($request->tunjangan) {
-        $karyawan->tunjangan()->sync($request->tunjangan);
-    } else {
-        $karyawan->tunjangan()->detach();
+            return redirect()->route('karyawan')
+                ->with('success','Karyawan berhasil diupdate');
+        } catch (\Exception $e) {
+            return redirect()->back()->withInput()->with('error', 'Gagal update karyawan: ' . $e->getMessage());
+        }
     }
 
-    return redirect()->route('karyawan')
-        ->with('success','Karyawan berhasil diupdate');
-}
 
     public function destroy($id)
     {
-        Karyawan::where('id_karyawan',$id)->delete();
-
-        return redirect()->route('karyawan')
-            ->with('success','Karyawan berhasil dihapus');
+        try {
+            $deleted = Karyawan::where('id_karyawan',$id)->delete();
+            if (!$deleted) {
+                return redirect()->route('karyawan')->with('error', 'Karyawan tidak ditemukan atau gagal dihapus');
+            }
+            return redirect()->route('karyawan')->with('success','Karyawan berhasil dihapus');
+        } catch (\Exception $e) {
+            return redirect()->route('karyawan')->with('error', 'Gagal menghapus karyawan: ' . $e->getMessage());
+        }
     }
 
      public function dashboardKaryawan()

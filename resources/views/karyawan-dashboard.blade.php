@@ -1,4 +1,4 @@
- @extends('template')
+@extends('template')
 
 @section('title', 'Dashboard Karyawan')
 
@@ -22,20 +22,16 @@
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
     :root {
-        /* UBAH WARNA KE MERAH TUA (SENADA SIDEBAR) */
-        --primary: #8B0000;       /* Merah Tua Utama */
-        --primary-dark: #5c0000; /* Merah Gelap */
+        --primary: #8B0000;
+        --primary-dark: #5c0000;
         --secondary: #8B0000;
         --text-dark: #333;
         --glass: rgba(255, 255, 255, 0.95);
         --shadow: 0 10px 30px rgba(139, 0, 0, 0.1);
         --shadow-hover: 0 15px 35px rgba(139, 0, 0, 0.2);
-
-        /* Background Halaman: Putih dengan sentuhan merah muda */
         --bg-gradient: linear-gradient(135deg, #fff0f0 0%, #ffffff 100%);
     }
 
-    /* RESET & UTAMA */
     body {
         font-family: 'Poppins', sans-serif;
         background: var(--bg-gradient);
@@ -45,7 +41,6 @@
         overflow-x: hidden;
     }
 
-    /* LAYOUT WEBSITE */
     .website-layout {
         width: 100%;
         max-width: 1200px;
@@ -53,7 +48,7 @@
         padding: 40px 20px;
         position: relative;
         z-index: 10;
-        padding-top: 100px; /* Jarak dari topbar */
+        padding-top: 100px;
     }
 
     /* --- ANIMASI CSS --- */
@@ -111,7 +106,7 @@
     }
     .main-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
 
-    /* --- CARD BASE STYLE (BERSIH TANPA TITIK) --- */
+    /* --- CARD BASE STYLE --- */
     .card {
         background: var(--glass);
         padding: 30px;
@@ -123,12 +118,9 @@
         position: relative;
         overflow: hidden;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
-        /* Background dots DIHAPUS agar bersih */
     }
-
     .card:hover { transform: translateY(-5px); box-shadow: var(--shadow-hover); }
 
-    /* Garis Gradasi Merah di Atas Kartu */
     .card::after {
         content: '';
         position: absolute;
@@ -156,7 +148,6 @@
     }
     .stat-card:hover .stat-icon-lg { transform: scale(1.1); }
 
-    /* Warna Solid Bersih */
     .bg-hadir { background: #E8F5E9; color: #2E7D32; }
     .bg-izin { background: #FFF3E0; color: #F57C00; }
     .bg-alpha { background: #FFEBEE; color: #D32F2F; }
@@ -208,6 +199,100 @@
     .info-label-web { font-size: 0.75rem; color: #888; margin-bottom: 2px; font-weight: 600; }
     .info-value-web { font-size: 1rem; font-weight: 600; color: #333; }
 
+    /* --- SLIP GAJI BUTTON (SETENGAH, KIRI) --- */
+    .slip-gaji-section {
+        margin-top: 24px;
+        padding-top: 20px;
+        border-top: 2px dashed rgba(139, 0, 0, 0.12);
+        position: relative;
+        z-index: 2;
+    }
+
+    .btn-slip-gaji {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        width: 55%;
+        padding: 15px 24px;
+        background: linear-gradient(135deg, var(--primary) 0%, #b30000 50%, var(--primary) 100%);
+        background-size: 200% 200%;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 14px;
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.95rem;
+        font-weight: 600;
+        letter-spacing: 0.3px;
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 6px 20px rgba(139, 0, 0, 0.3), inset 0 1px 0 rgba(255,255,255,0.15);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-slip-gaji::before {
+        content: '';
+        position: absolute;
+        top: 0; left: -100%; width: 100%; height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
+        transition: left 0.5s ease;
+    }
+    .btn-slip-gaji:hover::before { left: 100%; }
+
+    .btn-slip-gaji:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(139, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.2);
+        background-position: 100% 100%;
+    }
+    .btn-slip-gaji:active { transform: translateY(-1px); }
+
+    .btn-slip-gaji .btn-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        background: rgba(255,255,255,0.15);
+        border-radius: 10px;
+        font-size: 1.1rem;
+        flex-shrink: 0;
+    }
+
+    .btn-slip-gaji .btn-text {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        line-height: 1.2;
+    }
+    .btn-slip-gaji .btn-label {
+        font-size: 0.7rem;
+        font-weight: 400;
+        opacity: 0.85;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+    }
+    .btn-slip-gaji .btn-title {
+        font-size: 0.95rem;
+        font-weight: 700;
+    }
+
+    .btn-slip-gaji .btn-arrow {
+        margin-left: auto;
+        font-size: 0.85rem;
+        opacity: 0;
+        transform: translateX(-8px);
+        transition: all 0.3s ease;
+    }
+    .btn-slip-gaji:hover .btn-arrow {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    @media (max-width: 640px) {
+        .btn-slip-gaji { width: 80%; }
+    }
+
     /* --- SALARY CARD --- */
     .card.salary-card::before {
         content: '💰';
@@ -232,15 +317,13 @@
         margin: 10px 0;
     }
 
-    /* Tombol Merah */
     .btn-web {
         display: block; width: 100%; padding: 16px;
         background: linear-gradient(to right, var(--primary), #cc0000);
         color: white; text-align: center; text-decoration: none;
         border-radius: 16px; font-weight: 600; margin-top: auto;
         transition: transform 0.2s, opacity 0.2s; box-shadow: 0 4px 15px rgba(139, 0, 0, 0.3); z-index: 2; position: relative;
-        border: none;
-        cursor: pointer;
+        border: none; cursor: pointer;
     }
     .btn-web:hover { transform: translateY(-2px); opacity: 0.95; box-shadow: 0 6px 20px rgba(139, 0, 0, 0.4); }
 
@@ -256,9 +339,8 @@
 @isset($karyawan)
 <div class="website-layout">
 
-    <!-- 1. STATS ROW (ICON FORMAL) -->
+    <!-- 1. STATS ROW -->
     <div class="dashboard-grid">
-        <!-- Hadir -->
         <div class="card stat-card animate-up delay-1">
             <div class="stat-icon-lg bg-hadir">
                 <i class="fa-solid fa-circle-check"></i>
@@ -269,7 +351,6 @@
             </div>
         </div>
 
-        <!-- Izin -->
         <div class="card stat-card animate-up delay-2">
             <div class="stat-icon-lg bg-izin">
                 <i class="fa-solid fa-calendar-minus"></i>
@@ -280,7 +361,6 @@
             </div>
         </div>
 
-        <!-- Alpha -->
         <div class="card stat-card animate-up delay-3">
             <div class="stat-icon-lg bg-alpha">
                 <i class="fa-solid fa-circle-xmark"></i>
@@ -292,17 +372,14 @@
         </div>
     </div>
 
-    <!-- 2. MAIN CONTENT (BARIS BAWAH) -->
+    <!-- 2. MAIN CONTENT -->
     <div class="main-grid">
 
         <!-- KARTU INFO KARYAWAN -->
         <div class="card profile-card animate-up delay-4">
             <div class="card-header">
-                    <div class="header-dot" style="background: var(--primary);"></div>
-                    <h2 style="margin:0;">Profil Karyawan</h2>
-                    <a href="{{ route('karyawan.slip-gaji.download') }}" class="btn-web" style="padding:4px 12px; font-size:0.92em; min-width:unset; height:32px; line-height:22px; display:inline-block; background:#8B0000; color:#fff; border-radius:6px; box-shadow:none;">
-                        📥 Slip Gaji
-                    </a>
+                <div class="header-dot" style="background: var(--primary);"></div>
+                <h2 style="margin:0;">Profil Karyawan</h2>
             </div>
 
             <div class="profile-container">
@@ -331,13 +408,27 @@
                             <div class="info-icon-web"><i class="fa-solid fa-money-bill-wave"></i></div>
                             <div class="info-text">
                                 <span class="info-label-web">Gaji Pokok</span>
-                                <span class="info-value-web">Rp {{ number_format($karyawan->gaji_pokok,0,',','.') }}
-                                    </span>
-                                </span>
+                                <span class="info-value-web">Rp {{ number_format($karyawan->gaji_pokok,0,',','.') }}</span>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <!-- TOMBOL SLIP GAJI — setengah lebar, kiri -->
+            <div class="slip-gaji-section">
+                <a href="{{ route('karyawan.slip-gaji.download') }}" class="btn-slip-gaji">
+                    <span class="btn-icon">
+                        <i class="fa-solid fa-file-invoice-dollar"></i>
+                    </span>
+                    <span class="btn-text">
+                        <span class="btn-label">Dokumen</span>
+                        <span class="btn-title">Lihat Slip Gaji</span>
+                    </span>
+                    <span class="btn-arrow">
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </span>
+                </a>
             </div>
         </div>
 
@@ -400,25 +491,10 @@
             </div>
         </div>
 
-
     </div>
 
 </div>
 @endisset
-
-<!-- MODAL CUTI & script dihapus karena tidak dipakai lagi -->
-    {{-- const modal = document.getElementById('cutiModal');
-    modal.classList.remove('show');
-    setTimeout(()=> modal.style.display='none',300);
-}
-
-window.addEventListener('click', function(e){
-    const modal = document.getElementById('cutiModal');
-    if(e.target === modal){
-        closeCutiModal();
-    }
-}); --}}
-</script>
 
 <style>
 /* MODAL STYLING */

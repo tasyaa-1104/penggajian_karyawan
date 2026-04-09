@@ -84,12 +84,30 @@
                     <td class="text-center">{{ $g->bulan }}</td>
                     <td class="text-right">
                         Rp {{ number_format($g->total_tunjangan,0,',','.') }}
+                        @if($g->karyawan->tunjangan && $g->karyawan->tunjangan->count())
+                            <br>
+                            <small>
+                                <b>Tunjangan:</b>
+                                @foreach($g->karyawan->tunjangan as $t)
+                                    {{ $t->nama_tunjangan }}@if(!$loop->last), @endif
+                                @endforeach
+                            </small>
+                        @endif
                     </td>
                     <td class="text-right">
                         Rp {{ number_format($g->total_overtime ?? 0,0,',','.') }}
                     </td>
                     <td class="text-right">
                         Rp {{ number_format($g->total_potongan,0,',','.') }}
+                        @if($g->karyawan->potongan && $g->karyawan->potongan->count())
+                            <br>
+                            <small>
+                                <b>Potongan:</b>
+                                @foreach($g->karyawan->potongan as $p)
+                                    {{ $p->nama_potongan }}@if(!$loop->last), @endif
+                                @endforeach
+                            </small>
+                        @endif
                     </td>
                     <td class="text-right">
                         Rp {{ number_format($g->gaji_bersih,0,',','.') }}

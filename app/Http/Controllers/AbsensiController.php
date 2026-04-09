@@ -78,7 +78,7 @@ $absensi = Absensi::with('karyawan')
     ->orderBy('tanggal', 'desc')
     ->orderBy('id_absensi', 'desc')
     ->get();
-    
+
     return view('admin.absensi', [
         'absensi' => $absensi,
         'search' => $search,
@@ -101,17 +101,19 @@ $absensi = Absensi::with('karyawan')
             'status_kehadiran' => 'required|in:Hadir,Izin,Alpha',
             'keterangan' => 'nullable'
         ]);
-
-        Absensi::create([
-            'id_karyawan' => $request->id_karyawan,
-            'tanggal' => $request->tanggal,
-            'jam_masuk' => Carbon::now('Asia/Jakarta')->format('H:i'),
-            'status_kehadiran' => $request->status_kehadiran,
-            'keterangan' => $request->keterangan
-        ]);
-
-        return redirect()->route('absensi')
-            ->with('success', 'Absensi berhasil ditambahkan');
+        try {
+            Absensi::create([
+                'id_karyawan' => $request->id_karyawan,
+                'tanggal' => $request->tanggal,
+                'jam_masuk' => Carbon::now('Asia/Jakarta')->format('H:i'),
+                'status_kehadiran' => $request->status_kehadiran,
+                'keterangan' => $request->keterangan
+            ]);
+            return redirect()->route('absensi')
+                ->with('success', 'Absensi berhasil ditambahkan');
+        } catch (\Exception $e) {
+            return redirect()->back()->withInput()->with('error', 'Gagal menambah absensi: ' . $e->getMessage());
+        }
     }
 
     public function edit($id)
@@ -130,24 +132,32 @@ $absensi = Absensi::with('karyawan')
             'status_kehadiran' => 'required|in:Hadir,Izin,Alpha',
             'keterangan' => 'nullable'
         ]);
-
-        Absensi::findOrFail($id)->update([
-            'id_karyawan' => $request->id_karyawan,
-            'tanggal' => $request->tanggal,
-            'status_kehadiran' => $request->status_kehadiran,
-            'keterangan' => $request->keterangan
-        ]);
-
-        return redirect()->route('absensi')
-            ->with('success', 'Absensi berhasil diupdate');
+        try {
+            Absensi::findOrFail($id)->update([
+                'id_karyawan' => $request->id_karyawan,
+                'tanggal' => $request->tanggal,
+                'status_kehadiran' => $request->status_kehadiran,
+                'keterangan' => $request->keterangan
+            ]);
+            return redirect()->route('absensi')
+                ->with('success', 'Absensi berhasil diupdate');
+        } catch (\Exception $e) {
+            return redirect()->back()->withInput()->with('error', 'Gagal update absensi: ' . $e->getMessage());
+        }
     }
 
     public function destroy($id)
     {
-        Absensi::where('id_absensi', $id)->delete();
-
-        return redirect()->route('absensi')
-            ->with('success', 'Data absensi berhasil dihapus');
+        try {
+            $deleted = Absensi::where('id_absensi', $id)->delete();
+            if (!$deleted) {
+                return redirect()->route('absensi')->with('error', 'Data absensi tidak ditemukan atau gagal dihapus');
+            }
+            return redirect()->route('absensi')
+                ->with('success', 'Data absensi berhasil dihapus');
+        } catch (\Exception $e) {
+            return redirect()->route('absensi')->with('error', 'Gagal menghapus absensi: ' . $e->getMessage());
+        }
     }
 
 public function createKaryawan()

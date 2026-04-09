@@ -55,6 +55,8 @@
                 <th>Divisi</th>
                 <th>Jabatan</th>
                 <th>Gaji Pokok</th>
+                <th>Tunjangan</th>
+                <th>Potongan</th>
                 <th>Tanggal Masuk</th>
                 <th>Status</th>
             </tr>
@@ -69,6 +71,24 @@
                 <td>{{ $k->jabatan->nama_jabatan ?? '-' }}</td>
                 <td class="text-right">
                     Rp {{ number_format($k->gaji_pokok,0,',','.') }}
+                </td>
+                <td>
+                    @if($k->tunjangan && $k->tunjangan->count())
+                        @foreach($k->tunjangan as $t)
+                            {{ $t->nama_tunjangan }} (Rp {{ number_format($t->nominal,0,',','.') }})@if(!$loop->last), @endif
+                        @endforeach
+                    @else
+                        -
+                    @endif
+                </td>
+                <td>
+                    @if($k->potongan && $k->potongan->count())
+                        @foreach($k->potongan as $p)
+                            {{ $p->nama_potongan }} (Rp {{ number_format($p->nominal,0,',','.') }})@if(!$loop->last), @endif
+                        @endforeach
+                    @else
+                        -
+                    @endif
                 </td>
                 <td class="text-center">
                     {{ $k->tanggal_masuk ? date('d-m-Y', strtotime($k->tanggal_masuk)) : '-' }}

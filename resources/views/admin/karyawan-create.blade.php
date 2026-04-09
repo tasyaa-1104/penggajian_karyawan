@@ -261,13 +261,14 @@
 
             <div class="form-group">
                 <label for="tunjangan">Pilih Tunjangan</label>
-                <select name="tunjangan[]" id="tunjangan" class="form-control" multiple>
+                <div style="display: flex; flex-wrap: wrap; gap: 12px;">
                     @foreach($tunjangan as $t)
-                        <option value="{{ $t->id_tunjangan }}">
+                        <label style="display: flex; align-items: center; gap: 6px; font-weight: 400;">
+                            <input type="checkbox" name="tunjangan[]" value="{{ $t->id_tunjangan }}">
                             {{ $t->nama_tunjangan }} (Rp {{ number_format($t->nominal,0,',','.') }})
-                        </option>
+                        </label>
                     @endforeach
-                </select>
+                </div>
             </div>
 
             <div class="text-info">

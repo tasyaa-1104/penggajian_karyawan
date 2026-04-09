@@ -20,8 +20,12 @@ class TunjanganController extends Controller
 
     public function store(Request $request)
     {
-        Tunjangan::create($request->all());
-        return redirect()->route('tunjangan.index')->with('success','Data Berhasil Ditambahkan');
+        try {
+            Tunjangan::create($request->all());
+            return redirect()->route('tunjangan.index')->with('success','Data Berhasil Ditambahkan');
+        } catch (\Exception $e) {
+            return redirect()->back()->withInput()->with('error', 'Gagal menambah tunjangan: ' . $e->getMessage());
+        }
     }
 
     public function edit($id)
@@ -32,13 +36,24 @@ class TunjanganController extends Controller
 
     public function update(Request $request, $id)
     {
-        Tunjangan::findOrFail($id)->update($request->all());
-        return redirect()->route('tunjangan.index')->with('success','Data Berhasil Di Update');
+        try {
+            Tunjangan::findOrFail($id)->update($request->all());
+            return redirect()->route('tunjangan.index')->with('success','Data Berhasil Di Update');
+        } catch (\Exception $e) {
+            return redirect()->back()->withInput()->with('error', 'Gagal update tunjangan: ' . $e->getMessage());
+        }
     }
 
     public function destroy($id)
     {
-        Tunjangan::destroy($id);
-        return redirect()->route('tunjangan.index')->with('success','Data Berhasil Di Hapus');
+        try {
+            $deleted = Tunjangan::destroy($id);
+            if (!$deleted) {
+                return redirect()->route('tunjangan.index')->with('error', 'Tunjangan tidak ditemukan atau gagal dihapus');
+            }
+            return redirect()->route('tunjangan.index')->with('success','Data Berhasil Di Hapus');
+        } catch (\Exception $e) {
+            return redirect()->route('tunjangan.index')->with('error', 'Gagal menghapus tunjangan: ' . $e->getMessage());
+        }
     }
 }

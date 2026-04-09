@@ -366,9 +366,10 @@
                     <label>Role Pengguna</label>
                     <select name="role" id="role" class="form-control" required>
                         <option value="">-- Pilih Role --</option>
-                        <option value="admin">Admin</option>
-                        <!-- PERBAIKAN: Mengubah value menjadi 'karyawan' agar logis -->
+                        <option value="hrd">HRD</option>
                         <option value="karyawan">Karyawan</option>
+                        <option value="finance">Finance</option>
+                        <option value="manager">Manager</option>
                     </select>
                 </div>
 
