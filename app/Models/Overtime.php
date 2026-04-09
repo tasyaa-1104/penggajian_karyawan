@@ -11,17 +11,18 @@ class Overtime extends Model
 
     protected $table = 'overtimes';
 
-    protected $fillable = [
-        'karyawan_id',
-        'tanggal',
-        'jam_mulai',
-        'jam_selesai',
-        'total_jam',
-        'tarif_per_jam',
-        'total_upah',
-        'sumber',
-        'status'
-    ];
+ protected $fillable = [
+    'karyawan_id',
+    'tanggal',
+    'keterangan', // 🔥 WAJIB ADA
+    'foto',
+    'jam_mulai',
+    'jam_selesai',
+    'total_jam',
+    'tarif_per_jam',
+    'total_upah',
+    'status'
+];
 
     protected $casts = [
         'tanggal'       => 'date',

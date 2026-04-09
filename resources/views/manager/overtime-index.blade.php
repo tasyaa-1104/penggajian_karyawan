@@ -184,68 +184,104 @@
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table custom-table">
-                    <thead>
-                        <tr>
-                            <th>No</th>
-                            <th>Karyawan</th>
-                            <th>Tanggal</th>
-                            <th>Jam</th>
-                            <th>Total Jam</th>
-                            <th>Upah</th>
-                            <th>Status</th>
-                            <th style="width: 160px;">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($overtimes as $overtime)
-                        <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td><strong>{{ $overtime->karyawan->nama_karyawan ?? '-' }}</strong></td>
-                            <td>{{ \Carbon\Carbon::parse($overtime->tanggal)->format('d-m-Y') }}</td>
-                            <td>{{ $overtime->jam_mulai }} - {{ $overtime->jam_selesai }}</td>
-                            <td>{{ $overtime->total_jam }} Jam</td>
-                            <td>Rp {{ number_format($overtime->total_upah,0,',','.') }}</td>
-                            <td>
-                                @if($overtime->status == 'pending')
-                                    <span class="badge-status badge-pending">Pending</span>
-                                @elseif($overtime->status == 'approved')
-                                    <span class="badge-status badge-approved">Approved</span>
-                                @elseif($overtime->status == 'rejected')
-                                    <span class="badge-status badge-rejected">Rejected</span>
-                                @endif
-                            </td>
-                            <td>
-                                @if($overtime->status == 'pending')
-                                    <div class="d-flex gap-2">
-                                        <form action="{{ route('overtime.approve', $overtime->id) }}" method="POST">
-                                            @csrf
-                                            @method('PUT')
-                                            <button type="submit" class="btn-approve" onclick="return confirm('Setujui lembur ini?')">
-                                                <i class="fas fa-check me-1"></i> Approve
-                                            </button>
-                                        </form>
-                                        <form action="{{ route('overtime.reject', $overtime->id) }}" method="POST">
-                                            @csrf
-                                            @method('PUT')
-                                            <button type="submit" class="btn-reject" onclick="return confirm('Tolak lembur ini?')">
-                                                <i class="fas fa-times me-1"></i> Reject
-                                            </button>
-                                        </form>
-                                    </div>
-                                @else
-                                    <span class="text-muted">Selesai</span>
-                                @endif
-                            </td>
-                        </tr>
-                        @empty
-                        <tr>
-                            <td colspan="8" class="text-center py-5">
-                                <i class="fas fa-clock text-muted" style="font-size: 50px;"></i>
-                                <p class="text-muted mt-3">Tidak ada data lembur</p>
-                            </td>
-                        </tr>
-                        @endforelse
-                    </tbody>
+                  <thead>
+    <tr>
+        <th>No</th>
+        <th>Karyawan</th>
+        <th>Tanggal</th>
+        <th>Jam</th>
+        <th>Total Jam</th>
+        <th>Upah</th>
+        <th>Foto</th> {{-- 🔥 TAMBAHAN --}}
+        <th>Status</th>
+        <th style="width: 160px;">Aksi</th>
+    </tr>
+</thead>
+
+<tbody>
+@forelse($overtimes as $overtime)
+<tr>
+    <td>{{ $loop->iteration }}</td>
+
+    <td>
+        <strong>{{ $overtime->karyawan->nama_karyawan ?? '-' }}</strong>
+    </td>
+
+    <td>
+        {{ \Carbon\Carbon::parse($overtime->tanggal)->format('d-m-Y') }}
+    </td>
+
+    <td>
+        @if($overtime->jam_mulai)
+            {{ $overtime->jam_mulai }} - {{ $overtime->jam_selesai }}
+        @else
+            <span style="color:red;">Menunggu Generate</span>
+        @endif
+    </td>
+
+    <td>{{ $overtime->total_jam ?? 0 }} Jam</td>
+
+    <td>
+        Rp {{ number_format($overtime->total_upah ?? 0,0,',','.') }}
+    </td>
+
+    {{-- 🔥 FOTO --}}
+    <td style="text-align:center;">
+        @if($overtime->foto)
+            <a href="{{ asset('storage/' . $overtime->foto) }}" target="_blank">
+                <img src="{{ asset('storage/' . $overtime->foto) }}"
+                     style="width:50px; height:50px; object-fit:cover; border-radius:8px;">
+            </a>
+        @else
+            <span style="color:#999;">-</span>
+        @endif
+    </td>
+
+    {{-- STATUS --}}
+    <td>
+        @if($overtime->status == 'pending')
+            <span class="badge-status badge-pending">Pending</span>
+        @elseif($overtime->status == 'approved')
+            <span class="badge-status badge-approved">Approved</span>
+        @elseif($overtime->status == 'rejected')
+            <span class="badge-status badge-rejected">Rejected</span>
+        @endif
+    </td>
+
+    {{-- AKSI --}}
+    <td>
+        @if($overtime->status == 'pending')
+            <div class="d-flex gap-2">
+                <form action="{{ route('overtime.approve', $overtime->id) }}" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <button type="submit" class="btn-approve" onclick="return confirm('Setujui lembur ini?')">
+                        ✔ Approve
+                    </button>
+                </form>
+
+                <form action="{{ route('overtime.reject', $overtime->id) }}" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <button type="submit" class="btn-reject" onclick="return confirm('Tolak lembur ini?')">
+                        ✖ Reject
+                    </button>
+                </form>
+            </div>
+        @else
+            <span class="text-muted">Selesai</span>
+        @endif
+    </td>
+</tr>
+@empty
+<tr>
+    <td colspan="9" class="text-center py-5">
+        <i class="fas fa-clock text-muted" style="font-size: 50px;"></i>
+        <p class="text-muted mt-3">Tidak ada data lembur</p>
+    </td>
+</tr>
+@endforelse
+</tbody>
                 </table>
             </div>
         </div>

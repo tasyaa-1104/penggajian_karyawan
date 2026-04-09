@@ -17,38 +17,68 @@ public function index(Request $request)
 {
     $search = $request->search;
 
-    $absensi = Absensi::with('karyawan')
-        ->when($search, function ($query) use ($search) {
-            $query->where(function ($q) use ($search) {
+    // $absensi = Absensi::with('karyawan')
+    //     ->when($search, function ($query) use ($search) {
+    //         $query->where(function ($q) use ($search) {
 
-                $q->whereHas('karyawan', function ($k) use ($search) {
-                    $k->where('nama_karyawan', 'like', "%{$search}%");
-                })
-                ->orWhere('tanggal', 'like', "%{$search}%")
-                ->orWhere('status_kehadiran', 'like', "%{$search}%")
-                ->orWhereRaw("
-                    CASE
-                        WHEN MONTH(tanggal)=1 THEN 'Januari'
-                        WHEN MONTH(tanggal)=2 THEN 'Februari'
-                        WHEN MONTH(tanggal)=3 THEN 'Maret'
-                        WHEN MONTH(tanggal)=4 THEN 'April'
-                        WHEN MONTH(tanggal)=5 THEN 'Mei'
-                        WHEN MONTH(tanggal)=6 THEN 'Juni'
-                        WHEN MONTH(tanggal)=7 THEN 'Juli'
-                        WHEN MONTH(tanggal)=8 THEN 'Agustus'
-                        WHEN MONTH(tanggal)=9 THEN 'September'
-                        WHEN MONTH(tanggal)=10 THEN 'Oktober'
-                        WHEN MONTH(tanggal)=11 THEN 'November'
-                        WHEN MONTH(tanggal)=12 THEN 'Desember'
-                    END LIKE ?
-                ", ["%{$search}%"]);
-            });
-        })
-        ->orderBy('tanggal', 'desc')
-        ->orderBy('jam_masuk', 'desc')
-        ->orderBy('id_absensi', 'desc')
-        ->get();
+    //             $q->whereHas('karyawan', function ($k) use ($search) {
+    //                 $k->where('nama_karyawan', 'like', "%{$search}%");
+    //             })
+    //             ->orWhere('tanggal', 'like', "%{$search}%")
+    //             ->orWhere('status_kehadiran', 'like', "%{$search}%")
+    //             ->orWhereRaw("
+    //                 CASE
+    //                     WHEN MONTH(tanggal)=1 THEN 'Januari'
+    //                     WHEN MONTH(tanggal)=2 THEN 'Februari'
+    //                     WHEN MONTH(tanggal)=3 THEN 'Maret'
+    //                     WHEN MONTH(tanggal)=4 THEN 'April'
+    //                     WHEN MONTH(tanggal)=5 THEN 'Mei'
+    //                     WHEN MONTH(tanggal)=6 THEN 'Juni'
+    //                     WHEN MONTH(tanggal)=7 THEN 'Juli'
+    //                     WHEN MONTH(tanggal)=8 THEN 'Agustus'
+    //                     WHEN MONTH(tanggal)=9 THEN 'September'
+    //                     WHEN MONTH(tanggal)=10 THEN 'Oktober'
+    //                     WHEN MONTH(tanggal)=11 THEN 'November'
+    //                     WHEN MONTH(tanggal)=12 THEN 'Desember'
+    //                 END LIKE ?
+    //             ", ["%{$search}%"]);
+    //         });
+    //     })
+    //     ->orderBy('tanggal', 'desc')
+    //     ->orderBy('jam_masuk', 'desc')
+    //     ->orderBy('id_absensi', 'desc')
+    //     ->get();
+$absensi = Absensi::with('karyawan')
+    ->when($search, function ($query) use ($search) {
+        $query->where(function ($q) use ($search) {
 
+            $q->whereHas('karyawan', function ($k) use ($search) {
+                $k->where('nama_karyawan', 'like', "%{$search}%");
+            })
+            ->orWhere('tanggal', 'like', "%{$search}%")
+            ->orWhere('status_kehadiran', 'like', "%{$search}%")
+            ->orWhereRaw("
+                CASE
+                    WHEN MONTH(tanggal)=1 THEN 'Januari'
+                    WHEN MONTH(tanggal)=2 THEN 'Februari'
+                    WHEN MONTH(tanggal)=3 THEN 'Maret'
+                    WHEN MONTH(tanggal)=4 THEN 'April'
+                    WHEN MONTH(tanggal)=5 THEN 'Mei'
+                    WHEN MONTH(tanggal)=6 THEN 'Juni'
+                    WHEN MONTH(tanggal)=7 THEN 'Juli'
+                    WHEN MONTH(tanggal)=8 THEN 'Agustus'
+                    WHEN MONTH(tanggal)=9 THEN 'September'
+                    WHEN MONTH(tanggal)=10 THEN 'Oktober'
+                    WHEN MONTH(tanggal)=11 THEN 'November'
+                    WHEN MONTH(tanggal)=12 THEN 'Desember'
+                END LIKE ?
+            ", ["%{$search}%"]);
+        });
+    })
+    ->orderBy('tanggal', 'desc')
+    ->orderBy('id_absensi', 'desc')
+    ->get();
+    
     return view('admin.absensi', [
         'absensi' => $absensi,
         'search' => $search,

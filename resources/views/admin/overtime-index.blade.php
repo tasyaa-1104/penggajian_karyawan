@@ -262,75 +262,98 @@
                         <th style="text-align: center;">Jam Kerja</th>
                         <th style="text-align: center;">Total Jam</th>
                         <th>Total Upah</th>
-                        <th style="text-align: center;">Sumber</th>
+                        {{-- <th>Keterangan</th> --}}
+<th>Foto</th>
+                       
                         <th style="text-align: center;">Status</th>
                         <th style="text-align: center;">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($overtimes as $overtime)
-                        <tr>
-                            <td style="text-align: center;">{{ $loop->iteration }}</td>
-                            <td><strong>{{ $overtime->karyawan->nama_karyawan }}</strong></td>
-                            <td style="text-align: center;">{{ \Carbon\Carbon::parse($overtime->tanggal)->format('d-m-Y') }}</td>
-                            <td style="text-align: center;">{{ $overtime->jam_mulai }} - {{ $overtime->jam_selesai }}</td>
-                            <td style="text-align: center;">{{ $overtime->total_jam }} Jam</td>
-                            <td>
-                                <span class="text-currency">
-                                    Rp {{ number_format($overtime->total_upah,0,',','.') }}
-                                </span>
-                            </td>
+                   <tbody>
+@forelse($overtimes as $overtime)
+<tr>
+    <td style="text-align: center;">{{ $loop->iteration }}</td>
 
-                            {{-- SUMBER --}}
-                            <td style="text-align: center;">
-                                <span style="
-                                    padding:4px 10px;
-                                    border-radius:12px;
-                                    font-size:0.7rem;
-                                    font-weight:700;
-                                    background: {{ $overtime->sumber == 'absensi' ? '#dcfce7' : '#e0e7ff' }};
-                                    color: {{ $overtime->sumber == 'absensi' ? '#166534' : '#3730a3' }};
-                                ">
-                                    {{ strtoupper($overtime->sumber) }}
-                                </span>
-                            </td>
+    <td>
+        <strong>{{ $overtime->karyawan->nama_karyawan }}</strong>
+    </td>
 
-                            {{-- STATUS --}}
-                            <td style="text-align: center;">
-                                <span class="badge-status
-                                    {{ $overtime->status == 'approved' ? 'badge-approved' :
-                                       ($overtime->status == 'rejected' ? 'badge-rejected' : 'badge-pending') }}">
-                                    {{ ucfirst($overtime->status) }}
-                                </span>
-                            </td>
+    <td style="text-align: center;">
+        {{ \Carbon\Carbon::parse($overtime->tanggal)->format('d-m-Y') }}
+    </td>
 
-                            {{-- AKSI --}}
-                           <td style="text-align: center;">
-    <form action="{{ route('overtime.destroy', $overtime->id) }}" method="POST"
-          onsubmit="return confirm('Yakin hapus overtime ini?')">
+    {{-- JAM KERJA --}}
+    <td style="text-align: center;">
+        @if($overtime->jam_mulai)
+            {{ $overtime->jam_mulai }} - {{ $overtime->jam_selesai }}
+        @else
+            <span style="color:red;">Menunggu Generate</span>
+        @endif
+    </td>
 
-        @csrf
-     
-                                    {{-- HAPUS --}}
-                                    <form action="{{ route('overtime.destroy', $overtime->id) }}" method="POST" style="display:inline;"
-                                          onsubmit="return confirm('Yakin hapus overtime ini?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button class="btn-action-sm btn-delete" title="Hapus">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="9" style="text-align: center; padding: 40px; color: #999;">
-                                Data lembur kosong
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
+    {{-- TOTAL JAM --}}
+    <td style="text-align: center;">
+        {{ $overtime->total_jam ?? 0 }} Jam
+    </td>
+
+    {{-- TOTAL UPAH --}}
+    <td>
+        @if($overtime->total_upah)
+            <span class="text-currency">
+                Rp {{ number_format($overtime->total_upah,0,',','.') }}
+            </span>
+        @else
+            <span style="color:#999;">-</span>
+        @endif
+    </td>
+
+    {{-- KETERANGAN --}}
+    {{-- <td>
+    {{ $overtime->keterangan ?: '-' }}
+</td> --}}
+
+    {{-- FOTO --}}
+    <td style="text-align: center;">
+        @if($overtime->foto)
+            <a href="{{ asset('storage/' . $overtime->foto) }}" target="_blank">
+                <img src="{{ asset('storage/' . $overtime->foto) }}"
+                     style="width:50px; height:50px; object-fit:cover; border-radius:8px;">
+            </a>
+        @else
+            <span style="color:#999;">-</span>
+        @endif
+    </td>
+
+    {{-- STATUS --}}
+    <td style="text-align: center;">
+        <span class="badge-status
+            {{ $overtime->status == 'approved' ? 'badge-approved' :
+               ($overtime->status == 'rejected' ? 'badge-rejected' : 'badge-pending') }}">
+            {{ ucfirst($overtime->status) }}
+        </span>
+    </td>
+
+    {{-- AKSI --}}
+    <td style="text-align: center;">
+        <form action="{{ route('overtime.destroy', $overtime->id) }}" method="POST"
+              onsubmit="return confirm('Yakin hapus overtime ini?')" style="display:inline;">
+            @csrf
+            @method('DELETE')
+            <button class="btn-action-sm btn-delete" title="Hapus">
+                <i class="fas fa-trash"></i>
+            </button>
+        </form>
+    </td>
+</tr>
+@empty
+<tr>
+    <td colspan="10" style="text-align: center; padding: 40px; color: #999;">
+        Data lembur kosong
+    </td>
+</tr>
+@endforelse
+</tbody>
             </table>
         </div>
 

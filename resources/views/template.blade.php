@@ -279,6 +279,13 @@
                 <span>Pengajuan Cuti</span>
             </a>
         </li>
+        <li class="nav-item">
+    <a href="{{ route('karyawan.lembur') }}"
+       class="nav-link {{ request()->routeIs('karyawan.lembur') ? 'active' : '' }}">
+        <i class="fa-solid fa-clock"></i>
+        <span>Pengajuan Lembur</span>
+    </a>
+</li>
 
         <li class="nav-item" style="margin-top: auto;"></li>
 
