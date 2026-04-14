@@ -71,13 +71,11 @@
             box-shadow: var(--shadow-soft);
             overflow: hidden;
             position: relative;
-            /* Animation Utama Masuk */
             animation: cardEntrance 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
             opacity: 0;
             transform: scale(0.9);
         }
 
-        /* Efek Cahaya Mengikuti Mouse */
         .login-card::before {
             content: "";
             position: absolute;
@@ -89,7 +87,7 @@
                 rgba(128, 0, 0, 0.05),
                 transparent 40%
             );
-            z-index: 3; /* Di atas background, di bawah konten */
+            z-index: 3;
             pointer-events: none;
             transition: opacity 0.5s;
         }
@@ -98,11 +96,10 @@
             to { opacity: 1; transform: scale(1); }
         }
 
-        /* --- 4. SISI KIRI: FOTO (DIUBAH) --- */
+        /* --- 4. SISI KIRI: FOTO GEDUNG (SAMA DENGAN LANDING PAGE) --- */
         .image-side {
             flex: 0 0 35%;
-            /* FOTO TUMPUKAN UANG (STACK OF BILLS) */
-            background-image: url('https://z-cdn-media.chatglm.cn/files/212e076d-891c-40e1-a4a5-8112bd8d703d.jpg?auth_key=1873202059-cfa65f2584334351a431602c756e811c-0-eb165adf61c2b0ef55e8b21aef04c629');
+            background-image: url('https://z-cdn-media.chatglm.cn/files/ece55b11-2bfb-4545-95fc-92f45d4ec335.jpg?auth_key=1875097066-8218f88c02734f28b4fbb7d7904490d0-0-74a2f70754f8c91bf3fde4f7b9dc9d04');
             background-size: cover;
             background-position: center;
             position: relative;
@@ -112,7 +109,7 @@
             content: '';
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(to bottom, rgba(128,0,0,0.2), rgba(128,0,0,0.7));
+            background: linear-gradient(to bottom, rgba(128,0,0,0.15), rgba(69,11,11,0.75));
         }
 
         .image-content {
@@ -123,7 +120,7 @@
             z-index: 2;
             color: #fff;
             text-align: left;
-            opacity: 0; /* Mulai tersembunyi */
+            opacity: 0;
             animation: slideInLeft 0.8s ease-out 0.5s forwards;
         }
 
@@ -144,20 +141,19 @@
             justify-content: center;
             position: relative;
             background: #fff;
-            z-index: 5; /* Konten di atas spotlight */
+            z-index: 5;
         }
 
-        /* Staggered Animation Classes */
         .stagger-anim {
             opacity: 0;
             animation: fadeInUp 0.6s ease-out forwards;
         }
-        .delay-1 { animation-delay: 0.2s; } /* Judul */
-        .delay-2 { animation-delay: 0.4s; } /* Sub Judul */
-        .delay-3 { animation-delay: 0.6s; } /* Input 1 */
-        .delay-4 { animation-delay: 0.7s; } /* Input 2 */
-        .delay-5 { animation-delay: 0.8s; } /* Link */
-        .delay-6 { animation-delay: 0.9s; } /* Button */
+        .delay-1 { animation-delay: 0.2s; }
+        .delay-2 { animation-delay: 0.4s; }
+        .delay-3 { animation-delay: 0.6s; }
+        .delay-4 { animation-delay: 0.7s; }
+        .delay-5 { animation-delay: 0.8s; }
+        .delay-6 { animation-delay: 0.9s; }
 
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(20px); }
@@ -201,7 +197,6 @@
             border-bottom-color: var(--primary-maroon);
         }
 
-        /* Garis Bawah Animasi */
         .input-group::after {
             content: '';
             position: absolute;
@@ -286,7 +281,6 @@
             overflow: hidden;
         }
 
-        /* Efek Kilau (Shine) saat Hover */
         .submit-btn::after {
             content: '';
             position: absolute;
@@ -313,7 +307,6 @@
             transform: translateY(0);
         }
 
-        /* Efek Ripple */
         .ripple {
             position: absolute;
             background: rgba(255, 255, 255, 0.3);
@@ -364,10 +357,9 @@
 
     <!-- Container Utama -->
     <div class="main-container">
-        <!-- Kartu Login -->
         <div class="login-card" id="main-card">
 
-            <!-- SISI KIRI: FOTO TUMPUKAN UANG -->
+            <!-- SISI KIRI: FOTO GEDUNG (SAMA DENGAN LANDING PAGE) -->
             <div class="image-side">
                 <div class="image-content">
                     <h3>SmartGaji</h3>
@@ -377,9 +369,6 @@
 
             <!-- SISI KANAN: FORM -->
             <div class="form-side">
-                <!--
-                   FORM LOGIN (LOGIKA LARAVEL TIDAK DIUBAH)
-                -->
                 <form method="POST" action="{{ route('login.proses') }}">
                     @csrf
 
@@ -432,13 +421,11 @@
 
         if (window.innerWidth > 950) {
             document.addEventListener('mousemove', (e) => {
-                // 1. Update variabel CSS untuk posisi Spotlight
                 const x = e.pageX - card.offsetLeft;
                 const y = e.pageY - card.offsetTop;
                 card.style.setProperty('--x', `${x}px`);
                 card.style.setProperty('--y', `${y}px`);
 
-                // 2. Efek 3D Tilt Halus
                 const xAxis = (window.innerWidth / 2 - e.pageX) / 50;
                 const yAxis = (window.innerHeight / 2 - e.pageY) / 50;
                 card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
