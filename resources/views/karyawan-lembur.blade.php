@@ -5,6 +5,12 @@
 @section('content')
 
 <h3>Pengajuan Lembur</h3>
+@if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+@endif
 
 <form action="{{ route('karyawan.lembur.store') }}" method="POST" enctype="multipart/form-data">
     @csrf

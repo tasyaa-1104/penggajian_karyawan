@@ -141,7 +141,15 @@ class="{{ request()->routeIs('manager.cuti') ? 'active' : '' }}">
 
 <a href="{{ route('manager.overtime') }}"
 class="{{ request()->routeIs('manager.overtime') ? 'active' : '' }}">
-<span><i class="bi bi-clock-history"></i> Persetujuan Lembur</span>
+
+<span>
+<i class="bi bi-clock-history"></i> Persetujuan Lembur
+</span>
+
+@if(($lembur_pending ?? 0) > 0)
+<span class="badge-notif">{{ $lembur_pending }}</span>
+@endif
+
 </a>
 
 <a href="{{ route('manager.izin') }}"

@@ -36,6 +36,12 @@ class OvertimeController extends Controller
      */
  public function indexManager()
 {
+    // 🔥 HAPUS lembur pending lebih dari 7 hari
+    Overtime::where('status', 'pending')
+        ->where('created_at', '<', now()->subDays(7))
+        ->delete();
+
+    // 🔥 ambil data setelah dibersihkan
     $overtimes = Overtime::with('karyawan')
         ->orderBy('tanggal', 'desc')
         ->get();
