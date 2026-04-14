@@ -67,13 +67,24 @@ Rp {{ number_format($slip->gaji->karyawan->jabatan->gaji_pokok ?? 0,0,',','.') }
 
 
 <tr>
-<td>Tunjangan</td>
-<td>
-Rp {{ number_format($slip->gaji->total_tunjangan,0,',','.') }}
-</td>
+    <td style="vertical-align: top;">Tunjangan</td>
+    <td>
+        Rp {{ number_format($slip->gaji->total_tunjangan,0,',','.') }}
+
+        <div class="detail" style="margin-top:5px;">
+            <strong>Rincian:</strong><br>
+
+            @forelse($tunjangan as $t)
+                - {{ $t->nama_tunjangan }}
+                (Rp {{ number_format($t->nominal,0,',','.') }}) <br>
+            @empty
+                Tidak ada tunjangan
+            @endforelse
+        </div>
+    </td>
 </tr>
 
-<tr>
+{{-- <tr>
 <td colspan="2" class="detail">
 
 @foreach($tunjangan as $t)
@@ -86,7 +97,7 @@ Rp {{ number_format($t->nominal,0,',','.') }}
 @endforeach
 
 </td>
-</tr>
+</tr> --}}
 
 
 <tr>

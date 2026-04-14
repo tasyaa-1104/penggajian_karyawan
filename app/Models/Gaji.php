@@ -37,5 +37,15 @@ class Gaji extends Model
         return $this->hasOne(\App\Models\rekap_absensi::class, 'id_karyawan', 'id_karyawan')
             ->where('bulan', $this->bulan);
     }
-    
+
+    public function tunjangan()
+{
+    return $this->belongsToMany(
+        Tunjangan::class,
+        'gaji_tunjangan',
+        'id_gaji',
+        'id_tunjangan'
+    );
+}
+
 }

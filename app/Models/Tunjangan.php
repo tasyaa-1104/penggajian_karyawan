@@ -22,5 +22,10 @@ class Tunjangan extends Model
         'id_karyawan'
     );
 }
+
+public function gaji()
+{
+    return $this->belongsToMany(Gaji::class, 'gaji_tunjangan', 'id_tunjangan', 'id_gaji');
+}
 }
 

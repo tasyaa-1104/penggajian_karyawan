@@ -177,8 +177,19 @@
                 <td class="amount-col">{{ number_format($slip->gaji->total_overtime) }}</td>
             </tr>
             <tr>
-                <td>Tunjangan</td>
-                <td class="amount-col">{{ number_format($slip->gaji->total_tunjangan) }}</td>
+                <td>
+                    Tunjangan
+                    <div style="font-size:12px; margin-top:5px; color:#555;">
+                        @forelse($tunjangan as $t)
+                            - {{ $t->nama_tunjangan }} ({{ number_format($t->nominal) }})<br>
+                        @empty
+                            Tidak ada tunjangan
+                        @endforelse
+                    </div>
+                </td>
+                <td class="amount-col">
+                    {{ number_format($slip->gaji->total_tunjangan) }}
+                </td>
             </tr>
             <tr class="deduction-row">
                 <td>(-) Potongan</td>

@@ -114,7 +114,6 @@ public function indexHRD()
 public function indexManager()
 {
     $cuti = Cuti::with('karyawan')
-        ->where('status', 'pending') // hanya yang mengajukan
         ->orderBy('created_at', 'desc')
         ->get();
 

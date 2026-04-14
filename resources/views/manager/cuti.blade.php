@@ -229,27 +229,27 @@
                                     {{ strtoupper($c->status) }}
                                 </span>
                             </td>
-                            <td style="text-align: center;">
+                           <td style="text-align: center;">
                                 @if($c->status == 'pending')
                                     <div style="display:flex; gap:6px; justify-content:center;">
-                                        <!-- Form Approve (Logika Tetap) -->
-                                        <form action="{{ route('cuti.approve', $c->id_cuti) }}" method="POST" style="display:inline;">
+
+                                        <form action="{{ route('cuti.approve', $c->id_cuti) }}" method="POST">
                                             @csrf
-                                            <button class="btn-action-sm btn-approve" title="Setujui">
+                                            <button class="btn-action-sm btn-approve">
                                                 <i class="fas fa-check"></i> ACC
                                             </button>
                                         </form>
 
-                                        <!-- Form Reject (Logika Tetap) -->
-                                        <form action="{{ route('cuti.reject', $c->id_cuti) }}" method="POST" style="display:inline;">
+                                        <form action="{{ route('cuti.reject', $c->id_cuti) }}" method="POST">
                                             @csrf
-                                            <button class="btn-action-sm btn-reject" title="Tolak">
+                                            <button class="btn-action-sm btn-reject">
                                                 <i class="fas fa-times"></i> Tolak
                                             </button>
                                         </form>
+
                                     </div>
                                 @else
-                                    <span class="text-muted" style="font-size:0.85rem; font-weight:600; color:#94a3b8;">Selesai</span>
+                                    <span style="color:#94a3b8; font-weight:600;">-</span>
                                 @endif
                             </td>
                         </tr>

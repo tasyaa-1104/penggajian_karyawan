@@ -115,7 +115,6 @@ public function downloadKaryawan()
 {
     $user = Auth::user();
 
-    // Ambil gaji terakhir milik karyawan
     $gaji = Gaji::where('id_karyawan', $user->karyawan->id_karyawan)
                 ->latest()
                 ->first();
@@ -124,7 +123,6 @@ public function downloadKaryawan()
         return back()->with('error', 'Gaji belum tersedia');
     }
 
-    // Ambil slip gaji berdasarkan id_gaji
     $slip = slip_gaji::where('id_gaji', $gaji->id_gaji)
                     ->latest()
                     ->first();
@@ -133,7 +131,12 @@ public function downloadKaryawan()
         return back()->with('error', 'Slip gaji belum tersedia');
     }
 
-    $pdf = Pdf::loadView('slip-gaji', compact('slip'));
+    // ✅ TAMBAHKAN INI
+  $tunjangan = Tunjangan::whereHas('karyawan', function ($q) use ($gaji) {
+    $q->where('karyawan.id_karyawan', $gaji->id_karyawan);
+})->get();
+
+    $pdf = Pdf::loadView('slip-gaji', compact('slip', 'tunjangan'));
 
     return $pdf->download('slip-gaji-'.$slip->gaji->karyawan->nama_karyawan.'.pdf');
 }
@@ -142,7 +145,7 @@ public function downloadAdmin($id)
 {
     $slip = slip_gaji::with(['gaji.karyawan.jabatan'])->findOrFail($id);
 
-    $tunjangan = Tunjangan::all();
+    $tunjangan = $slip->gaji->tunjangan;
 
     $pdf = Pdf::loadView('finance.slip-gaji', compact('slip','tunjangan'));
 
