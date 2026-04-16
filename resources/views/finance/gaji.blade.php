@@ -49,7 +49,8 @@ background:var(--bg-page);
 }
 
 .container-custom{
-max-width:1200px;
+width:100%;
+max-width:100%;
 margin:auto;
 padding:30px;
 padding-top:90px;
@@ -261,7 +262,7 @@ cursor:pointer;
 </div>
 
 <div class="welcome-text-content">
-<h3>Selamat Datang, Admin 👋</h3>
+<h3>Selamat Datang👋</h3>
 <p>Berikut adalah data gaji dan rekapitulasi penggajian karyawan.</p>
 </div>
 
