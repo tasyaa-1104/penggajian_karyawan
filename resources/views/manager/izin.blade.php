@@ -144,6 +144,7 @@
                                     <th>Tanggal</th>
                                     <th>Bulan</th>
                                     <th>Status</th>
+                                    <th>Alasan</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
@@ -167,7 +168,9 @@
                                             <span class="badge-status badge-rejected">Rejected</span>
                                         @endif
                                     </td>
-
+<td>
+    {{ $d->alasan ?? $d->keterangan ?? '-' }}
+</td>
                                     <td>
                                         @if($d->status == 'pending')
                                             <form action="{{ route('manager.izin.approve', $d->id) }}" method="POST" class="d-inline">
@@ -214,6 +217,7 @@
                                     <th>Tanggal</th>
                                     <th>Bulan</th>
                                     <th>Status</th>
+                                    <th>Alasan</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
@@ -237,7 +241,9 @@
                                             <span class="badge-status badge-rejected">Rejected</span>
                                         @endif
                                     </td>
-
+                                       <td>
+    {{ $d->alasan ?? $d->keterangan ?? '-' }}
+</td>
                                     <td>
                                         @if($d->status == 'pending')
                                             <form action="{{ route('manager.sakit.approve', $d->id) }}" method="POST" class="d-inline">

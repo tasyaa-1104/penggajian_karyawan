@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Cuti;
 use App\Models\Karyawan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class CutiController extends Controller
@@ -27,7 +28,9 @@ class CutiController extends Controller
     /* =========================
      * SIMPAN CUTI KARYAWAN
      * ========================= */
-   public function store(Request $request)
+
+
+public function store(Request $request)
 {
     $request->validate([
         'tanggal_mulai'   => 'required|date',
@@ -47,6 +50,19 @@ class CutiController extends Controller
         return redirect()
             ->route('karyawan.cuti')
             ->with('error', 'Anda sudah mengajukan cuti bulan ini. Pengajuan berikutnya hanya bisa dilakukan bulan depan.');
+    }
+
+    // 🔴 BATAS MAKSIMAL 7 HARI
+    $mulai   = Carbon::parse($request->tanggal_mulai);
+    $selesai = Carbon::parse($request->tanggal_selesai);
+
+    $jumlahHari = $mulai->diffInDays($selesai) + 1;
+
+    if ($jumlahHari > 7) {
+        return redirect()
+            ->back()
+            ->withInput()
+            ->with('error', 'Durasi cuti maksimal hanya 7 hari.');
     }
 
     Cuti::create([

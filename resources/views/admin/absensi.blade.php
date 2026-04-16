@@ -318,7 +318,7 @@
                         <th>Jam Masuk</th>
                         <th>Jam Pulang</th>
                         <th>Status</th>
-                        <th>Keterangan</th>
+                        {{-- <th>Keterangan</th> --}}
                         <!-- KOLOM AKSI TETAP ADA -->
                         <th width="15%" style="text-align: center;">Aksi</th>
                     </tr>
@@ -351,7 +351,7 @@
                                     <span class="badge-sharp badge-alpha">Alpha</span>
                                 @endif
                             </td>
-                            <td><small>{{ $a->keterangan ?? '-' }}</small></td>
+                            {{-- <td><small>{{ $a->keterangan ?? '-' }}</small></td> --}}
 
                             <!-- TOMBOL EDIT DAN HAPUS TETAP ADA -->
                             <td>
