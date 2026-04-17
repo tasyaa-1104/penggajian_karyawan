@@ -45,6 +45,9 @@
 <body>
 
     <h2>DATA KARYAWAN</h2>
+    <div style="text-align: right; margin-bottom: 10px; font-size: 11px;">
+        Dicetak pada: {{ date('d-m-Y') }}
+    </div>
 
     <table>
         <thead>

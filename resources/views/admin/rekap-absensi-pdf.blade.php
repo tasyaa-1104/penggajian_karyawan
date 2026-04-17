@@ -3,15 +3,46 @@
 <head>
     <title>Rekap Absensi</title>
     <style>
-        body { font-family: sans-serif; }
-        table { width:100%; border-collapse: collapse; }
-        th, td { border:1px solid #000; padding:8px; text-align:center; }
-        th { background:#eee; }
+        body {
+            font-family: sans-serif;
+            font-size: 12px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 5px;
+        }
+
+        .tanggal-cetak {
+            text-align: right;
+            margin-bottom: 15px;
+            font-size: 11px;
+        }
+
+        table {
+            width:100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border:1px solid #000;
+            padding:8px;
+            text-align:center;
+        }
+
+        th {
+            background:#800000;
+            color: white;
+        }
     </style>
 </head>
 <body>
 
-<h2 style="text-align:center;">Rekap Absensi</h2>
+<h2>REKAP ABSENSI</h2>
+
+<div class="tanggal-cetak">
+    Dicetak pada: {{ date('d-m-Y') }}
+</div>
 
 <table>
     <thead>

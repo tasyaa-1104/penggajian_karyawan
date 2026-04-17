@@ -54,11 +54,7 @@
 
     .website-layout {
         width: 100%;
-        max-width: 1200px;
-        margin: 0 auto;
         padding: 30px;
-        position: relative;
-        z-index: 10;
         padding-top: 90px;
     }
 
@@ -176,7 +172,7 @@
 
 </style>
 
-<div class="website-layout">
+<div class="container-fluid mt-4">
 
     <!-- GLASS CARD CONTAINER -->
     <div class="glass-card">
@@ -205,7 +201,7 @@
         @endif
 
         <!-- TABEL MODERN -->
-        <div style="overflow-x: auto;">
+        <div class="table-responsive">
             <table class="modern-table">
                 <thead>
                     <tr>

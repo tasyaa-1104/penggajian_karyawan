@@ -288,11 +288,11 @@
 
         <div style="margin-bottom:15px; display:flex; gap:10px;">
     <a href="{{ route('rekap-absensi.excel') }}" class="btn btn-add">
-        <i class="fas fa-file-excel"></i> Export Excel
+        <i class="fas fa-file-excel"></i> Unduh Excel
     </a>
 
     <a href="{{ route('rekap-absensi.pdf') }}" class="btn btn-add">
-        <i class="fas fa-file-pdf"></i> Export PDF
+        <i class="fas fa-file-pdf"></i> Unduh PDF
     </a>
 </div>
 

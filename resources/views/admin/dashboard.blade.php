@@ -203,7 +203,7 @@
 <div class="container-fluid dashboard-wrapper">
 
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h4>Dashboard</h4>
+        <h4>Dashboard HRD</h4>
     </div>
 
     <!-- INFO BOX -->

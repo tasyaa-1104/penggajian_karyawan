@@ -247,6 +247,132 @@ font-size:22px;
 cursor:pointer;
 }
 
+/* MODAL BACKDROP */
+.modal-detail{
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.5);
+backdrop-filter: blur(3px);
+justify-content:center;
+align-items:center;
+z-index:9999;
+}
+
+/* MODAL BOX */
+.modal-content-detail{
+background: white;
+padding: 25px;
+border-radius: 16px;
+width: 420px;
+box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+animation: zoomIn 0.25s ease;
+}
+
+/* ANIMASI */
+@keyframes zoomIn{
+from{transform:scale(0.9); opacity:0;}
+to{transform:scale(1); opacity:1;}
+}
+
+/* HEADER */
+.modal-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:15px;
+}
+
+.modal-header h3{
+margin:0;
+font-size:18px;
+color:#800000;
+font-weight:700;
+}
+
+.close-modal{
+font-size:22px;
+cursor:pointer;
+transition:0.2s;
+}
+
+.close-modal:hover{
+color:#EF5350;
+transform:rotate(90deg);
+}
+
+/* INFO BOX */
+.modal-info{
+background:#fff5f5;
+padding:10px 12px;
+border-radius:8px;
+margin-bottom:10px;
+font-size:14px;
+}
+
+/* LIST */
+.modal-content-detail ul{
+list-style:none;
+padding:0;
+margin-top:10px;
+}
+
+.modal-content-detail ul li{
+background:#f9fafb;
+padding:10px 12px;
+border-radius:8px;
+margin-bottom:8px;
+display:flex;
+justify-content:space-between;
+font-size:13px;
+border-left:4px solid #800000;
+transition:0.2s;
+}
+
+.modal-content-detail ul li:hover{
+background:#fff5f5;
+transform:translateX(3px);
+}
+
+/* TOTAL */
+.modal-total{
+margin-top:10px;
+padding:10px;
+background:#800000;
+color:white;
+border-radius:8px;
+font-weight:600;
+text-align:right;
+}
+
+.currency-text{
+font-weight:600;
+cursor:pointer;
+display:inline-flex;
+align-items:center;
+gap:6px;
+transition:0.2s;
+}
+
+.currency-text i{
+font-size:12px;
+opacity:0.6;
+transition:0.2s;
+}
+
+.currency-text:hover{
+color:#800000;
+text-decoration:underline;
+}
+
+.currency-text:hover i{
+opacity:1;
+transform:scale(1.1);
+}
+
 </style>
 
 
@@ -328,12 +454,18 @@ cursor:pointer;
 
 <td>
 <span class="currency-text"
+title="Klik untuk lihat detail tunjangan"
 onclick="showTunjangan(
 '{{ $g->karyawan->nama_karyawan }}',
-`@foreach($tunjangan as $t)
-<li>{{ $t->nama_tunjangan }} - Rp {{ number_format($t->nominal,0,',','.') }}</li>
-@endforeach`
+`@if($g->karyawan->tunjangan && $g->karyawan->tunjangan->count())
+    @foreach($g->karyawan->tunjangan as $t)
+        <li>{{ $t->nama_tunjangan }} <span>Rp {{ number_format($t->nominal,0,',','.') }}</span></li>
+    @endforeach
+@else
+    <li>Tidak ada tunjangan</li>
+@endif`
 )">
+<i class="fas fa-eye"></i>
 Rp {{ number_format($g->total_tunjangan,0,',','.') }}
 </span>
 </td>
@@ -347,30 +479,30 @@ Rp {{ number_format($g->total_overtime ?? 0,0,',','.') }}
 
 
 <td>
-
 <span class="currency-text"
-
+title="Klik untuk lihat detail potongan"
 onclick="showPotongan(
 '{{ $g->karyawan->nama_karyawan }}',
+`@if($g->karyawan->potongan && $g->karyawan->potongan->count())
+    @foreach($g->karyawan->potongan as $p)
+        <li>{{ $p->nama_potongan }} <span>Rp {{ number_format($p->nominal,0,',','.') }}</span></li>
+    @endforeach
+@endif
 
-`@php
+@php
 $rekap = \App\Models\rekap_absensi::where('id_karyawan',$g->id_karyawan)
 ->where('bulan',$g->bulan)
 ->first();
 @endphp
 
-<li>Alpha : {{ $rekap->jumlah_alpha ?? 0 }}</li>
-<li>Izin : {{ $rekap->jumlah_izin ?? 0 }}</li>
-<li>Sakit : {{ $rekap->jumlah_sakit ?? 0 }}</li>
+<li>Alpha <span>{{ $rekap->jumlah_alpha ?? 0 }}</span></li>
+<li>Izin <span>{{ $rekap->jumlah_izin ?? 0 }}</span></li>
+<li>Sakit <span>{{ $rekap->jumlah_sakit ?? 0 }}</span></li>
 `
-)"
-
->
-
+)">
+<i class="fas fa-eye"></i>
 Rp {{ number_format($g->total_potongan,0,',','.') }}
-
 </span>
-
 </td>
 
 
