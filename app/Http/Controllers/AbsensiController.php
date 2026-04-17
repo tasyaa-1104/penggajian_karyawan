@@ -404,8 +404,64 @@ public function absenPulang(Request $request)
 //     return back()->with('success','Pengajuan berhasil dikirim, menunggu approval manager');
 // }
 
+// public function absenIzin(Request $request)
+// {
+//     $request->validate([
+//         'status_kehadiran' => 'required|in:Izin,Sakit',
+//         'alasan' => 'required|min:5'
+//     ]);
+
+//     $karyawan = Karyawan::where('id_user', Auth::user()->id)->first();
+
+//     if (!$karyawan) {
+//         return back()->with('error', 'Akun belum terhubung dengan data karyawan');
+//     }
+
+//     $tanggal = Carbon::now('Asia/Jakarta')->toDateString();
+
+//     $cekIzin = Izin::where('karyawan_id', $karyawan->id_karyawan)
+//         ->where('tanggal', $tanggal)
+//         ->exists();
+
+//     $cekSakit = Sakit::where('karyawan_id', $karyawan->id_karyawan)
+//         ->where('tanggal', $tanggal)
+//         ->exists();
+
+//     if ($cekIzin || $cekSakit) {
+//         return back()->with('error', 'Kamu sudah mengajukan izin/sakit hari ini');
+//     }
+
+//     if ($request->status_kehadiran == 'Izin') {
+//         Izin::create([
+//             'karyawan_id' => $karyawan->id_karyawan,
+//             'tanggal' => $tanggal,
+//             'alasan' => $request->alasan,
+//             'status' => 'pending'
+//         ]);
+//     } else {
+//         Sakit::create([
+//             'karyawan_id' => $karyawan->id_karyawan,
+//             'tanggal' => $tanggal,
+//             'alasan' => $request->alasan,
+//             'status' => 'pending'
+//         ]);
+//     }
+
+//     return back()->with('success', 'Pengajuan berhasil dikirim');
+// }
+
 public function absenIzin(Request $request)
 {
+    // ⏰ VALIDASI JAM (MAKS JAM 10:00)
+    $now = Carbon::now('Asia/Jakarta');
+    // $now = Carbon::createFromTime(11, 0, 0, 'Asia/Jakarta');
+    $batasIzin = Carbon::createFromTime(10, 0, 0, 'Asia/Jakarta');
+
+    if ($now->greaterThan($batasIzin)) {
+        return back()->with('error', 'Pengajuan izin/sakit hanya bisa sebelum jam 10:00');
+    }
+
+    // VALIDASI INPUT
     $request->validate([
         'status_kehadiran' => 'required|in:Izin,Sakit',
         'alasan' => 'required|min:5'
