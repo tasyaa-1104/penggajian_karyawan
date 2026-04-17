@@ -324,6 +324,10 @@ Route::get('/manager/izin-sakit', [ManagerController::class, 'izinSakit'])->name
 Route::get('/manager/karyawan', [ManagerController::class, 'karyawan'])
     ->name('manager.karyawan');
 
+Route::post('/dashboard/detail-kehadiran', [ManagerController::class, 'detailKehadiran'])->name('manager.dashboard.detail-kehadiran');
+Route::post('/dashboard/rekap-bulanan', [ManagerController::class, 'rekap-bulanan'])->name('manager.dashboard.rekap-bulanan');
+
+
 });
 
 use App\Http\Controllers\FinanceController;

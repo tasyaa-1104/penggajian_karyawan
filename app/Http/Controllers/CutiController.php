@@ -40,30 +40,57 @@ public function store(Request $request)
 
     $karyawan = Karyawan::where('id_user', Auth::id())->firstOrFail();
 
-    // CEK apakah sudah mengajukan cuti bulan ini
-    $sudahCuti = Cuti::where('id_karyawan', $karyawan->id_karyawan)
-        ->whereMonth('tanggal_mulai', date('m'))
-        ->whereYear('tanggal_mulai', date('Y'))
-        ->exists();
-
-    if ($sudahCuti) {
-        return redirect()
-            ->route('karyawan.cuti')
-            ->with('error', 'Anda sudah mengajukan cuti bulan ini. Pengajuan berikutnya hanya bisa dilakukan bulan depan.');
-    }
-
-    // 🔴 BATAS MAKSIMAL 7 HARI
     $mulai   = Carbon::parse($request->tanggal_mulai);
     $selesai = Carbon::parse($request->tanggal_selesai);
 
-    $jumlahHari = $mulai->diffInDays($selesai) + 1;
+    // jumlah hari pengajuan sekarang
+    $jumlahHariPengajuan = $mulai->diffInDays($selesai) + 1;
 
-    if ($jumlahHari > 7) {
+    // 🔥 HITUNG SEMUA (pending + disetujui)
+    $totalCuti = Cuti::where('id_karyawan', $karyawan->id_karyawan)
+        ->whereYear('tanggal_mulai', date('Y'))
+        ->whereIn('status', ['pending', 'disetujui']) // INI PENTING
+        ->get()
+        ->sum(function ($c) {
+            return Carbon::parse($c->tanggal_mulai)
+                ->diffInDays(Carbon::parse($c->tanggal_selesai)) + 1;
+        });
+
+    // total jika ditambah pengajuan sekarang
+    $totalSemua = $totalCuti + $jumlahHariPengajuan;
+
+    // validasi 12 hari
+    if ($totalSemua > 12) {
         return redirect()
             ->back()
             ->withInput()
-            ->with('error', 'Durasi cuti maksimal hanya 7 hari.');
+            ->with('error', 'Jatah cuti tahunan hanya 12 hari.');
     }
+
+    // CEK apakah sudah mengajukan cuti bulan ini
+    // $sudahCuti = Cuti::where('id_karyawan', $karyawan->id_karyawan)
+    //     ->whereMonth('tanggal_mulai', date('m'))
+    //     ->whereYear('tanggal_mulai', date('Y'))
+    //     ->exists();
+
+    // if ($sudahCuti) {
+    //     return redirect()
+    //         ->route('karyawan.cuti')
+    //         ->with('error', 'Anda sudah mengajukan cuti bulan ini. Pengajuan berikutnya hanya bisa dilakukan bulan depan.');
+    // }
+
+    // 🔴 BATAS MAKSIMAL 7 HARI
+    // $mulai   = Carbon::parse($request->tanggal_mulai);
+    // $selesai = Carbon::parse($request->tanggal_selesai);
+
+    // $jumlahHari = $mulai->diffInDays($selesai) + 1;
+
+    // if ($jumlahHari > 7) {
+    //     return redirect()
+    //         ->back()
+    //         ->withInput()
+    //         ->with('error', 'Durasi cuti maksimal hanya 7 hari.');
+    // }
 
     Cuti::create([
         'id_karyawan'     => $karyawan->id_karyawan,
