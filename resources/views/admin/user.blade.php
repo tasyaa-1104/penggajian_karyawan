@@ -248,6 +248,193 @@
 
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
+    /* =========================================
+       RESPONSIF DATA USER
+       ========================================= */
+
+    /* Tablet */
+    @media (max-width: 991px) {
+        .website-layout {
+            padding: 20px;
+            padding-top: 90px;
+        }
+
+        .card-box {
+            padding: 20px;
+        }
+    }
+
+    /* Mobile */
+    @media (max-width: 767px) {
+        .website-layout {
+            padding: 15px;
+            padding-top: 20px;
+        }
+
+        .card-box {
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        /* Welcome banner vertikal */
+        .welcome-card {
+            flex-direction: column;
+            text-align: center;
+            padding: 15px;
+            gap: 12px;
+        }
+
+        .welcome-icon {
+            width: 42px;
+            height: 42px;
+            font-size: 1.2rem;
+        }
+
+        .welcome-text-content h3 {
+            font-size: 1.1rem;
+        }
+
+        .welcome-text-content p {
+            font-size: 0.82rem;
+        }
+
+        /* Page header stack */
+        .page-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .page-title {
+            font-size: 1.05rem;
+        }
+
+        .btn-add {
+            width: 100%;
+            justify-content: center;
+            padding: 10px 16px;
+            font-size: 0.85rem;
+        }
+
+        /* Alert wrap */
+        .alert {
+            flex-wrap: wrap;
+            font-size: 0.82rem;
+            padding: 10px 15px;
+        }
+
+        /* Table compact */
+        table.modern-table thead th {
+            padding: 10px 8px;
+            font-size: 0.68rem;
+            letter-spacing: 0.3px;
+        }
+
+        table.modern-table td {
+            padding: 10px 8px;
+            font-size: 0.8rem;
+        }
+
+        /* Badge lebih kecil */
+        .badge-sharp {
+            padding: 4px 8px;
+            font-size: 0.65rem;
+        }
+
+        /* Action buttons stack vertikal */
+        .action-buttons {
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .btn-action {
+            padding: 6px 10px;
+            font-size: 0.75rem;
+            justify-content: center;
+            width: 100%;
+        }
+
+        /* Modal */
+        .modal-content {
+            width: 95%;
+            max-width: 95%;
+            border-radius: 10px;
+        }
+
+        .modal-header {
+            padding: 15px;
+        }
+
+        .modal-header h3 {
+            font-size: 1rem;
+        }
+
+        .modal-body {
+            padding: 20px 15px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            font-size: 0.82rem;
+            margin-bottom: 6px;
+        }
+
+        .form-control {
+            padding: 10px;
+            font-size: 0.85rem;
+        }
+
+        .modal-footer {
+            padding: 15px;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .modal-footer .btn {
+            width: 100%;
+            justify-content: center;
+            padding: 10px 16px;
+            font-size: 0.85rem;
+        }
+    }
+
+    /* Mobile kecil */
+    @media (max-width: 400px) {
+        .website-layout {
+            padding: 10px;
+            padding-top: 15px;
+        }
+
+        .card-box {
+            padding: 12px;
+        }
+
+        .welcome-text-content h3 {
+            font-size: 1rem;
+        }
+
+        .page-title {
+            font-size: 0.95rem;
+        }
+
+        table.modern-table thead th {
+            padding: 8px 6px;
+            font-size: 0.62rem;
+        }
+
+        table.modern-table td {
+            padding: 8px 6px;
+            font-size: 0.75rem;
+        }
+
+        .badge-sharp {
+            font-size: 0.6rem;
+            padding: 3px 6px;
+        }
+    }
 </style>
 
 <div class="website-layout">
@@ -419,8 +606,6 @@
             document.getElementById('passwordLabel').innerText = "Password *";
             document.getElementById('passwordHint').style.display = "none";
 
-            // PERBAIKAN LOGIKA: Set default status menjadi 'aktif' agar backend menerima data valid
-            // meskipun dropdown disembunyikan.
             document.getElementById('status_akun').value = "aktif";
             document.getElementById('statusGroup').style.display = "none";
         } else {
@@ -435,7 +620,6 @@
             document.getElementById('role').value = role;
             document.getElementById('status_akun').value = status;
 
-            // Logika Password Edit
             document.getElementById('password').required = false;
             document.getElementById('password').value = "";
             document.getElementById('passwordLabel').innerText = "Password (Opsional)";
@@ -457,24 +641,15 @@
         }
     }
 
-    // Event Listener untuk menangani submit form
     document.getElementById('userForm').addEventListener('submit', function(e) {
-        // Anda bisa menghapus komentar di bawah ini jika ingin mencegah reload (AJAX),
-        // tapi untuk menjaga logika Blade (Laravel) standar, biarkan form submit normal.
-        // e.preventDefault();
-
         const btn = document.getElementById('btnSubmit');
         const spinner = document.getElementById('loadingSpinner');
         const btnText = document.getElementById('btnText');
 
-        // Efek Loading
         spinner.style.display = 'inline-block';
         btnText.innerText = 'Menyimpan...';
         btn.disabled = true;
         btn.style.opacity = '0.7';
-
-        // Form akan submit secara normal (reload halaman) karena e.preventDefault() tidak aktif.
-        // Setelah reload, data baru akan muncul dari backend (Laravel).
     });
 </script>
 

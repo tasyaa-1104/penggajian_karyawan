@@ -493,12 +493,259 @@
     opacity: 0.5;
 }
 
-@media (max-width: 768px) {
-    .stat-value { font-size: 24px; }
-    .custom-legend { gap: 12px; font-size: 12px; }
-    .rekap-table { font-size: 12px; }
-    .rekap-summary { gap: 16px; }
-    .employee-badge { display: none; }
+.rekap-formula {
+    padding: 10px 20px;
+    background: #f9fafb;
+    border-top: 1px solid #e5e7eb;
+    font-size: 11px;
+    color: #9ca3af;
+}
+
+/* =========================================
+   RESPONSIF DASHBOARD MANAGER
+   ========================================= */
+@media (max-width: 991px) {
+    .page-title-section {
+        padding: 14px 16px;
+        margin-bottom: 20px;
+    }
+
+    .page-title {
+        font-size: 18px;
+    }
+
+    .stat-card .card-body {
+        padding: 16px;
+    }
+
+    .stat-value {
+        font-size: 24px;
+    }
+
+    .stat-icon {
+        width: 38px;
+        height: 38px;
+        font-size: 15px;
+    }
+
+    .filter-section {
+        padding: 14px 16px;
+    }
+
+    .rekap-summary {
+        gap: 16px;
+        padding: 12px 16px;
+    }
+}
+
+@media (max-width: 767px) {
+    .page-title-section {
+        padding: 12px 14px;
+        border-radius: 10px;
+    }
+
+    .page-title {
+        font-size: 16px;
+    }
+
+    .page-subtitle {
+        font-size: 11px;
+    }
+
+    .stat-value {
+        font-size: 22px;
+    }
+
+    .stat-label {
+        font-size: 11px;
+    }
+
+    .stat-sub {
+        font-size: 10px;
+    }
+
+    .stat-icon {
+        width: 34px;
+        height: 34px;
+        font-size: 14px;
+        border-radius: 10px;
+    }
+
+    .section-header {
+        font-size: 13px;
+        margin-top: 20px;
+    }
+
+    .card-chart .card-header {
+        font-size: 13px;
+    }
+
+    .custom-legend {
+        gap: 10px;
+        font-size: 11px;
+    }
+
+    .rekap-table thead th {
+        padding: 10px 8px;
+        font-size: 10px;
+    }
+
+    .rekap-table tbody td {
+        padding: 10px 8px;
+        font-size: 12px;
+    }
+
+    .badge-rekap-izin,
+    .badge-rekap-sakit,
+    .badge-rekap-total {
+        font-size: 10px;
+        padding: 3px 8px;
+        min-width: 48px;
+    }
+
+    .rekap-summary {
+        gap: 12px;
+        padding: 10px 14px;
+    }
+
+    .rekap-summary-item {
+        gap: 6px;
+    }
+
+    .rekap-summary-label {
+        font-size: 11px;
+    }
+
+    .rekap-summary-value {
+        font-size: 12px;
+    }
+
+    .rekap-formula {
+        font-size: 10px;
+        padding: 8px 14px;
+    }
+
+    .chart-hint {
+        font-size: 11px;
+    }
+
+    .filter-section {
+        padding: 12px 14px;
+    }
+
+    .filter-section label {
+        font-size: 12px;
+    }
+
+    .filter-section .form-select {
+        font-size: 12px;
+        padding: 7px 10px;
+    }
+
+    .btn-filter-rekap {
+        font-size: 12px;
+        padding: 8px 14px;
+    }
+
+    /* Modal */
+    .modal-detail .modal-content {
+        border-radius: 12px;
+    }
+
+    .modal-detail .modal-header {
+        padding: 14px 16px;
+    }
+
+    .modal-detail .modal-header h6 {
+        font-size: 13px;
+    }
+
+    .modal-detail .modal-header small {
+        font-size: 11px;
+    }
+
+    .modal-detail .modal-footer {
+        padding: 10px 16px;
+    }
+
+    .employee-list-item {
+        padding: 10px 16px;
+    }
+
+    .employee-avatar {
+        width: 34px;
+        height: 34px;
+        font-size: 12px;
+        margin-right: 10px;
+    }
+
+    .employee-name {
+        font-size: 13px;
+    }
+
+    .employee-keterangan {
+        font-size: 10px;
+    }
+
+    .employee-badge {
+        display: none;
+    }
+
+    .modal-group-header {
+        padding: 12px 16px 6px;
+        font-size: 12px;
+    }
+
+    .modal-group-count {
+        font-size: 10px;
+    }
+}
+
+@media (max-width: 400px) {
+    .page-title {
+        font-size: 14px;
+    }
+
+    .stat-value {
+        font-size: 20px;
+    }
+
+    .stat-icon {
+        width: 30px;
+        height: 30px;
+        font-size: 12px;
+    }
+
+    .rekap-table thead th {
+        padding: 8px 6px;
+        font-size: 9px;
+    }
+
+    .rekap-table tbody td {
+        padding: 8px 6px;
+        font-size: 11px;
+    }
+
+    .badge-rekap-izin,
+    .badge-rekap-sakit,
+    .badge-rekap-total {
+        font-size: 9px;
+        padding: 2px 6px;
+        min-width: 40px;
+    }
+
+    .rekap-summary {
+        gap: 10px;
+        padding: 8px 12px;
+    }
+
+    .rekap-summary-label {
+        font-size: 10px;
+    }
+
+    .rekap-summary-value {
+        font-size: 11px;
+    }
 }
 </style>
 
@@ -539,8 +786,8 @@
 
     {{-- ROW 1 --}}
     <div class="row g-3">
-        <div class="col-md-6">
-            <div class="card stat-card card-total h-100">
+        <div class="col-6">
+            <div class="card stat-card card-total">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
@@ -553,8 +800,8 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="card stat-card card-overtime h-100">
+        <div class="col-6">
+            <div class="card stat-card card-overtime">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
@@ -596,7 +843,7 @@
         </div>
     </div>
 
-    {{-- REKAP BULANAN (PAKAI PHP BIASA, BUKAN JAVASCRIPT) --}}
+    {{-- REKAP BULANAN --}}
     <div class="section-header mt-4">
         <i class="fas fa-calendar-alt"></i> Rekap Kehadiran Bulanan
     </div>
@@ -672,18 +919,18 @@
                 </table>
             </div>
 
-            <div class="px-3 py-2" style="background:#f9fafb;border-top:1px solid #e5e7eb;">
-                <p style="margin:0;font-size:11px;color:#9ca3af;">
-                    <i class="fas fa-calculator me-1"></i>
-                    Rumus: (Jumlah Hari / <span style="font-weight:600;color:#6b7280;">{{ $jumlahHari ?? now()->daysInMonth }}</span> Hari) × 100
-                    &nbsp;|&nbsp;
-                    <span style="display:inline-block;width:10px;height:10px;background:#fde68a;border-radius:2px;vertical-align:middle;"></span> >10% &nbsp;
-                    <span style="display:inline-block;width:10px;height:10px;background:#fee2e2;border-radius:2px;vertical-align:middle;"></span> Total >20%
-                </p>
+            {{-- RUMUS --}}
+            <div class="rekap-formula">
+                <i class="fas fa-calculator me-1"></i>
+                Rumus: (Jumlah Hari / <span style="font-weight:600;color:#6b7280;">{{ $jumlahHari ?? now()->daysInMonth }}</span> Hari) × 100
+                &nbsp;|&nbsp;
+                <span style="display:inline-block;width:10px;height:10px;background:#fde68a;border-radius:2px;vertical-align:middle;"></span> >10% &nbsp;
+                <span style="display:inline-block;width:10px;height:10px;background:#fee2e2;border-radius:2px;vertical-align:middle;"></span> Total >20%
             </div>
 
+            {{-- SUMMARY --}}
             @if(isset($rekapBulanan) && $rekapBulanan->count() > 0)
-            <div class="rekap-summary" style="display:flex;">
+            <div class="rekap-summary">
                 <div class="rekap-summary-item">
                     <span class="rekap-summary-dot" style="background:#10B981;"></span>
                     <span class="rekap-summary-label">Rata-rata Izin:</span>
@@ -706,10 +953,11 @@
                 </div>
             </div>
             @endif
+
         </div>
     </div>
 
-</div> <!-- PENUTUK CONTAINER-FLUID -->
+</div>
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
@@ -840,7 +1088,6 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-
     /* ============================================ */
     /* MODAL                                        */
     /* ============================================ */
@@ -953,7 +1200,6 @@ document.addEventListener("DOMContentLoaded", function() {
         body.innerHTML = html;
     }
 
-
     /* ============================================ */
     /* FETCH: ambil IZIN + SAKIT sekaligus         */
     /* ============================================ */
@@ -989,7 +1235,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-}); // PENUTUP SCRIPT
+});
 </script>
 
 @endsection

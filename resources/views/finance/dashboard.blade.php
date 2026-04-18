@@ -123,6 +123,7 @@
         animation-name: slideInRight;
         animation-duration: 0.5s;
         animation-fill-mode: forwards;
+        gap: 10px;
     }
 
     /* Delay untuk tiap item list agar muncul berurutan */
@@ -163,11 +164,13 @@
         font-weight: 700;
         color: var(--maroon-primary);
         font-size: 1rem;
+        white-space: nowrap;
     }
 
     .comp-icon {
         width: 40px;
         height: 40px;
+        min-width: 40px;
         background-color: #fff0f0;
         color: var(--maroon-primary);
         border-radius: 10px;
@@ -183,13 +186,90 @@
         height: 300px;
         width: 100%;
     }
+
+    /* =========================================
+       RESPONSIF DASHBOARD
+       ========================================= */
+
+    /* Tablet */
+    @media (max-width: 991px) {
+        .chart-wrapper {
+            height: 260px;
+        }
+    }
+
+    /* Mobile */
+    @media (max-width: 767px) {
+        /* Header dashboard */
+        .dashboard-header {
+            flex-direction: column;
+            align-items: flex-start !important;
+            gap: 6px;
+        }
+
+        .dashboard-header h2 {
+            font-size: 1.25rem;
+        }
+
+        .dashboard-header .text-muted {
+            font-size: 0.8rem;
+        }
+
+        /* Ukuran angka counter di kartu statistik */
+        .card-maroon .card-body h2 {
+            font-size: 1.15rem;
+        }
+
+        .card-maroon .card-body h6 {
+            font-size: 0.7rem;
+        }
+
+        /* Icon lingkaran di kartu statistik */
+        .card-maroon .bg-opacity-20 {
+            padding: 10px !important;
+            font-size: 1.2rem !important;
+        }
+
+        /* Tinggi chart lebih kecil */
+        .chart-wrapper {
+            height: 220px;
+        }
+
+        /* Item komponen tunjangan */
+        .component-item {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
+            padding: 12px 8px;
+        }
+
+        .comp-amount {
+            font-size: 0.9rem;
+            padding-left: 55px;
+        }
+
+        .comp-info h6 {
+            font-size: 0.85rem;
+        }
+    }
+
+    /* Mobile kecil */
+    @media (max-width: 400px) {
+        .chart-wrapper {
+            height: 190px;
+        }
+
+        .card-maroon .card-body h2 {
+            font-size: 1rem;
+        }
+    }
 </style>
 
 <!-- Wrapper Utama -->
 <div class="fade-in p-2">
 
     <!-- Header -->
-    <div class="d-flex justify-content-between mb-4 align-items-center animate-item" style="animation-delay: 0s;">
+    <div class="d-flex justify-content-between mb-4 align-items-center animate-item dashboard-header" style="animation-delay: 0s;">
         <h2 class="fw-bold" style="color: #800000; position: relative; display: inline-block;">
             Dashboard Finance
             <span style="display:block; width: 50%; height: 3px; background: linear-gradient(to right, #800000, #3e2723); margin-top: 5px; border-radius: 2px;"></span>
@@ -201,7 +281,7 @@
     <div class="animate-item delay-1">
         <div class="row g-4 mb-4">
             <!-- Total Tunjangan -->
-            <div class="col-md-6">
+            <div class="col-sm-6 col-md-6">
                 <div class="card card-maroon h-100">
                     <div class="card-body d-flex justify-content-between align-items-center position-relative" style="z-index: 2;">
                         <div>
@@ -217,7 +297,7 @@
                 </div>
             </div>
             <!-- Total Gaji -->
-            <div class="col-md-6">
+            <div class="col-sm-6 col-md-6">
                 <div class="card card-maroon h-100">
                     <div class="card-body d-flex justify-content-between align-items-center position-relative" style="z-index: 2;">
                         <div>

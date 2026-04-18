@@ -312,7 +312,7 @@
         @media (max-width: 991px) {
             .sidebar {
                 left: calc(-1 * var(--sidebar-width));
-                box-shadow: none; /* Hilangkan shadow di mobile saat tutup */
+                box-shadow: none;
             }
             .sidebar.active {
                 left: 0;
@@ -320,6 +320,25 @@
             }
             .main-wrapper { margin-left: 0; width: 100%; }
             .mobile-toggle { display: block; }
+
+            .content {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 575px) {
+            .mobile-toggle {
+                top: 12px;
+                right: 12px;
+                padding: 10px 14px;
+                font-size: 1rem;
+                border-radius: 6px;
+            }
+
+            .content {
+                padding: 12px;
+                padding-top: 60px;
+            }
         }
     </style>
 </head>

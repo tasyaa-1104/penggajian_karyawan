@@ -16,6 +16,7 @@
             --maroon-mid: #5d1010;       /* Warna Tengah */
             --maroon-dark: #3e2723;      /* Warna Coklat Tua (Bawah) */
             --text-white: #ffffff;
+            --sidebar-width: 260px;
         }
 
         body {
@@ -51,19 +52,26 @@
             color: white;
             display: flex;
             flex-direction: column;
-            height: 100%;
+            height: 100vh;
 
             /* Ukuran Tetap */
-            width: 260px !important;
-            max-width: 260px !important;
-            min-width: 260px !important;
+            width: var(--sidebar-width) !important;
+            max-width: var(--sidebar-width) !important;
+            min-width: var(--sidebar-width) !important;
             flex-shrink: 0;
 
-            /* Penting: Agar elemen animasi background tidak keluar */
-            position: relative;
-            overflow: hidden;
-            z-index: 100;
+            /* Fixed positioning seperti HRD */
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 1000;
             box-shadow: 4px 0 15px rgba(0,0,0,0.2);
+
+            /* Transisi slide seperti HRD */
+            transition: left 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+
+            /* Penting: Agar elemen animasi background tidak keluar */
+            overflow: hidden;
         }
 
         /* --- 2. EFEK AWAN GELOMBANG (Latar Belakang Bergerak) --- */
@@ -241,6 +249,13 @@
             height: 100vh;
             overflow-y: auto;
             position: relative;
+
+            /* Margin kiri agar tidak tertutup sidebar fixed */
+            margin-left: var(--sidebar-width);
+            width: calc(100% - var(--sidebar-width));
+
+            /* Transisi seperti HRD */
+            transition: margin-left 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), width 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
         .content-area::-webkit-scrollbar { width: 8px; }
@@ -248,40 +263,65 @@
         .content-area::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 4px; }
         .content-area::-webkit-scrollbar-thumb:hover { background: #a8a8a8; }
 
-        /* --- Responsif --- */
-        @media (max-width: 768px) {
-            .sidebar-maroon {
-                width: 100% !important;
-                max-width: 100% !important;
-                min-width: 100% !important;
-                height: auto;
-                flex-direction: row;
-                overflow-x: auto;
-                align-items: center;
-            }
-            /* Matikan animasi background di mobile agar performa lancar */
-            .sidebar-maroon::before, .sidebar-maroon::after { display: none; }
+        /* =========================================
+           TOGGLE BUTTON MOBILE (Seperti HRD)
+           ========================================= */
+        .mobile-toggle {
+            display: none;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1100;
+            background: var(--maroon-primary);
+            color: white;
+            border: none;
+            padding: 12px 18px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(128, 0, 0, 0.3);
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
 
-            .sidebar-user-info {
-                padding: 15px;
-                border-bottom: none;
-                border-right: 1px solid rgba(255,255,255,0.1);
-                flex-shrink: 0;
+        .mobile-toggle:hover {
+            background: var(--maroon-dark);
+            transform: scale(1.05);
+        }
+
+        /* =========================================
+           RESPONSIF (Pola HRD: slide sidebar)
+           ========================================= */
+        @media (max-width: 991px) {
+            .sidebar-maroon {
+                left: calc(-1 * var(--sidebar-width));
+                box-shadow: none;
             }
-            .sidebar-user-info i { font-size: 2rem; margin-bottom: 0; margin-right: 10px; animation: none; }
-            .sidebar-user-info h5 { font-size: 1rem; margin: 0; display: none; }
-            .sidebar-user-info small { display: none; }
-            .sidebar-menu-title { display: none; }
-            .nav-link-custom { padding: 15px; border-left: none; border-bottom: 3px solid transparent; }
-            .nav-link-custom:hover { transform: none; padding-left: 15px; border-left: none; border-bottom: 3px solid white; }
-            .nav-link-custom i { margin-right: 0; }
-            .nav-link-custom span { display: none; }
-            .sidebar-logout { display: none; }
-            .nav-item { opacity: 1; animation: none; } /* Langsung tampil di mobile */
+
+            .sidebar-maroon.active {
+                left: 0;
+                box-shadow: 10px 0 50px rgba(0,0,0,0.5);
+            }
+
+            .content-area {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .mobile-toggle {
+                display: block;
+            }
         }
     </style>
 </head>
 <body>
+
+<!-- Tombol Toggle Mobile -->
+<button class="mobile-toggle" onclick="toggleSidebar()">
+    <i class="fa-solid fa-bars"></i>
+</button>
+
+<!-- Overlay Mobile -->
+<div id="sidebarOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:999; backdrop-filter: blur(3px);" onclick="toggleSidebar()"></div>
 
 <!-- TIDAK ADA NAVBAR DI ATAS -->
 
@@ -289,7 +329,7 @@
     <div class="row">
 
         <!-- SIDEBAR (Berisi User Info + Menu + Logout) -->
-        <div class="col-md-2 sidebar-maroon shadow-sm">
+        <div class="col-md-2 sidebar-maroon shadow-sm" id="sidebar">
 
             <!-- 1. USER INFO -->
             <div class="sidebar-user-info">
@@ -355,5 +395,30 @@
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+
+        sidebar.classList.toggle('active');
+
+        if (window.innerWidth <= 991) {
+            if (sidebar.classList.contains('active')) {
+                overlay.style.display = 'block';
+            } else {
+                overlay.style.display = 'none';
+            }
+        }
+    }
+
+    window.addEventListener('resize', function() {
+        const overlay = document.getElementById('sidebarOverlay');
+        const sidebar = document.getElementById('sidebar');
+        if (window.innerWidth > 991) {
+            overlay.style.display = 'none';
+            sidebar.classList.remove('active');
+        }
+    });
+</script>
 </body>
 </html>

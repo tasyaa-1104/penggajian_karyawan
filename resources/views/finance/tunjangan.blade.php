@@ -224,6 +224,190 @@
 
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
+    /* =========================================
+       RESPONSIF TUNJANGAN
+       ========================================= */
+
+    /* Tablet */
+    @media (max-width: 991px) {
+        .website-layout {
+            padding: 20px;
+            padding-top: 90px;
+        }
+
+        .card-box {
+            padding: 20px;
+        }
+
+        .search-box {
+            max-width: 100%;
+        }
+    }
+
+    /* Mobile */
+    @media (max-width: 767px) {
+        .website-layout {
+            padding: 15px;
+            padding-top: 20px;
+        }
+
+        .card-box {
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        /* Welcome banner jadi vertikal */
+        .welcome-card {
+            flex-direction: column;
+            text-align: center;
+            padding: 15px;
+            gap: 12px;
+        }
+
+        .welcome-icon {
+            width: 42px;
+            height: 42px;
+            font-size: 1.2rem;
+        }
+
+        .welcome-text-content h3 {
+            font-size: 1.1rem;
+        }
+
+        .welcome-text-content p {
+            font-size: 0.82rem;
+        }
+
+        /* Page header: judul & tombol stack */
+        .page-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .page-title {
+            font-size: 1.05rem;
+        }
+
+        .btn-add {
+            width: 100%;
+            justify-content: center;
+            padding: 10px 16px;
+            font-size: 0.85rem;
+        }
+
+        /* Search box full width */
+        .search-box {
+            max-width: 100%;
+        }
+
+        /* Alert flex-wrap */
+        .alert {
+            flex-wrap: wrap;
+            font-size: 0.82rem;
+            padding: 10px 15px;
+        }
+
+        /* Table */
+        table.modern-table thead th {
+            padding: 10px 8px;
+            font-size: 0.7rem;
+            letter-spacing: 0.3px;
+        }
+
+        table.modern-table td {
+            padding: 10px 8px;
+            font-size: 0.82rem;
+        }
+
+        .currency {
+            font-size: 0.8rem;
+        }
+
+        /* Action buttons: compact & wrap */
+        .action-buttons {
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .btn-action {
+            padding: 6px 12px;
+            font-size: 0.75rem;
+            justify-content: center;
+            width: 100%;
+        }
+
+        /* Modal */
+        .modal-content {
+            width: 95%;
+            max-width: 95%;
+            border-radius: 10px;
+        }
+
+        .modal-header {
+            padding: 15px;
+        }
+
+        .modal-header h3 {
+            font-size: 1rem;
+        }
+
+        .modal-body {
+            padding: 20px 15px;
+        }
+
+        .modal-footer {
+            padding: 15px;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .modal-footer .btn {
+            width: 100%;
+            justify-content: center;
+            padding: 10px 16px;
+            font-size: 0.85rem;
+        }
+
+        .form-control {
+            padding: 10px;
+            font-size: 0.85rem;
+        }
+
+        .form-group label {
+            font-size: 0.82rem;
+        }
+    }
+
+    /* Mobile kecil */
+    @media (max-width: 400px) {
+        .website-layout {
+            padding: 10px;
+            padding-top: 15px;
+        }
+
+        .card-box {
+            padding: 12px;
+        }
+
+        .welcome-text-content h3 {
+            font-size: 1rem;
+        }
+
+        .page-title {
+            font-size: 0.95rem;
+        }
+
+        table.modern-table thead th {
+            padding: 8px 6px;
+            font-size: 0.65rem;
+        }
+
+        table.modern-table td {
+            padding: 8px 6px;
+            font-size: 0.78rem;
+        }
+    }
 </style>
 
 <div class="website-layout">
