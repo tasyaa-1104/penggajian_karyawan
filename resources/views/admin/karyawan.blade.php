@@ -319,7 +319,7 @@
                 <thead>
                     <tr>
                         <th width="5%">No</th>
-                        <th width="10%">NIK</th>
+                        <th width="10%">NIP</th>
                         <th width="20%">Nama</th>
                         <th width="15%">Divisi</th>
                         <th width="15%">Jabatan</th>

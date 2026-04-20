@@ -220,8 +220,8 @@
             @csrf
 
             <div class="form-group">
-                <label for="nik">NIK</label>
-                <input type="text" name="nik" id="nik" class="form-control" placeholder="Masukkan NIK..." required>
+                <label for="nik">NIP</label>
+                <input type="text" name="nik" id="nik" class="form-control" placeholder="Masukkan NIP..." required>
             </div>
 
             <div class="form-group">

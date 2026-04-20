@@ -332,7 +332,7 @@
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th>NIK</th>
+                        <th>NIP</th>
                         <th>Nama</th>
                         <th>Divisi</th>
                         <th>Jabatan</th>
